@@ -46,6 +46,7 @@ export const translations = {
       exportQualityDesc: "Xalqaro standartlarga javob beradigan mahsulotlar",
       craftmanship: "Hunarmandchilik",
       craftmanshipDesc: "Har bir tikuv bilan e'tibor va g'amxo'rlik",
+      address: "Istiqbol (M.F.Y), Turakurgan ko'chasi, 1-A, 160100, Namangan, O'zbekiston",
     },
     catalog: {
       title: "Bizning kolleksiya",
@@ -118,6 +119,7 @@ export const translations = {
       exportQualityDesc: "Продукция соответствует международным стандартам",
       craftmanship: "Мастерство",
       craftmanshipDesc: "Внимание и забота в каждом стежке",
+      address: "Истикбол (М.Ф.Й), ул. Туракурган, 1-А, 160100, Наманган, Узбекистан",
     },
     catalog: {
       title: "Наша коллекция",
@@ -190,6 +192,7 @@ export const translations = {
       exportQualityDesc: "Products meeting international standards",
       craftmanship: "Craftsmanship",
       craftmanshipDesc: "Attention and care in every stitch",
+      address: "Istiqbol (M.F.Y), Turakurgan street, 1-A, 160100, Namangan, Uzbekistan",
     },
     catalog: {
       title: "Our Collection",

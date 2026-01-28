@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslations } from "@/lib/i18n";
-import { Sparkles, Leaf, Award, Heart } from "lucide-react";
+import { Sparkles, Leaf, Award, Heart, Mail, Phone, MapPin, Send } from "lucide-react";
+import { SiWhatsapp, SiTelegram } from "react-icons/si";
 
 import heroLifestyle from "@/assets/images/hero-lifestyle.jpg";
 import heroBathrobe from "@/assets/images/hero-bathrobe.jpg";
@@ -246,26 +247,103 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20 lg:py-28">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="py-20 lg:py-28 bg-card/30">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
+            className="text-center mb-16"
           >
-            <h2 className="text-3xl sm:text-4xl font-semibold mb-6">
+            <h2 className="text-3xl sm:text-4xl font-semibold mb-4">
               {t.contact.title}
             </h2>
-            <p className="text-body text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
+            <p className="text-body text-muted-foreground text-lg max-w-2xl mx-auto">
               {t.contact.subtitle}
             </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <Card className="bg-background/50 backdrop-blur-sm border-primary/10 hover-elevate">
+              <CardContent className="p-6 text-center">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <Mail className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-semibold mb-2">{t.contact.email}</h3>
+                <a 
+                  href="mailto:Marycollection.uz@gmail.com" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors block break-all"
+                >
+                  Marycollection.uz@gmail.com
+                </a>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-background/50 backdrop-blur-sm border-primary/10 hover-elevate">
+              <CardContent className="p-6 text-center">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <Phone className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-semibold mb-2">{t.contact.phone}</h3>
+                <div className="space-y-1">
+                  <a 
+                    href="tel:+998882599444" 
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors block"
+                  >
+                    +998 88 259 94 44
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-background/50 backdrop-blur-sm border-primary/10 hover-elevate">
+              <CardContent className="p-6 text-center">
+                <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4">
+                  <SiWhatsapp className="h-6 w-6 text-green-600" />
+                </div>
+                <h3 className="font-semibold mb-2">Socials</h3>
+                <div className="flex flex-col gap-1">
+                  <a 
+                    href="https://wa.me/998882599444" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-sm text-muted-foreground hover:text-green-600 transition-colors inline-flex items-center justify-center gap-2"
+                  >
+                    <SiWhatsapp className="h-3 w-3" /> WhatsApp
+                  </a>
+                  <a 
+                    href="https://t.me/+998882599444" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-sm text-muted-foreground hover:text-blue-500 transition-colors inline-flex items-center justify-center gap-2"
+                  >
+                    <SiTelegram className="h-3 w-3" /> Telegram
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-background/50 backdrop-blur-sm border-primary/10 hover-elevate">
+              <CardContent className="p-6 text-center">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <MapPin className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-semibold mb-2">{t.contact.address}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {t.home.address}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="mt-16 text-center">
             <Link href="/contact">
-              <Button size="lg" className="text-body" data-testid="button-cta-contact">
+              <Button size="lg" className="rounded-none px-12 h-14 uppercase tracking-widest text-xs">
                 {t.home.contactUs}
               </Button>
             </Link>
-          </motion.div>
+          </div>
         </div>
       </section>
     </div>

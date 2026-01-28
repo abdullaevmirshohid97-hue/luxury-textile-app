@@ -73,6 +73,7 @@ export const translations = {
       send: "Yuborish",
       address: "Manzil",
       workingHours: "Ish vaqti",
+      fullAddress: "Istiqbol (M.F.Y), Turakurgan ko'chasi, 1-A\n160100, Namangan viloyati, O'zbekiston",
     },
     chat: {
       title: "Yordam kerakmi?",
@@ -143,6 +144,7 @@ export const translations = {
       send: "Отправить",
       address: "Адрес",
       workingHours: "Часы работы",
+      fullAddress: "Истикбол (М.Ф.Й), ул. Туракурган, 1-А\n160100, Наманганская область, Узбекистан",
     },
     chat: {
       title: "Нужна помощь?",
@@ -213,6 +215,7 @@ export const translations = {
       send: "Send",
       address: "Address",
       workingHours: "Working Hours",
+      fullAddress: "Istiqbol (M.F.Y), Turakurgan street, 1-A\n160100, Namangan region, Uzbekistan",
     },
     chat: {
       title: "Need Help?",

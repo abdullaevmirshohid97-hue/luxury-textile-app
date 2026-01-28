@@ -209,11 +209,11 @@ export default function Contact() {
                   <div>
                     <h3 className="font-semibold mb-1">{t.contact.email}</h3>
                     <a
-                      href="mailto:info@marycollection.com"
+                      href="mailto:marycollection.uz@gmail.com"
                       className="text-body text-muted-foreground hover:text-foreground transition-colors"
                       data-testid="link-email"
                     >
-                      info@marycollection.com
+                      marycollection.uz@gmail.com
                     </a>
                   </div>
                 </div>
@@ -225,11 +225,11 @@ export default function Contact() {
                   <div>
                     <h3 className="font-semibold mb-1">{t.contact.phone}</h3>
                     <a
-                      href="tel:+998901234567"
+                      href="tel:+998882599444"
                       className="text-body text-muted-foreground hover:text-foreground transition-colors"
                       data-testid="link-phone"
                     >
-                      +998 90 123 45 67
+                      +998 88 259 94 44
                     </a>
                   </div>
                 </div>
@@ -241,13 +241,13 @@ export default function Contact() {
                   <div>
                     <h3 className="font-semibold mb-1">WhatsApp</h3>
                     <a
-                      href="https://wa.me/998901234567"
+                      href="https://wa.me/998882599444"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-body text-muted-foreground hover:text-foreground transition-colors"
                       data-testid="link-whatsapp"
                     >
-                      +998 90 123 45 67
+                      +998 88 259 94 44
                     </a>
                   </div>
                 </div>
@@ -258,9 +258,8 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">{t.contact.address}</h3>
-                    <p className="text-body text-muted-foreground">
-                      Tashkent, Uzbekistan<br />
-                      Mirzo Ulugbek district
+                    <p className="text-body text-muted-foreground whitespace-pre-line">
+                      {t.contact.fullAddress}
                     </p>
                   </div>
                 </div>
@@ -283,7 +282,7 @@ export default function Contact() {
             <Card className="overflow-hidden">
               <div className="aspect-video">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d191885.50264869612!2d69.1393354625!3d41.31151310000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ae8b0cc379e9c3%3A0xa5a9323b4aa5cb98!2sTashkent%2C%20Uzbekistan!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d96471.98686399722!2d71.5969!3d41.0011!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38bb4f77096a9f79%3A0x5a42a5cb7a7c5c8a!2sNamangan%2C%20Uzbekistan!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}

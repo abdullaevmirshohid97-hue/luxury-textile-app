@@ -25,6 +25,7 @@ export function Header() {
   const navLinks = [
     { href: "/", label: t.nav.home },
     { href: "/catalog", label: t.nav.catalog },
+    { href: "/spa", label: t.nav.spa },
     { href: "/contact", label: t.nav.contact },
   ];
 

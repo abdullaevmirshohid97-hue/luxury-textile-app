@@ -8,6 +8,7 @@ import NotFound from "@/pages/not-found";
 
 import Home from "@/pages/Home";
 import Catalog from "@/pages/Catalog";
+import SpaCollection from "@/pages/SpaCollection";
 import Product from "@/pages/Product";
 import Contact from "@/pages/Contact";
 
@@ -43,6 +44,9 @@ function Router() {
       </Route>
       <Route path="/catalog">
         <PublicRoute component={Catalog} />
+      </Route>
+      <Route path="/spa">
+        <PublicRoute component={SpaCollection} />
       </Route>
       <Route path="/product/:slug">
         <PublicRoute component={Product} />

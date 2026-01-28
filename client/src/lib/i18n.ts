@@ -20,6 +20,7 @@ export const translations = {
     nav: {
       home: "Bosh sahifa",
       catalog: "Katalog",
+      spa: "Spa Kolleksiyasi",
       contact: "Aloqa",
       bathrobes: "Xalatlar",
       towels: "Sochiqlar",
@@ -91,6 +92,7 @@ export const translations = {
     nav: {
       home: "Главная",
       catalog: "Каталог",
+      spa: "Спа Коллекция",
       contact: "Контакты",
       bathrobes: "Халаты",
       towels: "Полотенца",
@@ -162,6 +164,7 @@ export const translations = {
     nav: {
       home: "Home",
       catalog: "Catalog",
+      spa: "Spa Collection",
       contact: "Contact",
       bathrobes: "Bathrobes",
       towels: "Towels",

@@ -9,12 +9,21 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Catalog from "@/pages/Catalog";
 import SpaCollection from "@/pages/SpaCollection";
+import PastelCollection from "@/pages/PastelCollection";
+import SpaHotel from "@/pages/SpaHotel";
+import BarberShop from "@/pages/BarberShop";
+import Accessories from "@/pages/Accessories";
+import BulkOrder from "@/pages/BulkOrder";
+import ExportMiddleEast from "@/pages/ExportMiddleEast";
+import ExportEurope from "@/pages/ExportEurope";
+import ExportBarberGlobal from "@/pages/ExportBarberGlobal";
 import Product from "@/pages/Product";
 import Contact from "@/pages/Contact";
 
 import AdminLogin from "@/pages/admin/Login";
 import AdminLayout from "@/pages/admin/Layout";
 import AdminDashboard from "@/pages/admin/Dashboard";
+import AdminLeads from "@/pages/admin/Leads";
 import AdminProducts from "@/pages/admin/Products";
 import AdminCategories from "@/pages/admin/Categories";
 import AdminInquiries from "@/pages/admin/Inquiries";
@@ -48,6 +57,30 @@ function Router() {
       <Route path="/spa">
         <PublicRoute component={SpaCollection} />
       </Route>
+      <Route path="/pastel">
+        <PublicRoute component={PastelCollection} />
+      </Route>
+      <Route path="/spa-hotel">
+        <PublicRoute component={SpaHotel} />
+      </Route>
+      <Route path="/barber">
+        <PublicRoute component={BarberShop} />
+      </Route>
+      <Route path="/accessories">
+        <PublicRoute component={Accessories} />
+      </Route>
+      <Route path="/bulk-order">
+        <PublicRoute component={BulkOrder} />
+      </Route>
+      <Route path="/export/middle-east">
+        <PublicRoute component={ExportMiddleEast} />
+      </Route>
+      <Route path="/export/europe">
+        <PublicRoute component={ExportEurope} />
+      </Route>
+      <Route path="/export/barber-global">
+        <PublicRoute component={ExportBarberGlobal} />
+      </Route>
       <Route path="/product/:slug">
         <PublicRoute component={Product} />
       </Route>
@@ -55,6 +88,9 @@ function Router() {
         <PublicRoute component={Contact} />
       </Route>
       <Route path="/admin/login" component={AdminLogin} />
+      <Route path="/admin/leads">
+        <AdminRoute component={AdminLeads} />
+      </Route>
       <Route path="/admin/products">
         <AdminRoute component={AdminProducts} />
       </Route>

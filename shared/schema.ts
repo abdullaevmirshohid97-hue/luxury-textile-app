@@ -28,6 +28,7 @@ export const categories = pgTable("categories", {
   descriptionRu: text("description_ru"),
   descriptionEn: text("description_en"),
   image: text("image"),
+  categoryType: text("category_type").default("b2c"),
 });
 
 export const insertCategorySchema = createInsertSchema(categories).omit({ id: true });
@@ -75,6 +76,58 @@ export const insertInquirySchema = createInsertSchema(inquiries).omit({ id: true
 export type InsertInquiry = z.infer<typeof insertInquirySchema>;
 export type Inquiry = typeof inquiries.$inferSelect;
 
+export const leads = pgTable("leads", {
+  id: serial("id").primaryKey(),
+  phone: text("phone").notNull(),
+  email: text("email"),
+  name: text("name"),
+  source: text("source").notNull(),
+  page: text("page"),
+  leadType: text("lead_type").notNull().default("b2c"),
+  language: text("language").notNull().default("en"),
+  score: integer("score").notNull().default(0),
+  status: text("status").notNull().default("new"),
+  businessType: text("business_type"),
+  productType: text("product_type"),
+  estimatedQuantity: text("estimated_quantity"),
+  message: text("message"),
+  aiSummary: text("ai_summary"),
+  country: text("country"),
+  crmId: text("crm_id"),
+  createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+});
+
+export const insertLeadSchema = createInsertSchema(leads).omit({ id: true, createdAt: true, updatedAt: true, crmId: true });
+export type InsertLead = z.infer<typeof insertLeadSchema>;
+export type Lead = typeof leads.$inferSelect;
+
+export const LeadStatus = {
+  NEW: "new",
+  QUALIFIED: "qualified",
+  CONTACTED: "contacted",
+  NEEDS_PROPOSAL: "needs_proposal",
+  OFFER_SENT: "offer_sent",
+  NEGOTIATION: "negotiation",
+  WON: "won",
+  LOST: "lost",
+} as const;
+
+export const LeadType = {
+  B2C: "b2c",
+  SPA_B2B: "spa_b2b",
+  BARBER_B2B: "barber_b2b",
+  BULK_B2B: "bulk_b2b",
+  EXPORT: "export",
+} as const;
+
+export const LeadSource = {
+  AI_CHAT: "ai_chat",
+  CONTACT_FORM: "contact_form",
+  BULK_ORDER: "bulk_order",
+  EXPORT_FORM: "export_form",
+} as const;
+
 export const siteContent = pgTable("site_content", {
   id: serial("id").primaryKey(),
   key: text("key").notNull().unique(),
@@ -117,3 +170,48 @@ export type Conversation = typeof conversations.$inferSelect;
 export type Message = typeof messages.$inferSelect;
 export type InsertConversation = z.infer<typeof insertConversationSchema>;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
+
+export interface GlobalContact {
+  phone: string;
+  whatsapp: string;
+  telegram: string;
+  email: string;
+  addressEn: string;
+  addressRu: string;
+  addressUz: string;
+}
+
+export function calculateLeadScore(lead: {
+  leadType: string;
+  language: string;
+  country?: string | null;
+  source: string;
+  message?: string | null;
+}): number {
+  let score = 30;
+
+  if (lead.leadType === LeadType.SPA_B2B) score += 30;
+  if (lead.leadType === LeadType.BARBER_B2B) score += 25;
+  if (lead.leadType === LeadType.BULK_B2B) score += 30;
+  if (lead.leadType === LeadType.EXPORT) score += 25;
+
+  if (lead.language === "en") score += 10;
+
+  if (lead.country && lead.country.toLowerCase() !== "uzbekistan" && lead.country.toLowerCase() !== "o'zbekiston") {
+    score += 20;
+  }
+
+  const msg = (lead.message || "").toLowerCase();
+  const priceOnlyPattern = /^(price|narx|цена|qancha|сколько|how much)\??$/i;
+  if (priceOnlyPattern.test(msg.trim())) {
+    score -= 20;
+  }
+
+  return Math.max(0, Math.min(100, score));
+}
+
+export function getLeadTemperature(score: number): "HOT" | "WARM" | "COLD" {
+  if (score >= 80) return "HOT";
+  if (score >= 50) return "WARM";
+  return "COLD";
+}

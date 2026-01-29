@@ -13,7 +13,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, Package, Tag, MessageSquare, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, Tag, MessageSquare, Settings, LogOut, Users } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
 interface AdminLayoutProps {
@@ -22,6 +22,7 @@ interface AdminLayoutProps {
 
 const menuItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/leads", label: "Leads", icon: Users },
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/categories", label: "Categories", icon: Tag },
   { href: "/admin/inquiries", label: "Inquiries", icon: MessageSquare },

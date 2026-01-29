@@ -1,20 +1,22 @@
 import { Link } from "wouter";
-import { useTranslations } from "@/lib/i18n";
+import { useTranslations, useLanguageStore } from "@/lib/i18n";
 import { Mail, Phone, MapPin } from "lucide-react";
-import { SiWhatsapp } from "react-icons/si";
+import { SiWhatsapp, SiTelegram } from "react-icons/si";
+import { GLOBAL_CONTACT } from "@shared/globalConfig";
 
 export function Footer() {
   const t = useTranslations();
+  const { language } = useLanguageStore();
   const currentYear = new Date().getFullYear();
 
   return (
     <footer className="border-t bg-card">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-lg font-semibold mb-4">Mary Collection</h3>
             <p className="text-body text-sm text-muted-foreground leading-relaxed">
-              {t.home.philosophyText.substring(0, 150)}...
+              {t.home.philosophyText.substring(0, 120)}...
             </p>
           </div>
 
@@ -23,19 +25,34 @@ export function Footer() {
               {t.nav.catalog}
             </h4>
             <nav className="flex flex-col gap-2">
-              <Link
-                href="/catalog?category=bathrobes"
-                className="text-body text-sm text-muted-foreground hover:text-foreground transition-colors"
-                data-testid="link-footer-bathrobes"
-              >
-                {t.nav.bathrobes}
+              <Link href="/catalog" className="text-body text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="link-footer-catalog">
+                {t.nav.catalog}
               </Link>
-              <Link
-                href="/catalog?category=towels"
-                className="text-body text-sm text-muted-foreground hover:text-foreground transition-colors"
-                data-testid="link-footer-towels"
-              >
-                {t.nav.towels}
+              <Link href="/spa" className="text-body text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="link-footer-spa">
+                {t.nav.spa}
+              </Link>
+              <Link href="/pastel" className="text-body text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="link-footer-pastel">
+                {t.nav.pastel}
+              </Link>
+              <Link href="/accessories" className="text-body text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="link-footer-accessories">
+                {t.nav.accessories}
+              </Link>
+            </nav>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-wider mb-4 text-muted-foreground">
+              B2B
+            </h4>
+            <nav className="flex flex-col gap-2">
+              <Link href="/spa-hotel" className="text-body text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="link-footer-spa-hotel">
+                {t.nav.spaHotel}
+              </Link>
+              <Link href="/barber" className="text-body text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="link-footer-barber">
+                {t.nav.barber}
+              </Link>
+              <Link href="/bulk-order" className="text-body text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="link-footer-bulk-order">
+                {t.nav.bulkOrder}
               </Link>
             </nav>
           </div>
@@ -46,23 +63,23 @@ export function Footer() {
             </h4>
             <div className="flex flex-col gap-3">
               <a
-                href="mailto:info@marycollection.com"
+                href={`mailto:${GLOBAL_CONTACT.email}`}
                 className="text-body text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
                 data-testid="link-footer-email"
               >
                 <Mail className="h-4 w-4" />
-                info@marycollection.com
+                {GLOBAL_CONTACT.email}
               </a>
               <a
-                href="tel:+998901234567"
+                href={`tel:${GLOBAL_CONTACT.phone.replace(/\s/g, "")}`}
                 className="text-body text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
                 data-testid="link-footer-phone"
               >
                 <Phone className="h-4 w-4" />
-                +998 90 123 45 67
+                {GLOBAL_CONTACT.phone}
               </a>
               <a
-                href="https://wa.me/998901234567"
+                href={GLOBAL_CONTACT.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-body text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
@@ -71,9 +88,19 @@ export function Footer() {
                 <SiWhatsapp className="h-4 w-4" />
                 WhatsApp
               </a>
+              <a
+                href={GLOBAL_CONTACT.telegram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-body text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                data-testid="link-footer-telegram"
+              >
+                <SiTelegram className="h-4 w-4" />
+                Telegram
+              </a>
               <span className="text-body text-sm text-muted-foreground flex items-center gap-2">
-                <MapPin className="h-4 w-4" />
-                Tashkent, Uzbekistan
+                <MapPin className="h-4 w-4 shrink-0" />
+                {GLOBAL_CONTACT.address[language]}
               </span>
             </div>
           </div>
@@ -81,22 +108,15 @@ export function Footer() {
 
         <div className="border-t mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-body text-xs text-muted-foreground">
-            © {currentYear} Mary Collection. {t.footer.rights}.
+            {currentYear} Mary Collection. {t.footer.rights}.
           </p>
           <div className="flex gap-4">
             <Link
-              href="/privacy"
+              href="/contact"
               className="text-body text-xs text-muted-foreground hover:text-foreground transition-colors"
-              data-testid="link-footer-privacy"
+              data-testid="link-footer-contact"
             >
-              {t.footer.privacy}
-            </Link>
-            <Link
-              href="/terms"
-              className="text-body text-xs text-muted-foreground hover:text-foreground transition-colors"
-              data-testid="link-footer-terms"
-            >
-              {t.footer.terms}
+              {t.nav.contact}
             </Link>
           </div>
         </div>

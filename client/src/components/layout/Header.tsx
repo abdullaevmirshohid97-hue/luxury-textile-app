@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslations, useLanguageStore, type Language } from "@/lib/i18n";
 import {
@@ -8,6 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 const languageNames: Record<Language, string> = {
@@ -21,13 +22,6 @@ export function Header() {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { language, setLanguage } = useLanguageStore();
-
-  const navLinks = [
-    { href: "/", label: t.nav.home },
-    { href: "/catalog", label: t.nav.catalog },
-    { href: "/spa", label: t.nav.spa },
-    { href: "/contact", label: t.nav.contact },
-  ];
 
   const isActive = (href: string) => {
     if (href === "/") return location === "/";
@@ -44,19 +38,115 @@ export function Header() {
             </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-body text-sm font-medium transition-colors hover:text-primary ${
-                  isActive(link.href) ? "text-primary" : "text-muted-foreground"
-                }`}
-                data-testid={`link-nav-${link.href.replace("/", "") || "home"}`}
-              >
-                {link.label}
-              </Link>
-            ))}
+          <nav className="hidden lg:flex items-center gap-1">
+            <Link
+              href="/"
+              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary rounded-md ${
+                isActive("/") && location === "/" ? "text-primary" : "text-muted-foreground"
+              }`}
+              data-testid="link-nav-home"
+            >
+              {t.nav.home}
+            </Link>
+
+            <Link
+              href="/catalog"
+              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary rounded-md ${
+                isActive("/catalog") ? "text-primary" : "text-muted-foreground"
+              }`}
+              data-testid="link-nav-catalog"
+            >
+              {t.nav.catalog}
+            </Link>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary gap-1" data-testid="button-collections-menu">
+                  {language === "ru" ? "Коллекции" : language === "uz" ? "Kolleksiyalar" : "Collections"}
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem asChild>
+                  <Link href="/pastel" className="w-full cursor-pointer" data-testid="link-nav-pastel">
+                    {t.nav.pastel}
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/spa" className="w-full cursor-pointer" data-testid="link-nav-spa">
+                    {t.nav.spa}
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/accessories" className="w-full cursor-pointer" data-testid="link-nav-accessories">
+                    {t.nav.accessories}
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary gap-1" data-testid="button-b2b-menu">
+                  B2B
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem asChild>
+                  <Link href="/spa-hotel" className="w-full cursor-pointer" data-testid="link-nav-spa-hotel">
+                    {t.nav.spaHotel}
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/barber" className="w-full cursor-pointer" data-testid="link-nav-barber">
+                    {t.nav.barber}
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/bulk-order" className="w-full cursor-pointer font-medium" data-testid="link-nav-bulk-order">
+                    {t.nav.bulkOrder}
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary gap-1" data-testid="button-export-menu">
+                  {t.nav.export}
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem asChild>
+                  <Link href="/export/middle-east" className="w-full cursor-pointer" data-testid="link-nav-export-me">
+                    {t.export.middleEast}
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/export/europe" className="w-full cursor-pointer" data-testid="link-nav-export-eu">
+                    {t.export.europe}
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/export/barber-global" className="w-full cursor-pointer" data-testid="link-nav-export-barber">
+                    {t.export.global}
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Link
+              href="/contact"
+              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary rounded-md ${
+                isActive("/contact") ? "text-primary" : "text-muted-foreground"
+              }`}
+              data-testid="link-nav-contact"
+            >
+              {t.nav.contact}
+            </Link>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -83,7 +173,7 @@ export function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="lg:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               data-testid="button-mobile-menu"
             >
@@ -93,21 +183,78 @@ export function Header() {
         </div>
 
         {mobileMenuOpen && (
-          <nav className="md:hidden py-4 border-t">
-            <div className="flex flex-col gap-2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`text-body px-2 py-2 text-sm font-medium transition-colors hover:text-primary rounded-md ${
-                    isActive(link.href) ? "text-primary bg-accent" : "text-muted-foreground"
-                  }`}
-                  data-testid={`link-mobile-nav-${link.href.replace("/", "") || "home"}`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+          <nav className="lg:hidden py-4 border-t">
+            <div className="flex flex-col gap-1">
+              <Link
+                href="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-3 py-2 text-sm font-medium rounded-md ${
+                  location === "/" ? "text-primary bg-accent" : "text-muted-foreground"
+                }`}
+                data-testid="link-mobile-nav-home"
+              >
+                {t.nav.home}
+              </Link>
+              <Link
+                href="/catalog"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-3 py-2 text-sm font-medium rounded-md ${
+                  isActive("/catalog") ? "text-primary bg-accent" : "text-muted-foreground"
+                }`}
+                data-testid="link-mobile-nav-catalog"
+              >
+                {t.nav.catalog}
+              </Link>
+              
+              <div className="px-3 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-2">
+                {language === "ru" ? "Коллекции" : language === "uz" ? "Kolleksiyalar" : "Collections"}
+              </div>
+              <Link href="/pastel" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary" data-testid="link-mobile-nav-pastel">
+                {t.nav.pastel}
+              </Link>
+              <Link href="/spa" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary" data-testid="link-mobile-nav-spa">
+                {t.nav.spa}
+              </Link>
+              <Link href="/accessories" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary" data-testid="link-mobile-nav-accessories">
+                {t.nav.accessories}
+              </Link>
+
+              <div className="px-3 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-2">
+                B2B
+              </div>
+              <Link href="/spa-hotel" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary" data-testid="link-mobile-nav-spa-hotel">
+                {t.nav.spaHotel}
+              </Link>
+              <Link href="/barber" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary" data-testid="link-mobile-nav-barber">
+                {t.nav.barber}
+              </Link>
+              <Link href="/bulk-order" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm font-medium text-primary" data-testid="link-mobile-nav-bulk-order">
+                {t.nav.bulkOrder}
+              </Link>
+
+              <div className="px-3 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-2">
+                {t.nav.export}
+              </div>
+              <Link href="/export/middle-east" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary" data-testid="link-mobile-nav-export-me">
+                {t.export.middleEast}
+              </Link>
+              <Link href="/export/europe" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary" data-testid="link-mobile-nav-export-eu">
+                {t.export.europe}
+              </Link>
+              <Link href="/export/barber-global" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary" data-testid="link-mobile-nav-export-barber">
+                {t.export.global}
+              </Link>
+
+              <Link
+                href="/contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-3 py-2 text-sm font-medium rounded-md mt-2 ${
+                  isActive("/contact") ? "text-primary bg-accent" : "text-muted-foreground"
+                }`}
+                data-testid="link-mobile-nav-contact"
+              >
+                {t.nav.contact}
+              </Link>
             </div>
           </nav>
         )}

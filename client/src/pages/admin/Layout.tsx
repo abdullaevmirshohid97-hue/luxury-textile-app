@@ -13,7 +13,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, Package, Tag, MessageSquare, Settings, LogOut, Users } from "lucide-react";
+import { LayoutDashboard, BarChart3, Package, Tag, MessageSquare, Settings, LogOut, Users } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useTranslations } from "@/lib/i18n";
 
@@ -27,6 +27,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const menuItems = [
     { href: "/admin", label: t.admin.dashboard, icon: LayoutDashboard },
+    { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
     { href: "/admin/leads", label: t.admin.leads, icon: Users },
     { href: "/admin/products", label: t.admin.products, icon: Package },
     { href: "/admin/categories", label: t.admin.categories, icon: Tag },

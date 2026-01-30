@@ -27,7 +27,7 @@ import AdminLeads from "@/pages/admin/Leads";
 import AdminProducts from "@/pages/admin/Products";
 import AdminCategories from "@/pages/admin/Categories";
 import AdminInquiries from "@/pages/admin/Inquiries";
-import AdminSettings from "@/pages/admin/Settings";
+import AdminAnalytics from "@/pages/admin/Analytics";
 
 function AdminRoute({ component: Component }: { component: React.ComponentType }) {
   return (
@@ -102,6 +102,9 @@ function Router() {
       </Route>
       <Route path="/admin/settings">
         <AdminRoute component={AdminSettings} />
+      </Route>
+      <Route path="/admin/analytics">
+        <AdminRoute component={AdminAnalytics} />
       </Route>
       <Route path="/admin">
         <AdminRoute component={AdminDashboard} />

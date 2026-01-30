@@ -51,7 +51,11 @@ export function ChatWidget() {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage, language }),
+        body: JSON.stringify({ 
+          message: userMessage, 
+          language,
+          history: messages 
+        }),
       });
 
       if (!response.ok) throw new Error("Failed to send message");
@@ -77,11 +81,15 @@ export function ChatWidget() {
               const data = JSON.parse(line.slice(6));
               if (data.content) {
                 assistantMessage += data.content;
+                
+                // Hide the lead data tag from the UI
+                const displayContent = assistantMessage.replace(/:::LEAD_DATA\{.*?\}:::/, "");
+                
                 setMessages((prev) => {
                   const newMessages = [...prev];
                   newMessages[newMessages.length - 1] = {
                     role: "assistant",
-                    content: assistantMessage,
+                    content: displayContent,
                   };
                   return newMessages;
                 });

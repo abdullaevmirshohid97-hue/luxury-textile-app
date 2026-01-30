@@ -239,7 +239,7 @@ export async function registerRoutes(
 
   app.post("/api/chat", async (req: Request, res: Response) => {
     try {
-      const { message, language = "en" } = req.body;
+      const { message, language = "en", history = [] } = req.body;
 
       const aiSetting = await storage.getSettingByKey("ai_assistant_enabled");
       if (aiSetting?.value !== "true") {
@@ -249,7 +249,7 @@ export async function registerRoutes(
       const products = await storage.getProducts();
       const categories = await storage.getCategories();
 
-      const productInfo = products.slice(0, 10).map((p) => ({
+      const productInfo = products.slice(0, 15).map((p) => ({
         name: language === "ru" ? p.nameRu : language === "uz" ? p.nameUz : p.nameEn,
         category: categories.find((c) => c.id === p.categoryId)?.[`name${language.charAt(0).toUpperCase() + language.slice(1)}` as keyof typeof categories[0]],
       }));
@@ -261,81 +261,81 @@ export async function registerRoutes(
       const contactInfo = `Phone/WhatsApp/Telegram: ${GLOBAL_CONTACT.phone}, Email: ${GLOBAL_CONTACT.email}`;
       const addressInfo = language === "ru" ? GLOBAL_CONTACT.address.ru : language === "uz" ? GLOBAL_CONTACT.address.uz : GLOBAL_CONTACT.address.en;
 
-      const systemPrompt = language === "ru" 
-        ? `Вы - профессиональный менеджер по продажам Mary Collection, премиального бренда домашнего текстиля из Узбекистана.
+      const systemPrompt = `You are a calm, elite luxury textile consultant for Mary Collection (Uzbekistan). 
+Your goal is to guide B2B clients through a qualification process while maintaining a "quiet luxury" brand voice.
 
-СТРОГИЕ ПРАВИЛА:
-1. НИКОГДА не называйте цены, скидки или сроки доставки - всегда направляйте к менеджеру для получения индивидуального предложения
-2. Отвечайте КОРОТКО и ТОЧНО (максимум 2-3 предложения)
-3. При вопросах о ценах говорите: "Для получения индивидуального предложения свяжитесь с нами: ${contactInfo}"
-4. ВСЕГДА давайте контактную информацию когда просят: ${contactInfo}
-5. Адрес: ${addressInfo}
+TONE: Professional, sophisticated, helpful, and never pushy. Use "we" instead of "I".
 
-КАТЕГОРИИ: ${categoryList}
+GUIDED FLOW:
+1. Identify User Type: Hotel, Spa, Retailer, or Private Label.
+2. Product Interest: Understand what specific textiles they need (Bathrobes, Towels, etc.).
+3. Order Volume: Discreetly ask about the scale of their project.
 
-НАПРАВЛЕНИЯ:
-- Спа/Отели → раздел "Spa & Hotel" (B2B)
-- Барбершопы → раздел "Barber Shop" (B2B)
-- Подарки → раздел "Pastel Collection"
-- Оптовые заказы → страница "Bulk Order"
+CRITICAL INSTRUCTIONS:
+- If lead info (business type, product, volume) is identified, output a JSON object at the END of your response (hidden from user but parsed by system) like: :::LEAD_DATA{"businessType": "...", "productType": "...", "estimatedQuantity": "..."}:::
+- ALWAYS guide the conversation toward a formal inquiry or direct contact with our export manager.
+- If they ask for prices, explain that we provide bespoke quotes based on volume and specifications.
+- Keep responses concise (max 3-4 sentences).
 
-Будьте вежливы и профессиональны. Отвечайте на русском.`
-        : language === "uz" 
-        ? `Siz Mary Collection - O'zbekistondan premium uy tekstil brendining professional savdo menejersiz.
+CONTEXT:
+Categories: ${categoryList}
+Address: ${addressInfo}
+Contact: ${contactInfo}
 
-QATIY QOIDALAR:
-1. HECH QACHON narx, chegirma yoki yetkazib berish muddatlarini aytmang - har doim individual taklif olish uchun menejerga yo'naltiring
-2. QISQA va ANIQ javob bering (maksimum 2-3 gap)
-3. Narx haqida savollarda ayting: "Individual taklif olish uchun biz bilan bog'laning: ${contactInfo}"
-4. Kontakt ma'lumotlarini so'rashganda DOIM bering: ${contactInfo}
-5. Manzil: ${addressInfo}
-
-KATEGORIYALAR: ${categoryList}
-
-YO'NALISHLAR:
-- Spa/Mehmonxonalar → "Spa & Hotel" bo'limi (B2B)
-- Sartaroshxonalar → "Barber Shop" bo'limi (B2B)
-- Sovg'alar → "Pastel Collection" bo'limi
-- Ulgurji buyurtmalar → "Bulk Order" sahifasi
-
-Xushmuomala va professional bo'ling. O'zbek tilida javob bering.`
-        : `You are a professional sales manager for Mary Collection, a premium home textile brand from Uzbekistan.
-
-STRICT RULES:
-1. NEVER give prices, discounts, or delivery timelines - always direct to manager for custom quote
-2. Answer SHORT and ACCURATE (maximum 2-3 sentences)
-3. For price questions say: "For a custom quote, please contact us: ${contactInfo}"
-4. ALWAYS provide contact info when asked: ${contactInfo}
-5. Address: ${addressInfo}
-
-CATEGORIES: ${categoryList}
-
-ROUTING:
-- Spa/Hotels → "Spa & Hotel" section (B2B)
-- Barber shops → "Barber Shop" section (B2B)
-- Gifts → "Pastel Collection" section
-- Bulk orders → "Bulk Order" page
-
-Be polite and professional. Respond in English.`;
+Respond in the user's language (${language}).`;
 
       res.setHeader("Content-Type", "text/event-stream");
       res.setHeader("Cache-Control", "no-cache");
       res.setHeader("Connection", "keep-alive");
 
+      const messages = [
+        { role: "system", content: systemPrompt },
+        ...history.map((h: any) => ({ role: h.role, content: h.content })),
+        { role: "user", content: message },
+      ];
+
       const stream = await openai.chat.completions.create({
         model: "gpt-4o-mini",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: message },
-        ],
+        messages,
         stream: true,
-        max_completion_tokens: 300,
+        max_completion_tokens: 500,
       });
 
+      let fullResponse = "";
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content || "";
         if (content) {
+          fullResponse += content;
           res.write(`data: ${JSON.stringify({ content })}\n\n`);
+        }
+      }
+
+      // Extract and save lead data if present
+      const leadDataMatch = fullResponse.match(/:::LEAD_DATA(\{.*?\}):::/);
+      if (leadDataMatch) {
+        try {
+          const leadData = JSON.parse(leadDataMatch[1]);
+          // Capture current language for the lead
+          leadData.language = language;
+          leadData.source = "ai_chat";
+          
+          // Try to find if user provided a phone in the history or current message
+          const allContent = [...history.map((h: any) => h.content), message].join(" ");
+          const phoneMatch = allContent.match(/(\+?\d[\d\s-]{8,})/);
+          if (phoneMatch) {
+            leadData.phone = phoneMatch[0].replace(/\s/g, "");
+            
+            // If we have a phone, we can create a formal lead record
+            await storage.createLead({
+              ...leadData,
+              phone: leadData.phone,
+              source: LeadSource.AI_CHAT,
+              leadType: LeadType.B2B_INQUIRY,
+            });
+            console.log("Structured lead created from chat:", leadData);
+          }
+        } catch (e) {
+          console.error("Failed to parse or save lead data:", e);
         }
       }
 

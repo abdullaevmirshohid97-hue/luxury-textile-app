@@ -202,6 +202,15 @@ export async function registerRoutes(
     })
   );
 
+  // Global error handler for session issues and security
+  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    if (err.name === 'UnauthorizedError') {
+      logRequest(req, 'warn', 'Unauthorized session');
+      return res.status(401).json({ error: "Invalid session, please login again" });
+    }
+    next(err);
+  });
+
   // Privacy-respecting analytics middleware
   app.use(async (req, res, next) => {
     // Only track GET requests for pages and products
@@ -601,11 +610,13 @@ Respond in the user's language (${language}).`;
     
     // Require authenticated session
     if (!req.session?.isAdmin) {
+      logRequest(req, 'warn', 'Unauthorized access attempt to admin API');
       return res.status(401).json({ error: "Authentication required" });
     }
     
     // Enforce admin role for all protected routes
     if (req.session?.userRole !== "admin") {
+      logRequest(req, 'warn', `Forbidden access attempt by ${req.session.username}`);
       return res.status(403).json({ error: "Admin role required" });
     }
     

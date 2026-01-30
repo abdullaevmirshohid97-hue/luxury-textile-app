@@ -92,6 +92,12 @@ uploads/             # Product image uploads directory
 - Temperature badges (HOT/WARM/COLD), units (pcs), and placeholders translated
 - Reuses existing i18n system from `client/src/lib/i18n.ts`
 
+## Analytics-Driven Features
+- **Trending Products**: Home page shows products trending based on click analytics (last 7 days)
+- **AI Context**: Chat assistant receives trending product info to make natural recommendations
+- **Fallback**: If no analytics data, falls back to featured products
+- **API Endpoint**: `GET /api/products/trending?limit=6` (public)
+
 ## Legal Pages
 - Privacy Policy: `/privacy` (multilingual uz/ru/en)
 - Terms of Use: `/terms` (multilingual uz/ru/en)

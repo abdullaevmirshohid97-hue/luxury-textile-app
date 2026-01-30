@@ -252,6 +252,31 @@ export async function registerRoutes(
     }
   });
 
+  // Trending products based on analytics (public)
+  app.get("/api/products/trending", async (req: Request, res: Response) => {
+    try {
+      const limit = Math.min(parseInt(req.query.limit as string) || 6, 12);
+      const trendingIds = await storage.getTrendingProductIds(limit);
+      
+      if (trendingIds.length === 0) {
+        // Fallback: return featured products if no trending data
+        const products = await storage.getProducts();
+        const featured = products.filter(p => p.isFeatured).slice(0, limit);
+        return res.json(featured.length > 0 ? featured : products.slice(0, limit));
+      }
+      
+      // Get full product details for trending IDs
+      const products = await storage.getProducts();
+      const trending = trendingIds
+        .map(id => products.find(p => p.id === id))
+        .filter(Boolean);
+      
+      res.json(trending);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch trending products" });
+    }
+  });
+
   app.get("/api/products/:slug", async (req: Request, res: Response) => {
     try {
       const product = await storage.getProductBySlug(parseSlug(req.params.slug));
@@ -400,6 +425,13 @@ export async function registerRoutes(
 
       const products = await storage.getProducts();
       const categories = await storage.getCategories();
+      
+      // Get trending products for AI context
+      const trendingIds = await storage.getTrendingProductIds(5);
+      const trendingProducts = trendingIds
+        .map(id => products.find(p => p.id === id))
+        .filter(Boolean)
+        .map(p => language === "ru" ? p!.nameRu : language === "uz" ? p!.nameUz : p!.nameEn);
 
       const productInfo = products.slice(0, 15).map((p) => ({
         name: language === "ru" ? p.nameRu : language === "uz" ? p.nameUz : p.nameEn,
@@ -412,6 +444,11 @@ export async function registerRoutes(
 
       const contactInfo = `Phone/WhatsApp/Telegram: ${GLOBAL_CONTACT.phone}, Email: ${GLOBAL_CONTACT.email}`;
       const addressInfo = language === "ru" ? GLOBAL_CONTACT.address.ru : language === "uz" ? GLOBAL_CONTACT.address.uz : GLOBAL_CONTACT.address.en;
+      
+      // Trending products context for AI
+      const trendingContext = trendingProducts.length > 0 
+        ? `\nTRENDING PRODUCTS (popular this week): ${trendingProducts.join(", ")}. Mention these naturally when relevant.`
+        : "";
 
       // 2. Hardened System Prompt with Security Guardrails
       const systemPrompt = `You are a calm, elite luxury textile consultant for Mary Collection (Uzbekistan). 
@@ -437,7 +474,7 @@ CRITICAL INSTRUCTIONS:
 - Keep responses concise (max 3-4 sentences).
 
 CONTEXT:
-Categories: ${categoryList}
+Categories: ${categoryList}${trendingContext}
 Address: ${addressInfo}
 Contact: ${contactInfo}
 

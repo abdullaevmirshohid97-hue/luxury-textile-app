@@ -23,6 +23,29 @@ export class DatabaseStorage implements IStorage {
     await db.insert(analytics).values(data);
   }
 
+  async getTrendingProductIds(limit: number = 6): Promise<number[]> {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 7); // Last 7 days
+
+    const productClicks = await db.select({
+      productId: analytics.productId,
+      count: sql<number>`count(*)`,
+    })
+    .from(analytics)
+    .where(and(
+      eq(analytics.type, 'product_click'),
+      gte(analytics.createdAt, startDate),
+      sql`${analytics.productId} IS NOT NULL`
+    ))
+    .groupBy(analytics.productId)
+    .orderBy(desc(sql`count(*)`))
+    .limit(limit);
+
+    return productClicks
+      .filter(pc => pc.productId !== null)
+      .map(pc => pc.productId as number);
+  }
+
   async getAnalyticsStats(timeframe: 'day' | 'week' | 'month' = 'day') {
     const now = new Date();
     let startDate = new Date();

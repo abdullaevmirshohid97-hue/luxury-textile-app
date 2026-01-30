@@ -15,6 +15,7 @@ export interface IStorage {
   // Analytics
   trackAnalytics(data: InsertAnalytics): Promise<void>;
   getAnalyticsStats(timeframe: 'day' | 'week' | 'month'): Promise<any>;
+  getTrendingProductIds(limit?: number): Promise<number[]>;
 
   // Users
   getUser(id: string): Promise<User | undefined>;
@@ -99,6 +100,25 @@ export class MemStorage implements IStorage {
 
   async trackAnalytics(data: InsertAnalytics): Promise<void> {
     this.analytics.push({ ...data, createdAt: new Date(), id: this.analytics.length + 1 });
+  }
+
+  async getTrendingProductIds(limit: number = 6): Promise<number[]> {
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    
+    const clicks = this.analytics.filter(
+      a => a.type === 'product_click' && a.productId && a.createdAt >= weekAgo
+    );
+    
+    const countMap = new Map<number, number>();
+    clicks.forEach(c => {
+      countMap.set(c.productId, (countMap.get(c.productId) || 0) + 1);
+    });
+    
+    return Array.from(countMap.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, limit)
+      .map(([id]) => id);
   }
 
   async getAnalyticsStats(timeframe: 'day' | 'week' | 'month'): Promise<any> {

@@ -1,10 +1,12 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useTranslations } from "@/lib/i18n";
-import { Sparkles, Leaf, Award, Heart, Mail, Phone, MapPin, Building2, Waves, ShoppingBag, Globe2, ShieldCheck, Factory } from "lucide-react";
+import { useTranslations, useLanguageStore } from "@/lib/i18n";
+import { Sparkles, Leaf, Award, Heart, Mail, Phone, MapPin, Building2, Waves, ShoppingBag, Globe2, ShieldCheck, Factory, TrendingUp } from "lucide-react";
 import { SiWhatsapp, SiTelegram } from "react-icons/si";
+import type { Product } from "@shared/schema";
 
 import heroLifestyle from "@/assets/images/hero-lifestyle.jpg";
 import heroBathrobe from "@/assets/images/hero-bathrobe.jpg";
@@ -27,6 +29,18 @@ const stagger = {
 
 export default function Home() {
   const t = useTranslations();
+  const language = useLanguageStore(state => state.language);
+
+  // Fetch trending products based on analytics
+  const { data: trendingProducts = [] } = useQuery<Product[]>({
+    queryKey: ['/api/products/trending', { limit: 4 }],
+  });
+
+  const getLocalizedName = (product: Product) => {
+    if (language === 'uz') return product.nameUz;
+    if (language === 'ru') return product.nameRu;
+    return product.nameEn;
+  };
 
   const features = [
     {
@@ -238,8 +252,79 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Trending Products Section */}
+      {trendingProducts.length > 0 && (
+        <section className="py-24 lg:py-32 bg-[#F9F7F5]">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <div className="inline-flex items-center gap-2 mb-4">
+                <TrendingUp className="w-4 h-4 text-primary/60" />
+                <span className="text-xs uppercase tracking-[0.3em] text-primary/60 font-medium">{t.home.trendingSubtitle}</span>
+              </div>
+              <h2 className="text-4xl sm:text-5xl font-semibold mb-6" data-testid="text-trending-title">
+                {t.home.trendingTitle}
+              </h2>
+              <div className="w-24 h-px bg-primary/20 mx-auto" />
+            </motion.div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {trendingProducts.slice(0, 4).map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Link href={`/product/${product.slug}`} data-testid={`link-trending-product-${product.id}`}>
+                    <div className="group cursor-pointer" data-testid={`card-trending-product-${product.id}`}>
+                      <div className="aspect-square overflow-hidden mb-4 bg-muted relative">
+                        {product.images ? (
+                          <img
+                            src={typeof product.images === 'string' ? product.images : (product.images as string[])[0]}
+                            alt={getLocalizedName(product)}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                            <ShoppingBag className="w-12 h-12 opacity-20" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors" />
+                      </div>
+                      <h3 className="text-sm font-medium tracking-wide mb-1 group-hover:text-primary transition-colors">
+                        {getLocalizedName(product)}
+                      </h3>
+                      <p className="text-xs text-muted-foreground uppercase tracking-wider">{t.home.viewDetails}</p>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-center mt-12"
+            >
+              <Link href="/catalog">
+                <Button variant="outline" className="rounded-none uppercase tracking-widest text-xs" data-testid="button-view-all-trending">
+                  {t.home.viewAllProducts}
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
       {/* Professional Use Cases */}
-      <section className="py-24 lg:py-32 bg-[#F9F7F5]">
+      <section className="py-24 lg:py-32 bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

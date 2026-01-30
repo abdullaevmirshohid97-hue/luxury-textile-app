@@ -56,6 +56,10 @@ export const translations = {
       b2bSection: "B2B Hamkorlik",
       b2bDesc: "Mehmonxonalar, spa markazlari va sartaroshxonalar uchun professional tekstil yechimlari",
       forBusiness: "Biznes uchun",
+      trendingTitle: "Mashhur Mahsulotlar",
+      trendingSubtitle: "Bu hafta mashhur",
+      viewDetails: "Batafsil ko'rish",
+      viewAllProducts: "Barcha mahsulotlarni ko'rish",
     },
     pastel: {
       title: "Pastel Kolleksiyasi",
@@ -343,6 +347,10 @@ export const translations = {
       b2bSection: "B2B Партнёрство",
       b2bDesc: "Профессиональные текстильные решения для отелей, спа-центров и барбершопов",
       forBusiness: "Для бизнеса",
+      trendingTitle: "Популярные товары",
+      trendingSubtitle: "Популярно на этой неделе",
+      viewDetails: "Подробнее",
+      viewAllProducts: "Смотреть все товары",
     },
     pastel: {
       title: "Пастельная Коллекция",
@@ -630,6 +638,10 @@ export const translations = {
       b2bSection: "B2B Partnership",
       b2bDesc: "Professional textile solutions for hotels, spas, and barber shops",
       forBusiness: "For Business",
+      trendingTitle: "Trending Products",
+      trendingSubtitle: "Popular This Week",
+      viewDetails: "View Details",
+      viewAllProducts: "View All Products",
     },
     pastel: {
       title: "Pastel Collection",

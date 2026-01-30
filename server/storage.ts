@@ -6,11 +6,17 @@ import type {
   SiteContent, InsertSiteContent,
   Settings, InsertSettings,
   Lead, InsertLead,
+  Analytics, InsertAnalytics,
 } from "@shared/schema";
 import { calculateLeadScore } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
+  // Analytics
+  trackAnalytics(data: InsertAnalytics): Promise<void>;
+  getAnalyticsStats(timeframe: 'day' | 'week' | 'month'): Promise<any>;
+
+  // Users
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
@@ -20,6 +26,7 @@ export interface IStorage {
   updateUserCredentials(id: string, username: string, password: string): Promise<User | undefined>;
   verifyPassword(user: User, password: string): Promise<boolean>;
 
+  // Categories
   getCategories(): Promise<Category[]>;
   getCategory(id: number): Promise<Category | undefined>;
   getCategoryBySlug(slug: string): Promise<Category | undefined>;
@@ -27,6 +34,7 @@ export interface IStorage {
   updateCategory(id: number, category: Partial<InsertCategory>): Promise<Category | undefined>;
   deleteCategory(id: number): Promise<void>;
 
+  // Products
   getProducts(): Promise<Product[]>;
   getProduct(id: number): Promise<Product | undefined>;
   getProductBySlug(slug: string): Promise<Product | undefined>;
@@ -35,12 +43,14 @@ export interface IStorage {
   updateProduct(id: number, product: Partial<InsertProduct>): Promise<Product | undefined>;
   deleteProduct(id: number): Promise<void>;
 
+  // Inquiries
   getInquiries(): Promise<Inquiry[]>;
   getInquiry(id: number): Promise<Inquiry | undefined>;
   createInquiry(inquiry: InsertInquiry): Promise<Inquiry>;
   updateInquiryStatus(id: number, status: string): Promise<Inquiry | undefined>;
   deleteInquiry(id: number): Promise<void>;
 
+  // Leads
   getLeads(): Promise<Lead[]>;
   getLead(id: number): Promise<Lead | undefined>;
   createLead(lead: InsertLead): Promise<Lead>;
@@ -48,10 +58,12 @@ export interface IStorage {
   updateLeadStatus(id: number, status: string): Promise<Lead | undefined>;
   deleteLead(id: number): Promise<void>;
 
+  // Site Content
   getSiteContent(): Promise<SiteContent[]>;
   getSiteContentByKey(key: string): Promise<SiteContent | undefined>;
   upsertSiteContent(content: InsertSiteContent): Promise<SiteContent>;
 
+  // Settings
   getSettings(): Promise<Settings[]>;
   getSettingByKey(key: string): Promise<Settings | undefined>;
   upsertSetting(key: string, value: string): Promise<Settings>;
@@ -65,6 +77,7 @@ export class MemStorage implements IStorage {
   private leads: Map<number, Lead>;
   private siteContent: Map<string, SiteContent>;
   private settings: Map<string, Settings>;
+  private analytics: any[] = [];
   private nextCategoryId = 1;
   private nextProductId = 1;
   private nextInquiryId = 1;
@@ -82,6 +95,32 @@ export class MemStorage implements IStorage {
     this.settings = new Map();
 
     this.initializeDefaultData();
+  }
+
+  async trackAnalytics(data: InsertAnalytics): Promise<void> {
+    this.analytics.push({ ...data, createdAt: new Date(), id: this.analytics.length + 1 });
+  }
+
+  async getAnalyticsStats(timeframe: 'day' | 'week' | 'month'): Promise<any> {
+    const now = new Date();
+    let startDate = new Date();
+    if (timeframe === 'day') startDate.setDate(now.getDate() - 1);
+    else if (timeframe === 'week') startDate.setDate(now.getDate() - 7);
+    else if (timeframe === 'month') startDate.setMonth(now.getMonth() - 1);
+
+    const filtered = this.analytics.filter(a => a.createdAt >= startDate);
+    
+    const overview = Array.from(new Set(filtered.map(a => a.type))).map(type => ({
+      type,
+      count: filtered.filter(a => a.type === type).length
+    }));
+
+    const pages = Array.from(new Set(filtered.filter(a => a.type === 'page_view').map(a => a.page))).map(page => ({
+      page,
+      count: filtered.filter(a => a.type === 'page_view' && a.page === page).length
+    }));
+
+    return { overview, pages, products: [] };
   }
 
   private initializeDefaultData() {
@@ -175,7 +214,7 @@ export class MemStorage implements IStorage {
     }
 
     const defaultProducts: Omit<Product, "id">[] = [
-      { categoryId: 1, slug: "classic-bathrobe", nameEn: "Classic Cotton Bathrobe", nameRu: "Классический хлопковый халат", nameUz: "Klassik paxta xalat", descriptionEn: "Luxurious cotton bathrobe in cream color", descriptionRu: "Роскошный хлопковый халат кремового цвета", descriptionUz: "Krem rangidagi hashamatli paxta xalat", materialEn: "100% Premium Egyptian Cotton", materialRu: "100% Премиальный египетский хлопок", materialUz: "100% Premium Misr paxtasi", careEn: "Machine wash cold, tumble dry low", careRu: "Машинная стирка в холодной воде", careUz: "Sovuq suvda yuvish", sizes: "S,M,L,XL", colors: "Cream,Beige,White", images: "bathrobe-1", featured: true },
+      { categoryId: 1, slug: "classic-bathrobe", nameEn: "Classic Cotton Bathrobe", nameRu: "Классический хлопковый халат", nameUz: "Klassik paxta xalat", descriptionEn: "Luxurious cotton bathrobe in cream color", descriptionRu: "Роскошный хлопковый халат кремового цвета", descriptionUz: "Krem rangidagi hashamatli paxta xalat", materialEn: "100% Premium Egyptian Cotton", materialRu: "100% Премиальный егитекский хлопок", materialUz: "100% Premium Misr paxtasi", careEn: "Machine wash cold, tumble dry low", careRu: "Машинная стирка в холодной воде", careUz: "Sovuq suvda yuvish", sizes: "S,M,L,XL", colors: "Cream,Beige,White", images: "bathrobe-1", featured: true },
       { categoryId: 1, slug: "spa-bathrobe", nameEn: "Spa Luxury Bathrobe", nameRu: "Спа-халат люкс", nameUz: "Spa hashamat xalati", descriptionEn: "Premium spa bathrobe in soft pastel tones", descriptionRu: "Премиальный спа-халат в мягких пастельных тонах", descriptionUz: "Yumshoq pastel ranglardagi premium spa xalati", materialEn: "100% Organic Cotton", materialRu: "100% Органический хлопок", materialUz: "100% Organik paxta", careEn: "Machine wash cold", careRu: "Машинная стирка в холодной воде", careUz: "Sovuq suvda yuvish", sizes: "S,M,L,XL,XXL", colors: "Light Pink,Mint,Lavender", images: "bathrobe-2", featured: true },
       { categoryId: 1, slug: "velour-bathrobe", nameEn: "Velour Touch Bathrobe", nameRu: "Велюровый халат", nameUz: "Velur xalat", descriptionEn: "Ultra-soft velour bathrobe", descriptionRu: "Ультрамягкий велюровый халат", descriptionUz: "O'ta yumshoq velur xalat", materialEn: "Cotton Velour Blend", materialRu: "Хлопковый велюр", materialUz: "Paxta velur aralashmasi", careEn: "Gentle cycle, hang dry", careRu: "Деликатная стирка", careUz: "Nozik yuvish", sizes: "M,L,XL", colors: "Taupe,Gray,Ivory", images: "bathrobe-3", featured: false },
       { categoryId: 2, slug: "bath-towel-set", nameEn: "Premium Bath Towel Set", nameRu: "Премиум набор банных полотенец", nameUz: "Premium hammom sochiq to'plami", descriptionEn: "Set of luxurious bath towels", descriptionRu: "Набор роскошных банных полотенец", descriptionUz: "Hashamatli hammom sochiqlari to'plami", materialEn: "100% Long-Staple Cotton", materialRu: "100% Длинноволокнистый хлопок", materialUz: "100% Uzun tolali paxta", careEn: "Machine wash warm", careRu: "Машинная стирка в теплой воде", careUz: "Iliq suvda yuvish", sizes: "Standard,Large", colors: "White,Cream,Sand", images: "towel-1", featured: true },
@@ -493,7 +532,7 @@ export class MemStorage implements IStorage {
   async upsertSetting(key: string, value: string): Promise<Settings> {
     const existing = this.settings.get(key);
     if (existing) {
-      const updated = { ...existing, value };
+      const updated: Settings = { ...existing, value };
       this.settings.set(key, updated);
       return updated;
     }

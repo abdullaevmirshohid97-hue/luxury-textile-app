@@ -171,6 +171,22 @@ export type Message = typeof messages.$inferSelect;
 export type InsertConversation = z.infer<typeof insertConversationSchema>;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
 
+export const analytics = pgTable("analytics", {
+  id: serial("id").primaryKey(),
+  type: text("type").notNull(), // 'page_view', 'product_click', 'chat_usage', 'visitor'
+  page: text("page"),
+  productId: integer("product_id"),
+  sessionId: text("session_id"),
+  ipHash: text("ip_hash"),
+  userAgent: text("user_agent"),
+  metadata: text("metadata"), // JSON string for extra info
+  createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+});
+
+export const insertAnalyticsSchema = createInsertSchema(analytics).omit({ id: true, createdAt: true });
+export type Analytics = typeof analytics.$inferSelect;
+export type InsertAnalytics = z.infer<typeof insertAnalyticsSchema>;
+
 export interface GlobalContact {
   phone: string;
   whatsapp: string;

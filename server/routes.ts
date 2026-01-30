@@ -10,6 +10,7 @@ import OpenAI from "openai";
 import rateLimit from "express-rate-limit";
 import { dbStorage, initializeDatabase } from "./dbStorage";
 import { pool } from "./db";
+import crypto from "crypto";
 import { GLOBAL_CONTACT, BRAND } from "@shared/globalConfig";
 import { LeadType, LeadSource, getLeadTemperature } from "@shared/schema";
 
@@ -110,7 +111,7 @@ export async function registerRoutes(
     session({
       secret: process.env.SESSION_SECRET || "mary-collection-secret-key",
       resave: false,
-      saveUninitialized: false,
+      saveUninitialized: true, // Changed to true to track non-admin visitors
       store: new PgStore({
         pool,
         tableName: "session",
@@ -123,6 +124,30 @@ export async function registerRoutes(
       },
     })
   );
+
+  // Privacy-respecting analytics middleware
+  app.use(async (req, res, next) => {
+    // Only track GET requests for pages and products
+    if (req.method !== 'GET') return next();
+    
+    // Ignore internal API calls and static assets
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads') || req.path.includes('.')) return next();
+
+    const ipHash = crypto.createHash('sha256').update(req.ip || 'unknown').digest('hex').substring(0, 12);
+    const userAgent = req.headers['user-agent'] || 'unknown';
+    const sessionId = req.sessionID;
+
+    // Async tracking to not block response
+    storage.trackAnalytics({
+      type: 'page_view',
+      page: req.path,
+      sessionId,
+      ipHash,
+      userAgent,
+    }).catch(err => console.error('Analytics error:', err));
+
+    next();
+  });
 
   app.get("/api/config/contact", async (req: Request, res: Response) => {
     res.json(GLOBAL_CONTACT);
@@ -176,6 +201,13 @@ export async function registerRoutes(
         productId: productId || null,
       });
       res.status(201).json(inquiry);
+
+      // Track inquiry
+      storage.trackAnalytics({
+        type: 'inquiry',
+        metadata: JSON.stringify({ source: 'contact_form', productId: productId || null }),
+        sessionId: req.sessionID,
+      }).catch(err => console.error('Analytics error:', err));
     } catch (error) {
       res.status(500).json({ error: "Failed to create inquiry" });
     }
@@ -371,6 +403,19 @@ Respond in the user's language (${language}).`;
               leadType: LeadType.BULK_B2B,
             });
             console.log("Structured lead created from chat:", leadData);
+            
+            // Track chat conversion
+            storage.trackAnalytics({
+              type: 'chat_conversion',
+              metadata: JSON.stringify(leadData),
+              sessionId: req.sessionID,
+            }).catch(err => console.error('Analytics error:', err));
+          } else {
+            // Track general chat usage
+            storage.trackAnalytics({
+              type: 'chat_usage',
+              sessionId: req.sessionID,
+            }).catch(err => console.error('Analytics error:', err));
           }
         } catch (e) {
           console.error("Failed to parse or save lead data:", e);
@@ -450,6 +495,17 @@ Respond in the user's language (${language}).`;
       authenticated: !!req.session?.isAdmin,
       role: req.session?.userRole || null,
     });
+  });
+
+  // Admin Analytics Endpoint
+  app.get("/api/admin/analytics", requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const timeframe = (req.query.timeframe as 'day' | 'week' | 'month') || 'day';
+      const stats = await storage.getAnalyticsStats(timeframe);
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch analytics" });
+    }
   });
 
   app.get("/api/admin/stats", requireAdmin, async (req: Request, res: Response) => {

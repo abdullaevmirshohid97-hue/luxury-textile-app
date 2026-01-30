@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
 import { db } from "./db";
 import {
-  users, categories, products, inquiries, leads, siteContent, settings,
+  users, categories, products, inquiries, leads, siteContent, settings, analytics,
   type User, type InsertUser,
   type Category, type InsertCategory,
   type Product, type InsertProduct,
@@ -10,13 +10,59 @@ import {
   type Lead, type InsertLead,
   type SiteContent, type InsertSiteContent,
   type Settings, type InsertSettings,
+  type Analytics, type InsertAnalytics,
   calculateLeadScore,
 } from "@shared/schema";
+import { sql, and, gte, desc } from "drizzle-orm";
 import type { IStorage } from "./storage";
 
 const SALT_ROUNDS = 12;
 
 export class DatabaseStorage implements IStorage {
+  async trackAnalytics(data: InsertAnalytics): Promise<void> {
+    await db.insert(analytics).values(data);
+  }
+
+  async getAnalyticsStats(timeframe: 'day' | 'week' | 'month' = 'day') {
+    const now = new Date();
+    let startDate = new Date();
+    if (timeframe === 'day') startDate.setDate(now.getDate() - 1);
+    else if (timeframe === 'week') startDate.setDate(now.getDate() - 7);
+    else if (timeframe === 'month') startDate.setMonth(now.getMonth() - 1);
+
+    const stats = await db.select({
+      count: sql<number>`count(*)`,
+      type: analytics.type,
+    })
+    .from(analytics)
+    .where(gte(analytics.createdAt, startDate))
+    .groupBy(analytics.type);
+
+    const pageViews = await db.select({
+      count: sql<number>`count(*)`,
+      page: analytics.page,
+    })
+    .from(analytics)
+    .where(and(eq(analytics.type, 'page_view'), gte(analytics.createdAt, startDate)))
+    .groupBy(analytics.page)
+    .orderBy(desc(sql`count(*)`));
+
+    const productClicks = await db.select({
+      count: sql<number>`count(*)`,
+      productId: analytics.productId,
+    })
+    .from(analytics)
+    .where(and(eq(analytics.type, 'product_click'), gte(analytics.createdAt, startDate)))
+    .groupBy(analytics.productId)
+    .orderBy(desc(sql`count(*)`));
+
+    return {
+      overview: stats,
+      pages: pageViews,
+      products: productClicks,
+    };
+  }
+
   async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
@@ -32,6 +78,7 @@ export class DatabaseStorage implements IStorage {
     const [created] = await db.insert(users).values({
       ...user,
       password: passwordHash,
+      role: "admin",
     }).returning();
     return created;
   }
@@ -261,7 +308,7 @@ export async function initializeDatabase(storage: DatabaseStorage): Promise<void
       { categoryId: catMap["towels"], slug: "bath-towel-set", nameEn: "Premium Bath Towel Set", nameRu: "Премиум набор банных полотенец", nameUz: "Premium hammom sochiq to'plami", descriptionEn: "Set of luxurious bath towels", descriptionRu: "Набор роскошных банных полотенец", descriptionUz: "Hashamatli hammom sochiqlari to'plami", materialEn: "100% Long-Staple Cotton", materialRu: "100% Длинноволокнистый хлопок", materialUz: "100% Uzun tolali paxta", careEn: "Machine wash warm", careRu: "Машинная стирка в теплой воде", careUz: "Iliq suvda yuvish", sizes: "Standard,Large", colors: "White,Cream,Sand", images: "towel-1", featured: true },
       { categoryId: catMap["pastel"], slug: "pastel-gift-box", nameEn: "Pastel Gift Box", nameRu: "Подарочный набор Пастель", nameUz: "Pastel sovg'a qutisi", descriptionEn: "Elegant gift box with towels and robe in pastel colors", descriptionRu: "Элегантный подарочный набор с полотенцами и халатом в пастельных тонах", descriptionUz: "Pastel rangdagi sochiq va xalat bilan nafis sovg'a qutisi", materialEn: "100% Premium Cotton", materialRu: "100% Премиальный хлопок", materialUz: "100% Premium paxta", careEn: "Machine wash cold", careRu: "Машинная стирка", careUz: "Sovuq suvda yuvish", sizes: "One Size", colors: "Blush Pink,Sage Green,Lavender", images: "pastel-1", featured: true },
       { categoryId: catMap["spa-hotel"], slug: "hotel-bathrobe-white", nameEn: "Hotel Collection Bathrobe", nameRu: "Гостиничный халат", nameUz: "Mehmonxona xalati", descriptionEn: "Professional-grade bathrobe for hotels and spas", descriptionRu: "Профессиональный халат для отелей и спа", descriptionUz: "Mehmonxona va spa uchun professional xalat", materialEn: "Heavy-duty Cotton Terry", materialRu: "Плотная хлопковая махра", materialUz: "Og'ir vazifali paxta maxsa", careEn: "Industrial wash safe", careRu: "Подходит для промышленной стирки", careUz: "Sanoat yuvishga mos", sizes: "S,M,L,XL,XXL", colors: "White,Ivory", images: "hotel-1", featured: true },
-      { categoryId: catMap["barber"], slug: "barber-towel-set", nameEn: "Barber Professional Towel Set", nameRu: "Профессиональный набор полотенец для барбера", nameUz: "Professional sartarosh sochiq to'plami", descriptionEn: "Premium towels designed for professional barber use", descriptionRu: "Премиальные полотенца для профессионального использования в барбершопах", descriptionUz: "Professional sartarosh foydalanishi uchun premium sochiqlar", materialEn: "Quick-dry Cotton Blend", materialRu: "Быстросохнущая хлопковая смесь", materialUz: "Tez quriydigan paxta aralashmasi", careEn: "Machine wash hot, tumble dry", careRu: "Машинная стирка в горячей воде", careUz: "Issiq suvda yuvish", sizes: "Standard", colors: "Black,White,Gray", images: "barber-1", featured: true },
+      { categoryId: catMap["barber"], slug: "barber-towel-set", nameEn: "Barber Professional Towel Set", nameRu: "Профессиональный набор полотенец для барбера", nameUz: "Professional sartarosh sochiq to'plami", descriptionEn: "Premium towels designed for professional barber use", descriptionRu: "Премиальные полотенца для профессионального использования в барбершопов", descriptionUz: "Professional sartarosh foydalanishi uchun premium sochiqlar", materialEn: "Quick-dry Cotton Blend", materialRu: "Быстросохнущая хлопковая смесь", materialUz: "Tez quriydigan paxta aralashmasi", careEn: "Machine wash hot, tumble dry", careRu: "Машинная стирка в горячей воде", careUz: "Issiq suvda yuvish", sizes: "Standard", colors: "Black,White,Gray", images: "barber-1", featured: true },
       { categoryId: catMap["accessories"], slug: "luxury-slippers", nameEn: "Luxury Spa Slippers", nameRu: "Люксовые спа-тапочки", nameUz: "Hashamatli spa shippaklar", descriptionEn: "Comfortable slippers for home and spa use", descriptionRu: "Комфортные тапочки для дома и спа", descriptionUz: "Uy va spa uchun qulay shippaklar", materialEn: "Cotton Terry Upper, Non-slip Sole", materialRu: "Махровый верх, нескользящая подошва", materialUz: "Maxsali yuza, sirg'anmaydigan taglik", careEn: "Hand wash", careRu: "Ручная стирка", careUz: "Qo'lda yuvish", sizes: "S/M,L/XL", colors: "White,Cream,Gray", images: "slippers-1", featured: false },
     ];
     for (const prod of defaultProducts) {

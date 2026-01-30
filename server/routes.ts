@@ -379,39 +379,52 @@ Respond in the user's language (${language}).`;
     }
   });
 
-  app.post("/api/admin/login", async (req: Request, res: Response) => {
-    try {
-      const { username, password } = req.body;
-      const user = await storage.getUserByUsername(username);
+import rateLimit from "express-rate-limit";
 
-      if (user && await storage.verifyPassword(user, password)) {
-        req.session.isAdmin = true;
-        req.session.username = username;
-        req.session.userRole = user.role;
-        res.json({ success: true, role: user.role });
-      } else {
-        res.status(401).json({ error: "Invalid credentials" });
-      }
-    } catch (error) {
-      res.status(500).json({ error: "Login failed" });
+// ... existing code ...
+
+export async function registerRoutes(
+  httpServer: Server,
+  app: Express
+): Promise<Server> {
+  await initializeDatabase(storage);
+
+  // Login rate limiter
+  const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Limit each IP to 5 login requests per window
+    message: { error: "Too many login attempts, please try again after 15 minutes" },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
+  app.post("/api/admin/login", loginLimiter, async (req: Request, res: Response) => {
+    // ... existing login logic ...
+  });
+
+  // Role-based access and authentication check for all admin routes
+  app.use("/api/admin", (req: Request, res: Response, next: NextFunction) => {
+    // Skip auth check for login and session status
+    if (req.path === "/login" || req.path === "/session") {
+      return next();
     }
-  });
-
-  app.post("/api/admin/logout", (req: Request, res: Response) => {
-    req.session.destroy((err) => {
-      if (err) {
-        res.status(500).json({ error: "Logout failed" });
-      } else {
-        res.json({ success: true });
-      }
-    });
-  });
-
-  app.get("/api/admin/session", (req: Request, res: Response) => {
-    res.json({ 
-      authenticated: !!req.session?.isAdmin,
-      role: req.session?.userRole || null,
-    });
+    
+    if (!req.session?.isAdmin) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+    
+    // Most admin routes require admin role, some (like inquiries) might allow manager
+    // For now, let's enforce admin role for everything except inquiries if needed
+    // But as per requirements: "Role-based access (admin only)"
+    if (req.session?.userRole !== "admin" && !req.path.startsWith("/inquiries")) {
+       // If it's not an inquiry route and not admin, reject
+       // For strict "admin only" as per checklist:
+       if (req.session?.userRole !== "admin") {
+         return res.status(403).json({ error: "Admin role required" });
+       }
+    }
+    
+    next();
   });
 
   app.get("/api/admin/stats", requireAdmin, async (req: Request, res: Response) => {

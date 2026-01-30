@@ -124,18 +124,18 @@ export default function Home() {
             </motion.p>
             <motion.div variants={fadeInUp} className="flex flex-wrap gap-6">
               <Link href="/catalog">
-                <Button size="lg" className="min-w-[200px] h-14 rounded-none uppercase tracking-widest text-xs font-semibold bg-white text-black hover:bg-white/90" data-testid="button-shop-collection">
-                  Explore Collections
+                <Button size="lg" className="min-w-[200px] h-14 rounded-none uppercase tracking-widest text-xs font-semibold bg-white text-black hover:bg-white/90 shadow-lg" data-testid="button-shop-collection">
+                  {t.home.shopCollection}
                 </Button>
               </Link>
-              <Link href="/contact">
+              <Link href="/bulk-order">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="min-w-[200px] h-14 rounded-none uppercase tracking-widest text-xs font-semibold bg-white/5 border-white/30 text-white backdrop-blur-md hover:bg-white/10"
+                  className="min-w-[200px] h-14 rounded-none uppercase tracking-widest text-xs font-semibold bg-white/5 border-white/40 text-white backdrop-blur-md hover:bg-white/10"
                   data-testid="button-wholesale-offer"
                 >
-                  Request Wholesale Offer
+                  {t.nav.bulkOrder}
                 </Button>
               </Link>
             </motion.div>

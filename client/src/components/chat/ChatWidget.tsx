@@ -195,11 +195,17 @@ export function ChatWidget() {
 
       <Button
         size="icon"
-        className="fixed bottom-4 right-4 sm:right-6 h-12 w-12 rounded-full shadow-lg z-50"
+        className="fixed bottom-4 right-4 sm:right-6 h-14 w-14 rounded-full shadow-2xl z-50 animate-in fade-in zoom-in duration-500"
         onClick={() => setIsOpen(!isOpen)}
         data-testid="button-open-chat"
       >
-        {isOpen ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" />}
+        {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+        {!isOpen && (
+          <span className="absolute -top-1 -right-1 flex h-4 w-4">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-4 w-4 bg-primary"></span>
+          </span>
+        )}
       </Button>
     </>
   );

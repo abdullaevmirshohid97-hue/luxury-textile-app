@@ -306,14 +306,17 @@ Respond in the user's language (${language}).`;
       // Sanitize history
       const sanitizedHistory = Array.isArray(history) 
         ? history.slice(-10).filter((h: any) => h.role === "user" || h.role === "assistant").map((h: any) => ({
-            role: h.role,
+            role: h.role === "assistant" ? "assistant" : "user",
             content: String(h.content || "").slice(0, 1000).replace(/[<>]/g, "")
           }))
         : [];
 
-      const messages = [
+      const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
         { role: "system", content: systemPrompt },
-        ...sanitizedHistory,
+        ...sanitizedHistory.map(h => ({
+          role: h.role as "user" | "assistant",
+          content: h.content
+        })),
         { role: "user", content: message },
       ];
 

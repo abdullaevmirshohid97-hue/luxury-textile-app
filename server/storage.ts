@@ -16,6 +16,9 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   getUsers(): Promise<User[]>;
   updateUserRole(id: string, role: string): Promise<User | undefined>;
+  updateUserPassword(id: string, password: string): Promise<User | undefined>;
+  updateUserCredentials(id: string, username: string, password: string): Promise<User | undefined>;
+  verifyPassword(user: User, password: string): Promise<boolean>;
 
   getCategories(): Promise<Category[]>;
   getCategory(id: number): Promise<Category | undefined>;
@@ -219,9 +222,27 @@ export class MemStorage implements IStorage {
   async updateUserRole(id: string, role: string): Promise<User | undefined> {
     const user = this.users.get(id);
     if (!user) return undefined;
-    const updated = { ...user, role };
-    this.users.set(id, updated);
-    return updated;
+    user.role = role;
+    return user;
+  }
+
+  async updateUserPassword(id: string, password: string): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+    user.password = password;
+    return user;
+  }
+
+  async updateUserCredentials(id: string, username: string, password: string): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+    user.username = username;
+    user.password = password;
+    return user;
+  }
+
+  async verifyPassword(user: User, password: string): Promise<boolean> {
+    return user.password === password;
   }
 
   async getCategories(): Promise<Category[]> {

@@ -1,13 +1,50 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import session from "express-session";
-import MemoryStore from "memorystore";
+import pgSession from "connect-pg-simple";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import express from "express";
 import OpenAI from "openai";
-import { storage } from "./storage";
+import { dbStorage, initializeDatabase } from "./dbStorage";
+import { pool } from "./db";
 import { GLOBAL_CONTACT, BRAND } from "@shared/globalConfig";
 import { LeadType, LeadSource, getLeadTemperature } from "@shared/schema";
 
-const SessionStore = MemoryStore(session);
+const storage = dbStorage;
+const PgStore = pgSession(session);
+
+const uploadsDir = path.join(process.cwd(), "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadsDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({
+  storage: multerStorage,
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif|webp/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    if (extname && mimetype) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only image files are allowed"));
+    }
+  },
+});
+
 
 const openai = new OpenAI({
   apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
@@ -51,16 +88,26 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  await initializeDatabase(storage);
+
+  app.use("/uploads", (req, res, next) => {
+    res.setHeader("Cache-Control", "public, max-age=31536000");
+    next();
+  }, express.static(uploadsDir));
+
   app.use(
     session({
       secret: process.env.SESSION_SECRET || "mary-collection-secret-key",
       resave: false,
       saveUninitialized: false,
-      store: new SessionStore({
-        checkPeriod: 86400000,
+      store: new PgStore({
+        pool,
+        tableName: "session",
+        createTableIfMissing: true,
       }),
       cookie: {
-        secure: false,
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
       },
     })
@@ -310,7 +357,7 @@ Be polite and professional. Respond in English.`;
       const { username, password } = req.body;
       const user = await storage.getUserByUsername(username);
 
-      if (user && user.password === password) {
+      if (user && await storage.verifyPassword(user, password)) {
         req.session.isAdmin = true;
         req.session.username = username;
         req.session.userRole = user.role;
@@ -449,6 +496,37 @@ Be polite and professional. Respond in English.`;
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ error: "Failed to delete product" });
+    }
+  });
+
+  app.post("/api/admin/upload", requireAdmin, upload.single("image"), async (req: Request, res: Response) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+      const imageUrl = `/uploads/${req.file.filename}`;
+      res.json({ url: imageUrl });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to upload image" });
+    }
+  });
+
+  app.post("/api/admin/credentials", requireAdminRole, async (req: Request, res: Response) => {
+    try {
+      const { newUsername, newPassword, currentPassword } = req.body;
+      const user = await storage.getUserByUsername(req.session.username!);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      const isValidPassword = await storage.verifyPassword(user, currentPassword);
+      if (!isValidPassword) {
+        return res.status(401).json({ error: "Current password is incorrect" });
+      }
+      await storage.updateUserCredentials(user.id, newUsername, newPassword);
+      req.session.username = newUsername;
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update credentials" });
     }
   });
 

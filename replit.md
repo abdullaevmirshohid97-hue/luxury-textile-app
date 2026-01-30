@@ -1,24 +1,30 @@
 # Mary Collection - Luxury Home Textiles
 
 ## Overview
-Mary Collection is a premium luxury home textile website for bathrobes and towels. The site features a minimalist Hermes/Armani/Gucci-inspired design with a cream/beige/soft brown color palette.
+Mary Collection is a production-ready AI-powered B2B & export sales platform for luxury home textiles. The site features a minimalist Hermes/Armani/Gucci-inspired design with a cream/beige/soft brown color palette.
 
 ## Tech Stack
 - **Frontend**: React + TypeScript + Vite, TailwindCSS, Shadcn UI, Framer Motion
-- **Backend**: Express.js with in-memory storage
+- **Backend**: Express.js with PostgreSQL database (Drizzle ORM)
+- **Database**: PostgreSQL with Drizzle ORM, connect-pg-simple for sessions
+- **Authentication**: bcrypt password hashing (12 salt rounds), session-based auth
+- **File Uploads**: multer with disk storage for product images
 - **State**: TanStack Query, Zustand for language state
 - **Styling**: Luxury design system with Playfair Display font
 
 ## Features
 - Full multilingual support (Uzbek, Russian, English)
 - AI-powered chat assistant for product recommendations (OpenAI gpt-4o-mini)
-- Secure admin panel for managing products, categories, and inquiries
-- Session-based authentication
+- Secure admin panel with bcrypt authentication and PostgreSQL sessions
+- Image upload support for products
+- CRUD operations for categories, products, inquiries
+- Admin credentials management (change username/password)
 
 ## Admin Access
 - URL: `/admin/login`
-- Username: `admin`
-- Password: `marycollection2024`
+- Initial Username: `marycollection.uzb`
+- Initial Password: `Aa1234567890@0987654321@`
+- **Important**: Change these credentials after first login via `/api/admin/credentials`
 
 ## Project Structure
 ```
@@ -30,19 +36,48 @@ client/
     lib/             # Utilities (i18n, queryClient)
     assets/images/   # Stock images for hero and products
 server/
+  db.ts              # PostgreSQL connection and Drizzle setup
+  dbStorage.ts       # Database storage implementation
   routes.ts          # API endpoints
-  storage.ts         # In-memory storage with default data
+  storage.ts         # Storage interface and MemStorage (legacy)
+  index.ts           # Express server setup with sessions
 shared/
   schema.ts          # Drizzle schemas and types
+uploads/             # Product image uploads directory
 ```
 
 ## Key APIs
+### Public Routes
 - `GET /api/products` - List all products
 - `GET /api/categories` - List all categories
 - `POST /api/inquiries` - Submit contact form
 - `POST /api/chat` - AI assistant (streaming SSE)
+
+### Admin Routes (Protected)
 - `POST /api/admin/login` - Admin authentication
-- Admin CRUD endpoints for products, categories, inquiries, settings
+- `POST /api/admin/logout` - Logout
+- `POST /api/admin/upload` - Upload product image
+- `POST /api/admin/credentials` - Change admin credentials
+- `GET/POST/PUT/DELETE /api/admin/products` - Product CRUD
+- `GET/POST/PUT/DELETE /api/admin/categories` - Category CRUD
+- `GET/PUT/DELETE /api/admin/inquiries` - Inquiry management
+- `GET/PUT /api/admin/settings` - Site settings
+
+## Database Schema
+- **users**: id, username, password (bcrypt hashed), role
+- **categories**: id, slug, name (uz/ru/en), description, image
+- **products**: id, slug, categoryId, name, description, features, price, images, isNew, isFeatured
+- **inquiries**: id, name, email, phone, message, status, createdAt
+- **leads**: id, companyName, country, contactPerson, email, phone, productInterest, source, status, priority, score
+- **settings**: key, value pairs for site configuration
+- **session**: PostgreSQL session storage (auto-created)
+
+## Security
+- Passwords hashed with bcrypt (12 salt rounds)
+- Sessions stored in PostgreSQL (24-hour expiration)
+- HTTP-only cookies, secure flag in production
+- Admin routes protected with middleware
+- File upload validation (jpeg/jpg/png/gif/webp, 10MB limit)
 
 ## Color Palette
 - Background: Cream (40 33% 98%)
@@ -51,5 +86,6 @@ shared/
 - Borders: Light beige (35 15% 88%)
 
 ## Default Data
-- 2 Categories: Bathrobes, Towels
-- 6 Products: 3 bathrobes, 3 towels with full multilingual content
+- 6 Categories: Bathrobes, Towels, Pastel Linen, Spa/Hotel, Barber Shop, Accessories
+- Multiple products with full multilingual content
+- Auto-seeded on first database initialization

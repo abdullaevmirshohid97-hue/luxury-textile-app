@@ -14,6 +14,63 @@ import crypto from "crypto";
 import { GLOBAL_CONTACT, BRAND } from "@shared/globalConfig";
 import { LeadType, LeadSource, getLeadTemperature } from "@shared/schema";
 
+// Basic server-side request logging
+function logRequest(req: Request, type: 'info' | 'warn' | 'error' = 'info', message?: string) {
+  const timestamp = new Date().toISOString();
+  const cfRay = req.headers['cf-ray'] || '-';
+  const cfCountry = req.headers['cf-ipcountry'] || '-';
+  const ip = req.headers['cf-connecting-ip'] || req.ip || 'unknown';
+  const method = req.method;
+  const path = req.path;
+  const userAgent = req.headers['user-agent']?.substring(0, 100) || '-';
+  
+  const logEntry = `[${timestamp}] [${type.toUpperCase()}] ${method} ${path} | IP: ${ip} | Country: ${cfCountry} | CF-Ray: ${cfRay} | UA: ${userAgent}${message ? ` | ${message}` : ''}`;
+  
+  if (type === 'error') {
+    console.error(logEntry);
+  } else if (type === 'warn') {
+    console.warn(logEntry);
+  } else {
+    console.log(logEntry);
+  }
+}
+
+// reCAPTCHA verification helper
+// Returns: { required: boolean, valid: boolean }
+// When RECAPTCHA_SECRET_KEY is set, verification is enforced
+async function verifyRecaptcha(token: string | undefined): Promise<{ required: boolean; valid: boolean }> {
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  
+  // If no secret key configured, reCAPTCHA is not required (development mode)
+  if (!secretKey) {
+    return { required: false, valid: true };
+  }
+  
+  // Secret key is set, so reCAPTCHA is required
+  if (!token) {
+    console.log('[recaptcha] Token missing but verification required');
+    return { required: true, valid: false };
+  }
+  
+  try {
+    const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `secret=${encodeURIComponent(secretKey)}&response=${encodeURIComponent(token)}`,
+    });
+    
+    const data = await response.json() as { success: boolean; score?: number };
+    // For reCAPTCHA v3, check score (0.5 is a good threshold for forms)
+    if (data.score !== undefined) {
+      return { required: true, valid: data.success && data.score >= 0.5 };
+    }
+    return { required: true, valid: data.success };
+  } catch (error) {
+    console.error('[recaptcha] Verification error:', error);
+    return { required: true, valid: false };
+  }
+}
+
 // Login rate limiter - 5 attempts per 15 minutes
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -102,6 +159,26 @@ export async function registerRoutes(
 ): Promise<Server> {
   await initializeDatabase(storage);
 
+  // Security headers - Cloudflare WAF compatible
+  app.use((req, res, next) => {
+    // Security headers
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+    next();
+  });
+
+  // Basic request logging for monitoring
+  app.use((req, res, next) => {
+    // Only log API requests and form submissions (not static assets)
+    if (req.path.startsWith('/api') && req.method !== 'GET') {
+      logRequest(req, 'info');
+    }
+    next();
+  });
+
   app.use("/uploads", (req, res, next) => {
     res.setHeader("Cache-Control", "public, max-age=31536000");
     next();
@@ -189,10 +266,18 @@ export async function registerRoutes(
 
   app.post("/api/inquiries", async (req: Request, res: Response) => {
     try {
-      const { name, email, phone, message, productId } = req.body;
+      const { name, email, phone, message, productId, recaptchaToken } = req.body;
       if (!name || !email || !message) {
         return res.status(400).json({ error: "Name, email, and message are required" });
       }
+
+      // Verify reCAPTCHA when configured
+      const captchaResult = await verifyRecaptcha(recaptchaToken);
+      if (!captchaResult.valid) {
+        logRequest(req, 'warn', 'reCAPTCHA verification failed');
+        return res.status(400).json({ error: "Security verification failed" });
+      }
+
       const inquiry = await storage.createInquiry({
         name,
         email,
@@ -215,10 +300,18 @@ export async function registerRoutes(
 
   app.post("/api/leads", async (req: Request, res: Response) => {
     try {
-      const { phone, email, name, source, page, leadType, language, businessType, productType, estimatedQuantity, message, country } = req.body;
+      const { phone, email, name, source, page, leadType, language, businessType, productType, estimatedQuantity, message, country, recaptchaToken } = req.body;
       if (!phone || !source) {
         return res.status(400).json({ error: "Phone and source are required" });
       }
+
+      // Verify reCAPTCHA when configured
+      const captchaResult = await verifyRecaptcha(recaptchaToken);
+      if (!captchaResult.valid) {
+        logRequest(req, 'warn', 'reCAPTCHA verification failed');
+        return res.status(400).json({ error: "Security verification failed" });
+      }
+
       const lead = await storage.createLead({
         phone,
         email: email || null,
@@ -250,10 +343,18 @@ export async function registerRoutes(
 
   app.post("/api/bulk-order", async (req: Request, res: Response) => {
     try {
-      const { phone, businessType, productType, estimatedQuantity, message, language } = req.body;
+      const { phone, businessType, productType, estimatedQuantity, message, language, recaptchaToken } = req.body;
       if (!phone || !businessType || !productType) {
         return res.status(400).json({ error: "Phone, business type, and product type are required" });
       }
+
+      // Verify reCAPTCHA when configured
+      const captchaResult = await verifyRecaptcha(recaptchaToken);
+      if (!captchaResult.valid) {
+        logRequest(req, 'warn', 'reCAPTCHA verification failed');
+        return res.status(400).json({ error: "Security verification failed" });
+      }
+
       const lead = await storage.createLead({
         phone,
         source: LeadSource.BULK_ORDER,
@@ -462,6 +563,7 @@ Respond in the user's language (${language}).`;
       
       // Input validation
       if (!username || !password || typeof username !== "string" || typeof password !== "string") {
+        logRequest(req, 'warn', 'Invalid login format');
         return res.status(400).json({ error: "Invalid credentials format" });
       }
       
@@ -471,11 +573,14 @@ Respond in the user's language (${language}).`;
         req.session.isAdmin = true;
         req.session.username = username;
         req.session.userRole = user.role;
+        logRequest(req, 'info', `Login success: ${username}`);
         res.json({ success: true, role: user.role });
       } else {
+        logRequest(req, 'warn', `Login failed: ${username}`);
         res.status(401).json({ error: "Invalid credentials" });
       }
     } catch (error) {
+      logRequest(req, 'error', 'Login error');
       res.status(500).json({ error: "Login failed" });
     }
   });

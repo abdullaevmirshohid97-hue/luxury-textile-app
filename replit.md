@@ -80,6 +80,10 @@ uploads/             # Product image uploads directory
 - File upload validation (jpeg/jpg/png/gif/webp, 10MB limit)
 - Login rate limiting (5 attempts per 15 minutes)
 - AI chat input sanitization (1000 char limit)
+- Google reCAPTCHA v3 integration for inquiry forms (optional, set RECAPTCHA_SECRET_KEY)
+- Security headers: X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, Referrer-Policy, Permissions-Policy
+- Cloudflare WAF compatible (trusts CF headers for real IP)
+- Server-side request logging for monitoring
 
 ## Admin Panel Multilingual Support
 - Full i18n support for admin panel (uz/ru/en)
@@ -87,6 +91,10 @@ uploads/             # Product image uploads directory
 - All menus, labels, forms, buttons, and messages are localized
 - Temperature badges (HOT/WARM/COLD), units (pcs), and placeholders translated
 - Reuses existing i18n system from `client/src/lib/i18n.ts`
+
+## Legal Pages
+- Privacy Policy: `/privacy` (multilingual uz/ru/en)
+- Terms of Use: `/terms` (multilingual uz/ru/en)
 
 ## Color Palette
 - Background: Cream (40 33% 98%)

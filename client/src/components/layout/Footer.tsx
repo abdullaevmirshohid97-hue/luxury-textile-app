@@ -112,6 +112,20 @@ export function Footer() {
           </p>
           <div className="flex gap-4">
             <Link
+              href="/privacy"
+              className="text-body text-xs text-muted-foreground hover:text-foreground transition-colors"
+              data-testid="link-footer-privacy"
+            >
+              {t.footer.privacy}
+            </Link>
+            <Link
+              href="/terms"
+              className="text-body text-xs text-muted-foreground hover:text-foreground transition-colors"
+              data-testid="link-footer-terms"
+            >
+              {t.footer.terms}
+            </Link>
+            <Link
               href="/contact"
               className="text-body text-xs text-muted-foreground hover:text-foreground transition-colors"
               data-testid="link-footer-contact"

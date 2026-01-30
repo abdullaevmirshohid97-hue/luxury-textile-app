@@ -19,6 +19,8 @@ import ExportEurope from "@/pages/ExportEurope";
 import ExportBarberGlobal from "@/pages/ExportBarberGlobal";
 import Product from "@/pages/Product";
 import Contact from "@/pages/Contact";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import Terms from "@/pages/Terms";
 
 import AdminLogin from "@/pages/admin/Login";
 import AdminLayout from "@/pages/admin/Layout";
@@ -87,6 +89,12 @@ function Router() {
       </Route>
       <Route path="/contact">
         <PublicRoute component={Contact} />
+      </Route>
+      <Route path="/privacy">
+        <PublicRoute component={PrivacyPolicy} />
+      </Route>
+      <Route path="/terms">
+        <PublicRoute component={Terms} />
       </Route>
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/leads">

@@ -10,8 +10,14 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Loader2 } from "lucide-react";
-import { useTranslations } from "@/lib/i18n";
+import { Loader2, Globe } from "lucide-react";
+import { useTranslations, useLanguageStore } from "@/lib/i18n";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type LoginData = {
   username: string;
@@ -22,6 +28,7 @@ export default function AdminLogin() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const t = useTranslations();
+  const { language, setLanguage } = useLanguageStore();
 
   const loginSchema = z.object({
     username: z.string().min(1, t.admin.usernameRequired),
@@ -58,7 +65,22 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4 relative">
+      <div className="absolute top-4 right-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" data-testid="button-language-switcher">
+              <Globe className="h-4 w-4 mr-2" />
+              {language.toUpperCase()}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={() => setLanguage("en")} data-testid="button-lang-en">English</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setLanguage("ru")} data-testid="button-lang-ru">Русский</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setLanguage("uz")} data-testid="button-lang-uz">O'zbekcha</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">{t.admin.maryCollection}</CardTitle>

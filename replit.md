@@ -78,6 +78,15 @@ uploads/             # Product image uploads directory
 - HTTP-only cookies, secure flag in production
 - Admin routes protected with middleware
 - File upload validation (jpeg/jpg/png/gif/webp, 10MB limit)
+- Login rate limiting (5 attempts per 15 minutes)
+- AI chat input sanitization (1000 char limit)
+
+## Admin Panel Multilingual Support
+- Full i18n support for admin panel (uz/ru/en)
+- Language switcher on login page and admin layout
+- All menus, labels, forms, buttons, and messages are localized
+- Temperature badges (HOT/WARM/COLD), units (pcs), and placeholders translated
+- Reuses existing i18n system from `client/src/lib/i18n.ts`
 
 ## Color Palette
 - Background: Cream (40 33% 98%)

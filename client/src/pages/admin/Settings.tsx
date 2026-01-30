@@ -8,9 +8,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Loader2, MessageSquare, Save } from "lucide-react";
+import { useTranslations } from "@/lib/i18n";
 
 export default function AdminSettings() {
   const { toast } = useToast();
+  const t = useTranslations();
 
   const { data: settings, isLoading } = useQuery<{ key: string; value: string }[]>({
     queryKey: ["/api/admin/settings"],
@@ -24,10 +26,10 @@ export default function AdminSettings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/settings"] });
-      toast({ title: "Success", description: "Settings saved" });
+      toast({ title: t.admin.success, description: t.admin.settingsSaved });
     },
     onError: () => {
-      toast({ title: "Error", description: "Failed to save settings", variant: "destructive" });
+      toast({ title: t.admin.error, description: t.admin.failedToSaveSettings, variant: "destructive" });
     },
   });
 
@@ -38,15 +40,15 @@ export default function AdminSettings() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold" data-testid="text-settings-title">Settings</h1>
-        <p className="text-body text-muted-foreground">Configure your store settings</p>
+        <h1 className="text-2xl font-semibold" data-testid="text-settings-title">{t.admin.settings}</h1>
+        <p className="text-body text-muted-foreground">{t.admin.configureSettings}</p>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5" />
-            AI Assistant
+            {t.admin.aiAssistant}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -55,9 +57,9 @@ export default function AdminSettings() {
           ) : (
             <div className="flex items-center justify-between">
               <div>
-                <Label className="text-body">Enable AI Chat Assistant</Label>
+                <Label className="text-body">{t.admin.enableAiChat}</Label>
                 <p className="text-body text-sm text-muted-foreground">
-                  Allow visitors to chat with an AI assistant for product recommendations
+                  {t.admin.aiChatDesc}
                 </p>
               </div>
               <Switch
@@ -73,11 +75,11 @@ export default function AdminSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Contact Information</CardTitle>
+          <CardTitle>{t.admin.contactInfo}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-body text-sm text-muted-foreground">
-            Contact information is managed in the Site Content section and displayed on the Contact page and footer.
+            {t.admin.contactInfoDesc}
           </p>
         </CardContent>
       </Card>

@@ -9,17 +9,26 @@ import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Mail, Phone, Trash2 } from "lucide-react";
 import { format } from "date-fns";
+import { useTranslations } from "@/lib/i18n";
 import type { Inquiry } from "@shared/schema";
-
-const statusColors: Record<string, string> = {
-  new: "bg-blue-500/10 text-blue-600 border-blue-500/20",
-  contacted: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20",
-  completed: "bg-green-500/10 text-green-600 border-green-500/20",
-  archived: "bg-gray-500/10 text-gray-600 border-gray-500/20",
-};
 
 export default function AdminInquiries() {
   const { toast } = useToast();
+  const t = useTranslations();
+
+  const statusColors: Record<string, string> = {
+    new: "bg-blue-500/10 text-blue-600 border-blue-500/20",
+    contacted: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20",
+    completed: "bg-green-500/10 text-green-600 border-green-500/20",
+    archived: "bg-gray-500/10 text-gray-600 border-gray-500/20",
+  };
+
+  const statusLabels: Record<string, string> = {
+    new: t.admin.new,
+    contacted: t.admin.contacted,
+    completed: t.admin.completed,
+    archived: t.admin.archived,
+  };
 
   const { data: inquiries = [], isLoading } = useQuery<Inquiry[]>({
     queryKey: ["/api/admin/inquiries"],
@@ -32,10 +41,10 @@ export default function AdminInquiries() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/inquiries"] });
       queryClient.invalidateQueries({ queryKey: ["/api/admin/stats"] });
-      toast({ title: "Success", description: "Status updated" });
+      toast({ title: t.admin.success, description: t.admin.statusUpdated });
     },
     onError: () => {
-      toast({ title: "Error", description: "Failed to update status", variant: "destructive" });
+      toast({ title: t.admin.error, description: t.admin.failedToUpdateStatus, variant: "destructive" });
     },
   });
 
@@ -46,18 +55,18 @@ export default function AdminInquiries() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/inquiries"] });
       queryClient.invalidateQueries({ queryKey: ["/api/admin/stats"] });
-      toast({ title: "Success", description: "Inquiry deleted" });
+      toast({ title: t.admin.success, description: t.admin.inquiryDeleted });
     },
     onError: () => {
-      toast({ title: "Error", description: "Failed to delete inquiry", variant: "destructive" });
+      toast({ title: t.admin.error, description: t.admin.failedToDeleteInquiry, variant: "destructive" });
     },
   });
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold" data-testid="text-inquiries-title">Inquiries</h1>
-        <p className="text-body text-muted-foreground">Manage customer inquiries and requests</p>
+        <h1 className="text-2xl font-semibold" data-testid="text-inquiries-title">{t.admin.inquiries}</h1>
+        <p className="text-body text-muted-foreground">{t.admin.manageInquiries}</p>
       </div>
 
       <Card>
@@ -70,17 +79,17 @@ export default function AdminInquiries() {
             </div>
           ) : inquiries.length === 0 ? (
             <div className="p-12 text-center">
-              <p className="text-body text-muted-foreground">No inquiries yet</p>
+              <p className="text-body text-muted-foreground">{t.admin.noInquiriesYet}</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Message</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{t.admin.contact}</TableHead>
+                  <TableHead>{t.admin.message}</TableHead>
+                  <TableHead>{t.admin.status}</TableHead>
+                  <TableHead>{t.admin.date}</TableHead>
+                  <TableHead className="text-right">{t.admin.actions}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -123,14 +132,14 @@ export default function AdminInquiries() {
                       >
                         <SelectTrigger className="w-28" data-testid={`select-status-${inquiry.id}`}>
                           <Badge variant="outline" className={statusColors[inquiry.status]}>
-                            {inquiry.status}
+                            {statusLabels[inquiry.status] || inquiry.status}
                           </Badge>
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="new">New</SelectItem>
-                          <SelectItem value="contacted">Contacted</SelectItem>
-                          <SelectItem value="completed">Completed</SelectItem>
-                          <SelectItem value="archived">Archived</SelectItem>
+                          <SelectItem value="new">{t.admin.new}</SelectItem>
+                          <SelectItem value="contacted">{t.admin.contacted}</SelectItem>
+                          <SelectItem value="completed">{t.admin.completed}</SelectItem>
+                          <SelectItem value="archived">{t.admin.archived}</SelectItem>
                         </SelectContent>
                       </Select>
                     </TableCell>

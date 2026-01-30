@@ -15,22 +15,24 @@ import {
 } from "@/components/ui/sidebar";
 import { LayoutDashboard, Package, Tag, MessageSquare, Settings, LogOut, Users } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
+import { useTranslations } from "@/lib/i18n";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
-const menuItems = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/leads", label: "Leads", icon: Users },
-  { href: "/admin/products", label: "Products", icon: Package },
-  { href: "/admin/categories", label: "Categories", icon: Tag },
-  { href: "/admin/inquiries", label: "Inquiries", icon: MessageSquare },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
-];
-
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const [location, setLocation] = useLocation();
+  const t = useTranslations();
+
+  const menuItems = [
+    { href: "/admin", label: t.admin.dashboard, icon: LayoutDashboard },
+    { href: "/admin/leads", label: t.admin.leads, icon: Users },
+    { href: "/admin/products", label: t.admin.products, icon: Package },
+    { href: "/admin/categories", label: t.admin.categories, icon: Tag },
+    { href: "/admin/inquiries", label: t.admin.inquiries, icon: MessageSquare },
+    { href: "/admin/settings", label: t.admin.settings, icon: Settings },
+  ];
 
   const { data: session, isLoading } = useQuery<{ authenticated: boolean }>({
     queryKey: ["/api/admin/session"],
@@ -45,7 +47,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse">Loading...</div>
+        <div className="animate-pulse">{t.admin.loading}</div>
       </div>
     );
   }
@@ -66,7 +68,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <Sidebar>
           <SidebarHeader className="p-4 border-b">
             <Link href="/admin" className="flex items-center gap-2">
-              <span className="text-lg font-semibold">Mary Admin</span>
+              <span className="text-lg font-semibold">{t.admin.title}</span>
             </Link>
           </SidebarHeader>
           <SidebarContent>
@@ -80,7 +82,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                         <SidebarMenuButton
                           asChild
                           isActive={isActive}
-                          data-testid={`link-admin-${item.label.toLowerCase()}`}
+                          data-testid={`link-admin-${item.href.replace("/admin/", "").replace("/admin", "dashboard")}`}
                         >
                           <Link href={item.href}>
                             <item.icon className="h-4 w-4" />
@@ -102,7 +104,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               data-testid="button-logout"
             >
               <LogOut className="h-4 w-4 mr-2" />
-              Logout
+              {t.admin.logout}
             </Button>
           </div>
         </Sidebar>
@@ -111,7 +113,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <header className="flex items-center gap-4 p-4 border-b bg-background">
             <SidebarTrigger data-testid="button-sidebar-toggle" />
             <Link href="/" className="text-body text-sm text-muted-foreground hover:text-foreground">
-              View Site
+              {t.admin.viewSite}
             </Link>
           </header>
           <main className="flex-1 overflow-auto p-6">

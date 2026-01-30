@@ -4,8 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Package, ShoppingBag, MessageSquare, TrendingUp, Users, ThermometerSun, Thermometer } from "lucide-react";
+import { useTranslations } from "@/lib/i18n";
 
 export default function AdminDashboard() {
+  const t = useTranslations();
+
   const { data: stats, isLoading } = useQuery<{
     products: number;
     categories: number;
@@ -20,42 +23,42 @@ export default function AdminDashboard() {
 
   const statCards = [
     {
-      title: "Total Leads",
+      title: t.admin.totalLeads,
       value: stats?.totalLeads || 0,
       icon: Users,
       color: "text-indigo-500",
       bg: "bg-indigo-500/10",
     },
     {
-      title: "HOT Leads",
+      title: t.admin.hotLeads,
       value: stats?.hotLeads || 0,
       icon: ThermometerSun,
       color: "text-red-500",
       bg: "bg-red-500/10",
     },
     {
-      title: "WARM Leads",
+      title: t.admin.warmLeads,
       value: stats?.warmLeads || 0,
       icon: Thermometer,
       color: "text-orange-500",
       bg: "bg-orange-500/10",
     },
     {
-      title: "Total Products",
+      title: t.admin.totalProducts,
       value: stats?.products || 0,
       icon: Package,
       color: "text-blue-500",
       bg: "bg-blue-500/10",
     },
     {
-      title: "Categories",
+      title: t.admin.categories,
       value: stats?.categories || 0,
       icon: ShoppingBag,
       color: "text-green-500",
       bg: "bg-green-500/10",
     },
     {
-      title: "Inquiries",
+      title: t.admin.inquiries,
       value: stats?.inquiries || 0,
       icon: MessageSquare,
       color: "text-purple-500",
@@ -66,8 +69,8 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold" data-testid="text-dashboard-title">Dashboard</h1>
-        <p className="text-body text-muted-foreground">Mary Collection Admin Panel</p>
+        <h1 className="text-2xl font-semibold" data-testid="text-dashboard-title">{t.admin.dashboard}</h1>
+        <p className="text-body text-muted-foreground">{t.admin.maryCollection} {t.admin.panel}</p>
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -97,25 +100,25 @@ export default function AdminDashboard() {
       <div className="grid md:grid-cols-2 gap-4">
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Quick Actions</CardTitle>
+            <CardTitle className="text-lg">{t.admin.quickActions}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <Link href="/admin/leads">
               <Button variant="outline" className="w-full justify-start" data-testid="button-view-leads">
                 <Users className="h-4 w-4 mr-2" />
-                View All Leads
+                {t.admin.viewAllLeads}
               </Button>
             </Link>
             <Link href="/admin/products">
               <Button variant="outline" className="w-full justify-start" data-testid="button-manage-products">
                 <Package className="h-4 w-4 mr-2" />
-                Manage Products
+                {t.admin.manageProducts}
               </Button>
             </Link>
             <Link href="/admin/inquiries">
               <Button variant="outline" className="w-full justify-start" data-testid="button-view-inquiries">
                 <MessageSquare className="h-4 w-4 mr-2" />
-                View Inquiries
+                {t.admin.viewInquiries}
               </Button>
             </Link>
           </CardContent>
@@ -123,19 +126,18 @@ export default function AdminDashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Lead Pipeline</CardTitle>
+            <CardTitle className="text-lg">{t.admin.leadPipeline}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-body text-muted-foreground mb-4">
-              Leads are automatically scored based on business type, language, and source. 
-              HOT leads (80-100) require immediate attention.
+              {t.admin.leadPipelineDesc}
             </p>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">New Lead</span>
-                <span className="text-muted-foreground">Qualified</span>
-                <span className="text-muted-foreground">Contacted</span>
-                <span className="text-muted-foreground">Won</span>
+                <span className="text-muted-foreground">{t.admin.newLead}</span>
+                <span className="text-muted-foreground">{t.admin.qualified}</span>
+                <span className="text-muted-foreground">{t.admin.contacted}</span>
+                <span className="text-muted-foreground">{t.admin.won}</span>
               </div>
               <div className="h-2 bg-muted rounded-full overflow-hidden">
                 <div className="h-full bg-gradient-to-r from-blue-500 via-yellow-500 to-green-500 w-full" />

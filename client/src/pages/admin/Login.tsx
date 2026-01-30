@@ -11,17 +11,22 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "@/lib/i18n";
 
-const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(1, "Password is required"),
-});
-
-type LoginData = z.infer<typeof loginSchema>;
+type LoginData = {
+  username: string;
+  password: string;
+};
 
 export default function AdminLogin() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const t = useTranslations();
+
+  const loginSchema = z.object({
+    username: z.string().min(1, t.admin.usernameRequired),
+    password: z.string().min(1, t.admin.passwordRequired),
+  });
 
   const form = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
@@ -41,8 +46,8 @@ export default function AdminLogin() {
     },
     onError: () => {
       toast({
-        title: "Login Failed",
-        description: "Invalid username or password",
+        title: t.admin.loginFailed,
+        description: t.admin.invalidCredentials,
         variant: "destructive",
       });
     },
@@ -56,8 +61,8 @@ export default function AdminLogin() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Mary Collection</CardTitle>
-          <p className="text-body text-sm text-muted-foreground">Admin Panel</p>
+          <CardTitle className="text-2xl">{t.admin.maryCollection}</CardTitle>
+          <p className="text-body text-sm text-muted-foreground">{t.admin.panel}</p>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -67,7 +72,7 @@ export default function AdminLogin() {
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-body">Username</FormLabel>
+                    <FormLabel className="text-body">{t.admin.username}</FormLabel>
                     <FormControl>
                       <Input {...field} className="text-body" data-testid="input-username" />
                     </FormControl>
@@ -81,7 +86,7 @@ export default function AdminLogin() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-body">Password</FormLabel>
+                    <FormLabel className="text-body">{t.admin.password}</FormLabel>
                     <FormControl>
                       <Input type="password" {...field} className="text-body" data-testid="input-password" />
                     </FormControl>
@@ -99,10 +104,10 @@ export default function AdminLogin() {
                 {loginMutation.isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Logging in...
+                    {t.admin.loggingIn}
                   </>
                 ) : (
-                  "Login"
+                  t.admin.login
                 )}
               </Button>
             </form>

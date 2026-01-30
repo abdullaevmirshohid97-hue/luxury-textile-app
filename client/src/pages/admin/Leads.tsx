@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
+import { useTranslations } from "@/lib/i18n";
 import { LeadStatus } from "@shared/schema";
 
 interface Lead {
@@ -29,30 +30,31 @@ interface Lead {
   createdAt: string;
 }
 
-const statusLabels: Record<string, string> = {
-  new: "New Lead",
-  qualified: "Qualified",
-  contacted: "Contacted",
-  needs_proposal: "Needs Proposal",
-  offer_sent: "Offer Sent",
-  negotiation: "Negotiation",
-  won: "Won",
-  lost: "Lost",
-};
-
-const statusColors: Record<string, string> = {
-  new: "bg-blue-100 text-blue-800",
-  qualified: "bg-purple-100 text-purple-800",
-  contacted: "bg-yellow-100 text-yellow-800",
-  needs_proposal: "bg-orange-100 text-orange-800",
-  offer_sent: "bg-indigo-100 text-indigo-800",
-  negotiation: "bg-cyan-100 text-cyan-800",
-  won: "bg-green-100 text-green-800",
-  lost: "bg-red-100 text-red-800",
-};
-
 export default function AdminLeads() {
   const { toast } = useToast();
+  const t = useTranslations();
+
+  const statusLabels: Record<string, string> = {
+    new: t.admin.newLead,
+    qualified: t.admin.qualified,
+    contacted: t.admin.contacted,
+    needs_proposal: t.admin.needsProposal,
+    offer_sent: t.admin.offerSent,
+    negotiation: t.admin.negotiation,
+    won: t.admin.won,
+    lost: t.admin.lost,
+  };
+
+  const statusColors: Record<string, string> = {
+    new: "bg-blue-100 text-blue-800",
+    qualified: "bg-purple-100 text-purple-800",
+    contacted: "bg-yellow-100 text-yellow-800",
+    needs_proposal: "bg-orange-100 text-orange-800",
+    offer_sent: "bg-indigo-100 text-indigo-800",
+    negotiation: "bg-cyan-100 text-cyan-800",
+    won: "bg-green-100 text-green-800",
+    lost: "bg-red-100 text-red-800",
+  };
 
   const { data: leads = [], isLoading } = useQuery<Lead[]>({
     queryKey: ["/api/admin/leads"],
@@ -64,7 +66,7 @@ export default function AdminLeads() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/leads"] });
-      toast({ title: "Status updated" });
+      toast({ title: t.admin.statusUpdated });
     },
   });
 
@@ -102,16 +104,16 @@ export default function AdminLeads() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold" data-testid="text-page-title">Leads Management</h1>
+        <h1 className="text-2xl font-bold" data-testid="text-page-title">{t.admin.leadsManagement}</h1>
         <div className="flex gap-2">
           <Badge variant="outline" className="gap-1">
-            <ThermometerSun className="h-3 w-3 text-red-500" /> {hotLeads.length} HOT
+            <ThermometerSun className="h-3 w-3 text-red-500" /> {hotLeads.length} {t.admin.hot}
           </Badge>
           <Badge variant="outline" className="gap-1">
-            <Thermometer className="h-3 w-3 text-orange-500" /> {warmLeads.length} WARM
+            <Thermometer className="h-3 w-3 text-orange-500" /> {warmLeads.length} {t.admin.warm}
           </Badge>
           <Badge variant="outline" className="gap-1">
-            <ThermometerSnowflake className="h-3 w-3 text-blue-500" /> {coldLeads.length} COLD
+            <ThermometerSnowflake className="h-3 w-3 text-blue-500" /> {coldLeads.length} {t.admin.cold}
           </Badge>
         </div>
       </div>
@@ -120,7 +122,7 @@ export default function AdminLeads() {
         {leads.length === 0 ? (
           <Card>
             <CardContent className="p-8 text-center text-muted-foreground">
-              No leads yet. Leads will appear here when customers submit inquiries.
+              {t.admin.noLeadsYet}
             </CardContent>
           </Card>
         ) : (
@@ -132,7 +134,7 @@ export default function AdminLeads() {
                     <TemperatureIcon temp={lead.temperature} />
                     <CardTitle className="text-lg">{lead.name || lead.phone}</CardTitle>
                     <Badge className={temperatureColors[lead.temperature]}>
-                      {lead.temperature} ({lead.score})
+                      {lead.temperature === "HOT" ? t.admin.hot : lead.temperature === "WARM" ? t.admin.warm : t.admin.cold} ({lead.score})
                     </Badge>
                   </div>
                   <Select
@@ -180,7 +182,7 @@ export default function AdminLeads() {
                   <Badge variant="outline">{lead.leadType}</Badge>
                   <Badge variant="outline">{lead.language.toUpperCase()}</Badge>
                   {lead.page && <Badge variant="outline">{lead.page}</Badge>}
-                  {lead.estimatedQuantity && <Badge variant="outline">{lead.estimatedQuantity} pcs</Badge>}
+                  {lead.estimatedQuantity && <Badge variant="outline">{lead.estimatedQuantity} {t.admin.pcs}</Badge>}
                 </div>
                 {lead.message && (
                   <p className="mt-3 text-sm text-muted-foreground bg-muted/50 p-2 rounded">

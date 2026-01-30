@@ -11,10 +11,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import { useTranslations } from "@/lib/i18n";
 import type { Category } from "@shared/schema";
 
 export default function AdminCategories() {
   const { toast } = useToast();
+  const t = useTranslations();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
@@ -59,14 +61,14 @@ export default function AdminCategories() {
       setDialogOpen(false);
       resetForm();
       toast({
-        title: "Success",
-        description: editingCategory ? "Category updated" : "Category created",
+        title: t.admin.success,
+        description: editingCategory ? t.admin.categoryUpdated : t.admin.categoryCreated,
       });
     },
     onError: () => {
       toast({
-        title: "Error",
-        description: "Failed to save category",
+        title: t.admin.error,
+        description: t.admin.failedToSaveCategory,
         variant: "destructive",
       });
     },
@@ -78,10 +80,10 @@ export default function AdminCategories() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/categories"] });
-      toast({ title: "Success", description: "Category deleted" });
+      toast({ title: t.admin.success, description: t.admin.categoryDeleted });
     },
     onError: () => {
-      toast({ title: "Error", description: "Failed to delete category", variant: "destructive" });
+      toast({ title: t.admin.error, description: t.admin.failedToDeleteCategory, variant: "destructive" });
     },
   });
 
@@ -109,27 +111,27 @@ export default function AdminCategories() {
     <div className="space-y-6">
       <div className="flex justify-between items-center gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-semibold" data-testid="text-categories-title">Categories</h1>
-          <p className="text-body text-muted-foreground">Manage product categories</p>
+          <h1 className="text-2xl font-semibold" data-testid="text-categories-title">{t.admin.categories}</h1>
+          <p className="text-body text-muted-foreground">{t.admin.manageCategories}</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
           <DialogTrigger asChild>
             <Button className="text-body" data-testid="button-add-category">
               <Plus className="h-4 w-4 mr-2" />
-              Add Category
+              {t.admin.addCategory}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-lg">
             <DialogHeader>
-              <DialogTitle>{editingCategory ? "Edit Category" : "Add New Category"}</DialogTitle>
+              <DialogTitle>{editingCategory ? t.admin.editCategory : t.admin.addNewCategory}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <Label className="text-body">Slug</Label>
+                <Label className="text-body">{t.admin.slug}</Label>
                 <Input
                   value={formData.slug}
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  placeholder="category-slug"
+                  placeholder={t.admin.categorySlug}
                   className="text-body"
                   required
                   data-testid="input-category-slug"
@@ -137,26 +139,26 @@ export default function AdminCategories() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-body">Name (English / Russian / Uzbek)</Label>
+                <Label className="text-body">{t.admin.nameMultilang}</Label>
                 <div className="grid grid-cols-3 gap-2">
                   <Input
                     value={formData.nameEn}
                     onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
-                    placeholder="English"
+                    placeholder={t.admin.english}
                     className="text-body"
                     required
                   />
                   <Input
                     value={formData.nameRu}
                     onChange={(e) => setFormData({ ...formData, nameRu: e.target.value })}
-                    placeholder="Русский"
+                    placeholder={t.admin.russian}
                     className="text-body"
                     required
                   />
                   <Input
                     value={formData.nameUz}
                     onChange={(e) => setFormData({ ...formData, nameUz: e.target.value })}
-                    placeholder="O'zbekcha"
+                    placeholder={t.admin.uzbek}
                     className="text-body"
                     required
                   />
@@ -164,25 +166,25 @@ export default function AdminCategories() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-body">Description (En / Ru / Uz)</Label>
+                <Label className="text-body">{t.admin.descriptionMultilang}</Label>
                 <Textarea
                   value={formData.descriptionEn}
                   onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
-                  placeholder="English description"
+                  placeholder={t.admin.englishDesc}
                   className="text-body"
                   rows={2}
                 />
                 <Textarea
                   value={formData.descriptionRu}
                   onChange={(e) => setFormData({ ...formData, descriptionRu: e.target.value })}
-                  placeholder="Описание на русском"
+                  placeholder={t.admin.russianDesc}
                   className="text-body"
                   rows={2}
                 />
                 <Textarea
                   value={formData.descriptionUz}
                   onChange={(e) => setFormData({ ...formData, descriptionUz: e.target.value })}
-                  placeholder="O'zbek tilida tavsif"
+                  placeholder={t.admin.uzbekDesc}
                   className="text-body"
                   rows={2}
                 />
@@ -190,7 +192,7 @@ export default function AdminCategories() {
 
               <Button type="submit" className="w-full text-body" disabled={saveMutation.isPending} data-testid="button-save-category">
                 {saveMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                {editingCategory ? "Update Category" : "Create Category"}
+                {editingCategory ? t.admin.updateCategory : t.admin.createCategory}
               </Button>
             </form>
           </DialogContent>
@@ -209,9 +211,9 @@ export default function AdminCategories() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name (EN)</TableHead>
-                  <TableHead>Slug</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{t.admin.name}</TableHead>
+                  <TableHead>{t.admin.slug}</TableHead>
+                  <TableHead className="text-right">{t.admin.actions}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

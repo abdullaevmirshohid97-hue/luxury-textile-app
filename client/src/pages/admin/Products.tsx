@@ -14,10 +14,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import { useTranslations } from "@/lib/i18n";
 import type { Product, Category } from "@shared/schema";
 
 export default function AdminProducts() {
   const { toast } = useToast();
+  const t = useTranslations();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
@@ -86,14 +88,14 @@ export default function AdminProducts() {
       setDialogOpen(false);
       resetForm();
       toast({
-        title: "Success",
-        description: editingProduct ? "Product updated" : "Product created",
+        title: t.admin.success,
+        description: editingProduct ? t.admin.productUpdated : t.admin.productCreated,
       });
     },
     onError: () => {
       toast({
-        title: "Error",
-        description: "Failed to save product",
+        title: t.admin.error,
+        description: t.admin.failedToSaveProduct,
         variant: "destructive",
       });
     },
@@ -105,10 +107,10 @@ export default function AdminProducts() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/products"] });
-      toast({ title: "Success", description: "Product deleted" });
+      toast({ title: t.admin.success, description: t.admin.productDeleted });
     },
     onError: () => {
-      toast({ title: "Error", description: "Failed to delete product", variant: "destructive" });
+      toast({ title: t.admin.error, description: t.admin.failedToDeleteProduct, variant: "destructive" });
     },
   });
 
@@ -146,35 +148,35 @@ export default function AdminProducts() {
     <div className="space-y-6">
       <div className="flex justify-between items-center gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-semibold" data-testid="text-products-title">Products</h1>
-          <p className="text-body text-muted-foreground">Manage your product catalog</p>
+          <h1 className="text-2xl font-semibold" data-testid="text-products-title">{t.admin.products}</h1>
+          <p className="text-body text-muted-foreground">{t.admin.manageProductCatalog}</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
           <DialogTrigger asChild>
             <Button className="text-body" data-testid="button-add-product">
               <Plus className="h-4 w-4 mr-2" />
-              Add Product
+              {t.admin.addProduct}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{editingProduct ? "Edit Product" : "Add New Product"}</DialogTitle>
+              <DialogTitle>{editingProduct ? t.admin.editProduct : t.admin.addNewProduct}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-body">Slug</Label>
+                  <Label className="text-body">{t.admin.slug}</Label>
                   <Input
                     value={formData.slug}
                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                    placeholder="product-slug"
+                    placeholder={t.admin.productSlug}
                     className="text-body"
                     required
                     data-testid="input-product-slug"
                   />
                 </div>
                 <div>
-                  <Label className="text-body">Category</Label>
+                  <Label className="text-body">{t.admin.category}</Label>
                   <Select
                     value={formData.categoryId.toString()}
                     onValueChange={(v) => setFormData({ ...formData, categoryId: parseInt(v) })}
@@ -194,26 +196,26 @@ export default function AdminProducts() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-body">Name (English / Russian / Uzbek)</Label>
+                <Label className="text-body">{t.admin.nameMultilang}</Label>
                 <div className="grid grid-cols-3 gap-2">
                   <Input
                     value={formData.nameEn}
                     onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
-                    placeholder="English"
+                    placeholder={t.admin.english}
                     className="text-body"
                     required
                   />
                   <Input
                     value={formData.nameRu}
                     onChange={(e) => setFormData({ ...formData, nameRu: e.target.value })}
-                    placeholder="Русский"
+                    placeholder={t.admin.russian}
                     className="text-body"
                     required
                   />
                   <Input
                     value={formData.nameUz}
                     onChange={(e) => setFormData({ ...formData, nameUz: e.target.value })}
-                    placeholder="O'zbekcha"
+                    placeholder={t.admin.uzbek}
                     className="text-body"
                     required
                   />
@@ -221,25 +223,25 @@ export default function AdminProducts() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-body">Description (En / Ru / Uz)</Label>
+                <Label className="text-body">{t.admin.descriptionMultilang}</Label>
                 <Textarea
                   value={formData.descriptionEn}
                   onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
-                  placeholder="English description"
+                  placeholder={t.admin.englishDesc}
                   className="text-body"
                   rows={2}
                 />
                 <Textarea
                   value={formData.descriptionRu}
                   onChange={(e) => setFormData({ ...formData, descriptionRu: e.target.value })}
-                  placeholder="Описание на русском"
+                  placeholder={t.admin.russianDesc}
                   className="text-body"
                   rows={2}
                 />
                 <Textarea
                   value={formData.descriptionUz}
                   onChange={(e) => setFormData({ ...formData, descriptionUz: e.target.value })}
-                  placeholder="O'zbek tilida tavsif"
+                  placeholder={t.admin.uzbekDesc}
                   className="text-body"
                   rows={2}
                 />
@@ -247,20 +249,20 @@ export default function AdminProducts() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-body">Sizes (comma-separated)</Label>
+                  <Label className="text-body">{t.admin.sizes}</Label>
                   <Input
                     value={formData.sizes}
                     onChange={(e) => setFormData({ ...formData, sizes: e.target.value })}
-                    placeholder="S,M,L,XL"
+                    placeholder={t.admin.sizesPlaceholder}
                     className="text-body"
                   />
                 </div>
                 <div>
-                  <Label className="text-body">Colors (comma-separated)</Label>
+                  <Label className="text-body">{t.admin.colors}</Label>
                   <Input
                     value={formData.colors}
                     onChange={(e) => setFormData({ ...formData, colors: e.target.value })}
-                    placeholder="White,Cream,Beige"
+                    placeholder={t.admin.colorsPlaceholder}
                     className="text-body"
                   />
                 </div>
@@ -272,12 +274,12 @@ export default function AdminProducts() {
                   onCheckedChange={(checked) => setFormData({ ...formData, featured: checked })}
                   data-testid="switch-featured"
                 />
-                <Label className="text-body">Featured Product</Label>
+                <Label className="text-body">{t.admin.featured}</Label>
               </div>
 
               <Button type="submit" className="w-full text-body" disabled={saveMutation.isPending} data-testid="button-save-product">
                 {saveMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                {editingProduct ? "Update Product" : "Create Product"}
+                {editingProduct ? t.admin.updateProduct : t.admin.createProduct}
               </Button>
             </form>
           </DialogContent>
@@ -296,10 +298,10 @@ export default function AdminProducts() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Featured</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{t.admin.name}</TableHead>
+                  <TableHead>{t.admin.category}</TableHead>
+                  <TableHead>{t.admin.featured}</TableHead>
+                  <TableHead className="text-right">{t.admin.actions}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -312,7 +314,7 @@ export default function AdminProducts() {
                       {categories.find((c) => c.id === product.categoryId)?.nameEn || "-"}
                     </TableCell>
                     <TableCell>
-                      {product.featured && <Badge variant="secondary">Featured</Badge>}
+                      {product.featured && <Badge variant="secondary">{t.admin.featured}</Badge>}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">

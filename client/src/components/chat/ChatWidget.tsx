@@ -225,7 +225,7 @@ export function ChatWidget() {
         </div>
         <Button
           size="icon"
-          className="h-14 w-14 rounded-full shadow-lg bg-stone-100 hover:bg-stone-200 text-stone-600 border border-stone-200 transition-transform duration-300 active:scale-95"
+          className="h-14 w-14 rounded-full shadow-lg bg-stone-100 hover:bg-stone-200 text-stone-600 border border-stone-200 transition-all duration-300 active:scale-95 no-default-hover-elevate no-default-active-elevate"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" strokeWidth={1.5} />}

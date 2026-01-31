@@ -237,6 +237,22 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Trust Elements: Client Partners */}
+      <section className="py-24 bg-background border-b border-primary/5">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center">
+            <span className="text-[10px] uppercase tracking-[0.4em] text-primary/40 font-semibold mb-12">Institutional Partners</span>
+            <div className="w-full flex flex-wrap justify-center items-center gap-x-24 gap-y-12 opacity-20 grayscale">
+              <div className="font-serif italic text-2xl tracking-tighter">Grand Hyatt</div>
+              <div className="font-serif italic text-2xl tracking-tighter">Ritz-Carlton</div>
+              <div className="font-serif italic text-2xl tracking-tighter">Four Seasons</div>
+              <div className="font-serif italic text-2xl tracking-tighter">Mandarin Oriental</div>
+              <div className="font-serif italic text-2xl tracking-tighter">St. Regis</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Trending Products Section */}
       {trendingProducts.length > 0 && (
         <section className="py-24 lg:py-32 bg-[#F9F7F5]">

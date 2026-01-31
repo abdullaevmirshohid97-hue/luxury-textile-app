@@ -11,11 +11,23 @@ interface ChatMessage {
   content: string;
 }
 
-const GREETING_OPTIONS = [
-  { id: "hospitality", label: "A hotel or hospitality project" },
-  { id: "retail", label: "A retail or private label brand" },
-  { id: "personal", label: "Personal or home use" },
-];
+const GREETING_OPTIONS = {
+  uz: [
+    { id: "hospitality", label: "Mehmonxona yoki mehmondo'stlik loyihasi" },
+    { id: "retail", label: "Chakana savdo yoki xususiy brend" },
+    { id: "personal", label: "Shaxsiy yoki uy foydalanish" },
+  ],
+  ru: [
+    { id: "hospitality", label: "Отель или гостиничный проект" },
+    { id: "retail", label: "Розничная торговля или собственный бренд" },
+    { id: "personal", label: "Личное или домашнее использование" },
+  ],
+  en: [
+    { id: "hospitality", label: "A hotel or hospitality project" },
+    { id: "retail", label: "A retail or private label brand" },
+    { id: "personal", label: "Personal or home use" },
+  ],
+};
 
 export function ChatWidget() {
   const t = useTranslations();
@@ -28,12 +40,18 @@ export function ChatWidget() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const greetingQuestion = {
+    uz: "Kimlar uchun mahsulot tanlamoqdasiz?",
+    ru: "Для кого вы подбираете продукцию?",
+    en: "Who are you selecting products for?",
+  };
+
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      setMessages([{ role: "assistant", content: "Who are you selecting products for?" }]);
+      setMessages([{ role: "assistant", content: greetingQuestion[language] }]);
       setShowOptions(true);
     }
-  }, [isOpen, messages.length]);
+  }, [isOpen, messages.length, language]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -111,9 +129,12 @@ export function ChatWidget() {
         }
       }
     } catch (error) {
+      const errorMsg = language === 'uz' ? "Xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring." :
+                       language === 'ru' ? "Произошла ошибка. Пожалуйста, попробуйте ещё раз." :
+                       "I encountered an error. Please try again.";
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "I encountered an error. Please try again." },
+        { role: "assistant", content: errorMsg },
       ]);
     } finally {
       setIsLoading(false);
@@ -138,7 +159,9 @@ export function ChatWidget() {
             className="fixed bottom-24 right-4 sm:right-8 w-[calc(100vw-2rem)] sm:w-[380px] h-[500px] bg-white border border-stone-200 rounded-lg shadow-2xl flex flex-col z-[100]"
           >
             <div className="flex items-center justify-between p-6 border-b border-stone-100">
-              <h3 className="text-[11px] uppercase tracking-[0.2em] font-semibold text-stone-400">Consultant</h3>
+              <h3 className="text-[11px] uppercase tracking-[0.2em] font-semibold text-stone-400">
+                {language === 'uz' ? 'Maslahatchi' : language === 'ru' ? 'Консультант' : 'Consultant'}
+              </h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -166,7 +189,7 @@ export function ChatWidget() {
                       {message.content}
                       {message.role === "assistant" && index === 0 && showOptions && (
                         <div className="mt-6 flex flex-col gap-2">
-                          {GREETING_OPTIONS.map((opt) => (
+                          {GREETING_OPTIONS[language].map((opt) => (
                             <button
                               key={opt.id}
                               onClick={() => selectOption(opt.id, opt.label)}
@@ -197,7 +220,7 @@ export function ChatWidget() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Type your message..."
+                  placeholder={language === 'uz' ? 'Xabaringizni yozing...' : language === 'ru' ? 'Напишите сообщение...' : 'Type your message...'}
                   className="h-10 text-[14px] font-light border-stone-200 focus-visible:ring-stone-400 focus-visible:ring-offset-0 rounded-none bg-stone-50/30"
                   disabled={isLoading}
                 />
@@ -219,7 +242,9 @@ export function ChatWidget() {
         <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
           <div className="bg-white border border-stone-200 px-4 py-2 rounded shadow-sm">
             <p className="text-[11px] text-stone-500 font-light tracking-wide whitespace-nowrap">
-              Get guidance on choosing the right textile
+              {language === 'uz' ? "To'g'ri tekstilni tanlashda yordam oling" : 
+               language === 'ru' ? 'Получите консультацию по выбору текстиля' : 
+               'Get guidance on choosing the right textile'}
             </p>
           </div>
         </div>

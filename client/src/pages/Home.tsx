@@ -298,7 +298,11 @@ export default function Home() {
       <section className="py-24 bg-background border-b border-primary/5">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-primary/40 font-semibold mb-12">Institutional Partners</span>
+            <span className="text-[10px] uppercase tracking-[0.4em] text-primary/40 font-semibold mb-12">
+              {language === 'uz' ? 'Institutsional Hamkorlar' : 
+               language === 'ru' ? 'Институциональные Партнёры' : 
+               'Institutional Partners'}
+            </span>
             <div className="w-full flex flex-wrap justify-center items-center gap-x-24 gap-y-12 opacity-20 grayscale">
               <div className="font-serif italic text-2xl tracking-tighter">Grand Hyatt</div>
               <div className="font-serif italic text-2xl tracking-tighter">Ritz-Carlton</div>

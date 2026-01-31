@@ -1,7 +1,7 @@
 # Mary Collection - Luxury Home Textiles
 
 ## Overview
-Mary Collection is a production-ready AI-powered B2B & export sales platform for luxury home textiles. The site features a minimalist Hermes/Armani/Gucci-inspired design with a cream/beige/soft brown color palette.
+Mary Collection is a production-ready AI-powered B2B & export sales platform for luxury home textiles. The site features a minimalist "quiet luxury" aesthetic inspired by Brunello Cucinelli, Armani, and Ralph Lauren, with a cream/beige/soft brown color palette. Content is investor-pitch ready with premium B2B positioning.
 
 ## Tech Stack
 - **Frontend**: React + TypeScript + Vite, TailwindCSS, Shadcn UI, Framer Motion
@@ -13,8 +13,10 @@ Mary Collection is a production-ready AI-powered B2B & export sales platform for
 - **Styling**: Luxury design system with Playfair Display font
 
 ## Features
-- Full multilingual support (Uzbek, Russian, English)
-- AI-powered chat assistant for product recommendations (OpenAI gpt-4o-mini)
+- Full multilingual support (Uzbek, Russian, English) — default language: Uzbek
+- Premium luxury brand voice across all content (investor-pitch ready)
+- AI-powered consultative chat assistant (OpenAI gpt-4o-mini) — closed by default, no auto-opening
+- Three-segment B2B user paths: Hospitality, Private Label/Retail, Private Collections
 - Secure admin panel with bcrypt authentication and PostgreSQL sessions
 - Image upload support for products
 - CRUD operations for categories, products, inquiries
@@ -91,6 +93,14 @@ uploads/             # Product image uploads directory
 - All menus, labels, forms, buttons, and messages are localized
 - Temperature badges (HOT/WARM/COLD), units (pcs), and placeholders translated
 - Reuses existing i18n system from `client/src/lib/i18n.ts`
+
+## Content & Brand Voice
+- Premium luxury brand voice — minimal, confident, high-end
+- Vertical textile manufacturer positioning (from raw cotton to finished product)
+- B2B-focused clarity for decision-makers (hotels, retailers, private label partners)
+- All text reviewed for grammar, spelling, and typography (proper dashes, spacing)
+- Consultative AI assistant — never sells directly, guides to human contact
+- Three human-led outcomes: hotel project inquiry, private label inquiry, or quotation request
 
 ## Analytics-Driven Features
 - **Trending Products**: Home page shows products trending based on click analytics (last 7 days)

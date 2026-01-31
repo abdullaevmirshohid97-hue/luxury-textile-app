@@ -112,20 +112,20 @@ export default function Home() {
               className="text-5xl sm:text-6xl lg:text-7xl font-semibold leading-[1.1] mb-8"
               data-testid="text-hero-title"
             >
-              The Science of <br />
-              <span className="text-white/80">Luxury Production</span>
+              The Art of <br />
+              <span className="text-white/80">Vertical Mastery</span>
             </motion.h1>
             <motion.p
               variants={fadeInUp}
               className="text-xl sm:text-2xl text-white/80 mb-12 max-w-xl font-light leading-relaxed"
               data-testid="text-hero-subtitle"
             >
-              Factory-direct luxury textiles engineered for scale. Controlling quality from fiber to finish.
+              Primary manufacturers of luxury towels and bathrobes. From raw fiber to refined finish, we define the standard of excellence.
             </motion.p>
             <motion.div variants={fadeInUp} className="flex flex-wrap gap-6">
               <Link href="/catalog">
                 <Button size="lg" className="min-w-[200px] h-14 rounded-none uppercase tracking-widest text-xs font-semibold bg-white text-black hover:bg-white/90 shadow-lg" data-testid="button-shop-collection">
-                  {t.home.shopCollection}
+                  View Collections
                 </Button>
               </Link>
               <Link href="/bulk-order">
@@ -135,7 +135,7 @@ export default function Home() {
                   className="min-w-[200px] h-14 rounded-none uppercase tracking-widest text-xs font-semibold bg-white/5 border-white/40 text-white backdrop-blur-md hover:bg-white/10"
                   data-testid="button-wholesale-offer"
                 >
-                  {t.nav.bulkOrder}
+                  Factory Direct Inquiry
                 </Button>
               </Link>
             </motion.div>
@@ -154,16 +154,21 @@ export default function Home() {
             className="grid lg:grid-cols-2 gap-16 items-center"
           >
             <div>
-              <span className="text-xs uppercase tracking-[0.3em] text-primary/60 font-medium mb-4 block">Industrial Excellence</span>
+              <span className="text-xs uppercase tracking-[0.3em] text-primary/60 font-medium mb-4 block">Our Origin</span>
               <h2 className="text-4xl sm:text-5xl font-semibold mb-8 leading-tight" data-testid="text-philosophy-title">
-                Vertical Manufacturing Heritage
+                The Standard of Vertically Integrated Production
               </h2>
               <p className="text-body text-muted-foreground text-xl leading-relaxed font-light italic mb-8">
-                "From raw Uzbek fiber to finished luxury product, we control every micron of quality."
+                "True luxury is found in the integrity of the process."
               </p>
-              <p className="text-body text-muted-foreground text-lg leading-relaxed" data-testid="text-philosophy-content">
-                As a primary manufacturer, Mary Collection eliminates intermediaries, providing world-class hospitality and retail partners with direct access to superior textile engineering and scalable production.
-              </p>
+              <div className="space-y-6 text-body text-muted-foreground text-lg leading-relaxed font-light">
+                <p>
+                  We exist to bridge the gap between industrial scale and artisan quality. As primary manufacturers, we control every phase of production—from the selection of raw long-staple cotton to the final precision stitch.
+                </p>
+                <p>
+                  Quality matters because it is the silent ambassador of a brand. World-class hotels choose Mary Collection because our textiles maintain their sensory integrity through hundreds of industrial laundering cycles, ensuring a consistent guest experience.
+                </p>
+              </div>
             </div>
             <div className="relative group">
               <div className="absolute -inset-4 border border-primary/10 rounded-lg -z-10 group-hover:scale-105 transition-transform duration-700" />
@@ -185,14 +190,14 @@ export default function Home() {
             <div className="p-12 border-b lg:border-b-0 lg:border-r border-primary/10 flex flex-col justify-between hover:bg-primary/[0.02] transition-colors">
               <div>
                 <Building2 className="w-10 h-10 mb-8 text-primary/40" />
-                <h3 className="text-2xl font-semibold mb-4 tracking-tight">Luxury Hospitality</h3>
+                <h3 className="text-2xl font-semibold mb-4 tracking-tight">Hospitality Partners</h3>
                 <p className="text-muted-foreground font-light leading-relaxed mb-8">
-                  Institutional-grade durability with 5-star sensory standards. Custom-branded linens and bathrobes for global resorts.
+                  Institutional-grade durability meeting the highest sensory standards. Bespoke linen solutions for global 5-star hospitality.
                 </p>
               </div>
               <Link href="/contact?segment=hospitality">
                 <Button variant="outline" className="w-full rounded-none uppercase tracking-widest text-[10px] font-bold h-12">
-                  Request Hospitality Catalog
+                  Hospitality Solutions
                 </Button>
               </Link>
             </div>
@@ -203,12 +208,12 @@ export default function Home() {
                 <Factory className="w-10 h-10 mb-8 text-primary/40" />
                 <h3 className="text-2xl font-semibold mb-4 tracking-tight">Private Label & Retail</h3>
                 <p className="text-muted-foreground font-light leading-relaxed mb-8">
-                  High-capacity manufacturing for exclusive retail labels. Direct factory pricing with flexible MOQs for resellers.
+                  Scalable manufacturing for exclusive retail collections. Direct factory access with precision quality control and MOQs.
                 </p>
               </div>
               <Link href="/bulk-order?segment=retail">
                 <Button variant="outline" className="w-full rounded-none uppercase tracking-widest text-[10px] font-bold h-12">
-                  Inquire Wholesale
+                  Wholesale Partnership
                 </Button>
               </Link>
             </div>
@@ -219,12 +224,12 @@ export default function Home() {
                 <ShoppingBag className="w-10 h-10 mb-8 text-primary/40" />
                 <h3 className="text-2xl font-semibold mb-4 tracking-tight">Private Collections</h3>
                 <p className="text-muted-foreground font-light leading-relaxed mb-8">
-                  Premium home textiles and curated gift sets. Direct-to-consumer access to our manufacturing heritage.
+                  The manufacturing heritage of Mary Collection brought into the private home. Curated textiles for personal luxury.
                 </p>
               </div>
               <Link href="/catalog?segment=private">
                 <Button variant="outline" className="w-full rounded-none uppercase tracking-widest text-[10px] font-bold h-12">
-                  Shop Personal Collection
+                  Discover Collections
                 </Button>
               </Link>
             </div>
@@ -346,23 +351,23 @@ export default function Home() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
             <div className="text-center">
               <Globe2 className="w-8 h-8 mx-auto mb-6 text-primary/30" />
-              <h4 className="text-sm uppercase tracking-widest font-semibold mb-2">Global Export</h4>
-              <p className="text-xs text-muted-foreground font-light">Serving markets across EU, USA, and CIS.</p>
+              <h4 className="text-sm uppercase tracking-widest font-semibold mb-2">Global Logistics</h4>
+              <p className="text-xs text-muted-foreground font-light">Seamless export to EU, USA, and CIS markets.</p>
             </div>
             <div className="text-center">
               <ShieldCheck className="w-8 h-8 mx-auto mb-6 text-primary/30" />
-              <h4 className="text-sm uppercase tracking-widest font-semibold mb-2">Quality Assurance</h4>
-              <p className="text-xs text-muted-foreground font-light">OEKO-TEX® certified manufacturing.</p>
+              <h4 className="text-sm uppercase tracking-widest font-semibold mb-2">Verified Quality</h4>
+              <p className="text-xs text-muted-foreground font-light">OEKO-TEX® certified industrial standards.</p>
             </div>
             <div className="text-center">
               <Factory className="w-8 h-8 mx-auto mb-6 text-primary/30" />
-              <h4 className="text-sm uppercase tracking-widest font-semibold mb-2">Direct Supply</h4>
-              <p className="text-xs text-muted-foreground font-light">Factory-direct pricing and logistics.</p>
+              <h4 className="text-sm uppercase tracking-widest font-semibold mb-2">Primary Source</h4>
+              <p className="text-xs text-muted-foreground font-light">Factory-direct transparency and scale.</p>
             </div>
             <div className="text-center">
               <Award className="w-8 h-8 mx-auto mb-6 text-primary/30" />
-              <h4 className="text-sm uppercase tracking-widest font-semibold mb-2">Custom Branding</h4>
-              <p className="text-xs text-muted-foreground font-light">Bespoke embroidery and packaging.</p>
+              <h4 className="text-sm uppercase tracking-widest font-semibold mb-2">Bespoke Design</h4>
+              <p className="text-xs text-muted-foreground font-light">Custom embroidery and private labeling.</p>
             </div>
           </div>
         </div>
@@ -494,7 +499,7 @@ export default function Home() {
           <div className="mt-20 text-center">
             <Link href="/contact">
               <Button size="lg" className="rounded-none px-16 h-14 uppercase tracking-[0.3em] text-[10px] font-bold">
-                Request a Consultation
+                Begin a Partnership
               </Button>
             </Link>
           </div>

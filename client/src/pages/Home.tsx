@@ -85,12 +85,12 @@ export default function Home() {
 
   return (
     <div className="flex flex-col">
-      {/* Enhanced Hero Section */}
+      {/* Hero Section */}
       <section className="relative h-screen min-h-[700px] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={heroLifestyle}
-            alt="Luxury home textiles"
+            alt="Mary Collection Manufacturing"
             className="w-full h-full object-cover scale-105"
           />
           <div className="absolute inset-0 bg-black/40" />
@@ -105,22 +105,22 @@ export default function Home() {
         >
           <div className="max-w-3xl text-white">
             <motion.div variants={fadeInUp} className="mb-4 inline-block">
-              <span className="text-xs uppercase tracking-[0.3em] font-medium text-white/70">Heritage of Excellence</span>
+              <span className="text-xs uppercase tracking-[0.3em] font-medium text-white/70">Vertical Textile Manufacturer</span>
             </motion.div>
             <motion.h1
               variants={fadeInUp}
               className="text-5xl sm:text-6xl lg:text-7xl font-semibold leading-[1.1] mb-8"
               data-testid="text-hero-title"
             >
-              The Art of <br />
-              <span className="text-white/80">Luxury Textiles</span>
+              The Science of <br />
+              <span className="text-white/80">Luxury Production</span>
             </motion.h1>
             <motion.p
               variants={fadeInUp}
               className="text-xl sm:text-2xl text-white/80 mb-12 max-w-xl font-light leading-relaxed"
               data-testid="text-hero-subtitle"
             >
-              Exquisite cotton collections for world-class hotels, spas, and exclusive retail partners. 
+              Factory-direct luxury textiles engineered for scale. Controlling quality from fiber to finish.
             </motion.p>
             <motion.div variants={fadeInUp} className="flex flex-wrap gap-6">
               <Link href="/catalog">
@@ -143,7 +143,7 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* Philosophy Section */}
+      {/* Philosophy Section - Manufacturing focus */}
       <section className="py-24 lg:py-32 luxury-gradient">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -154,22 +154,22 @@ export default function Home() {
             className="grid lg:grid-cols-2 gap-16 items-center"
           >
             <div>
-              <span className="text-xs uppercase tracking-[0.3em] text-primary/60 font-medium mb-4 block">Our Legacy</span>
+              <span className="text-xs uppercase tracking-[0.3em] text-primary/60 font-medium mb-4 block">Industrial Excellence</span>
               <h2 className="text-4xl sm:text-5xl font-semibold mb-8 leading-tight" data-testid="text-philosophy-title">
-                {t.home.philosophy}
+                Vertical Manufacturing Heritage
               </h2>
               <p className="text-body text-muted-foreground text-xl leading-relaxed font-light italic mb-8">
-                "Where Uzbekistan's cotton heritage meets Italian-inspired design standards."
+                "From raw Uzbek fiber to finished luxury product, we control every micron of quality."
               </p>
               <p className="text-body text-muted-foreground text-lg leading-relaxed" data-testid="text-philosophy-content">
-                {t.home.philosophyText}
+                As a primary manufacturer, Mary Collection eliminates intermediaries, providing world-class hospitality and retail partners with direct access to superior textile engineering and scalable production.
               </p>
             </div>
             <div className="relative group">
               <div className="absolute -inset-4 border border-primary/10 rounded-lg -z-10 group-hover:scale-105 transition-transform duration-700" />
               <img
                 src={cottonQuality}
-                alt="Premium cotton fibers"
+                alt="Factory direct production"
                 className="w-full rounded-lg shadow-2xl grayscale hover:grayscale-0 transition-all duration-700"
               />
             </div>
@@ -177,77 +177,57 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Latest Collections Section */}
-      <section className="py-24 lg:py-32 bg-background">
+      {/* Segmented User Paths */}
+      <section className="py-24 lg:py-32 bg-background border-t border-primary/5">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-20"
-          >
-            <span className="text-xs uppercase tracking-[0.3em] text-primary/60 font-medium mb-4 block">Seasonal Series</span>
-            <h2 className="text-4xl sm:text-5xl font-semibold mb-6" data-testid="text-featured-title">
-              Latest Collections
-            </h2>
-            <div className="w-24 h-px bg-primary/20 mx-auto" />
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-12">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <Link href="/catalog?category=bathrobes">
-                <div className="group cursor-pointer">
-                  <div className="aspect-[4/5] overflow-hidden mb-6 relative">
-                    <img
-                      src={heroBathrobe}
-                      alt="The Silk-Cotton Series"
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
-                  </div>
-                  <h3 className="text-2xl font-light tracking-wide mb-3" data-testid="text-collection-bathrobes">
-                    The Silk-Cotton Series
-                  </h3>
-                  <p className="text-body text-muted-foreground font-light mb-4">
-                    Signature bathrobes blending premium long-staple cotton with refined aesthetics for unparalleled comfort.
-                  </p>
-                  <span className="text-xs uppercase tracking-[0.2em] font-medium border-b border-primary/20 pb-1 group-hover:border-primary transition-colors">Discover Series</span>
-                </div>
+          <div className="grid lg:grid-cols-3 gap-0 border border-primary/10">
+            {/* Hospitality Path */}
+            <div className="p-12 border-b lg:border-b-0 lg:border-r border-primary/10 flex flex-col justify-between hover:bg-primary/[0.02] transition-colors">
+              <div>
+                <Building2 className="w-10 h-10 mb-8 text-primary/40" />
+                <h3 className="text-2xl font-semibold mb-4 tracking-tight">Luxury Hospitality</h3>
+                <p className="text-muted-foreground font-light leading-relaxed mb-8">
+                  Institutional-grade durability with 5-star sensory standards. Custom-branded linens and bathrobes for global resorts.
+                </p>
+              </div>
+              <Link href="/contact?segment=hospitality">
+                <Button variant="outline" className="w-full rounded-none uppercase tracking-widest text-[10px] font-bold h-12">
+                  Request Hospitality Catalog
+                </Button>
               </Link>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <Link href="/catalog?category=towels">
-                <div className="group cursor-pointer">
-                  <div className="aspect-[4/5] overflow-hidden mb-6 relative">
-                    <img
-                      src={heroTowels}
-                      alt="The Cloud-Touch Towel Series"
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
-                  </div>
-                  <h3 className="text-2xl font-light tracking-wide mb-3" data-testid="text-collection-towels">
-                    The Artisan Towel Series
-                  </h3>
-                  <p className="text-body text-muted-foreground font-light mb-4">
-                    High-density weave towels designed for rapid absorption and enduring softness, preferred by luxury spas.
-                  </p>
-                  <span className="text-xs uppercase tracking-[0.2em] font-medium border-b border-primary/20 pb-1 group-hover:border-primary transition-colors">Discover Series</span>
-                </div>
+            {/* Retail Path */}
+            <div className="p-12 border-b lg:border-b-0 lg:border-r border-primary/10 flex flex-col justify-between hover:bg-primary/[0.02] transition-colors">
+              <div>
+                <Factory className="w-10 h-10 mb-8 text-primary/40" />
+                <h3 className="text-2xl font-semibold mb-4 tracking-tight">Private Label & Retail</h3>
+                <p className="text-muted-foreground font-light leading-relaxed mb-8">
+                  High-capacity manufacturing for exclusive retail labels. Direct factory pricing with flexible MOQs for resellers.
+                </p>
+              </div>
+              <Link href="/bulk-order?segment=retail">
+                <Button variant="outline" className="w-full rounded-none uppercase tracking-widest text-[10px] font-bold h-12">
+                  Inquire Wholesale
+                </Button>
               </Link>
-            </motion.div>
+            </div>
+
+            {/* Individual Path */}
+            <div className="p-12 flex flex-col justify-between hover:bg-primary/[0.02] transition-colors">
+              <div>
+                <ShoppingBag className="w-10 h-10 mb-8 text-primary/40" />
+                <h3 className="text-2xl font-semibold mb-4 tracking-tight">Private Collections</h3>
+                <p className="text-muted-foreground font-light leading-relaxed mb-8">
+                  Premium home textiles and curated gift sets. Direct-to-consumer access to our manufacturing heritage.
+                </p>
+              </div>
+              <Link href="/catalog?segment=private">
+                <Button variant="outline" className="w-full rounded-none uppercase tracking-widest text-[10px] font-bold h-12">
+                  Shop Personal Collection
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -323,8 +303,8 @@ export default function Home() {
         </section>
       )}
 
-      {/* Professional Use Cases */}
-      <section className="py-24 lg:py-32 bg-background">
+      {/* Professional Use Cases - Segmented Trust */}
+      <section className="py-24 lg:py-32 bg-background border-b border-primary/5">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -332,9 +312,9 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-20"
           >
-            <span className="text-xs uppercase tracking-[0.3em] text-primary/60 font-medium mb-4 block">B2B Solutions</span>
-            <h2 className="text-4xl font-semibold mb-4">Professional Excellence</h2>
-            <p className="text-muted-foreground font-light">Tailored textile solutions for prestigious partners.</p>
+            <span className="text-xs uppercase tracking-[0.3em] text-primary/60 font-medium mb-4 block">Global Scale</span>
+            <h2 className="text-4xl font-semibold mb-4">Industrial Verification</h2>
+            <p className="text-muted-foreground font-light max-w-2xl mx-auto">Vertical integration ensuring consistent quality for the world's most demanding hospitality and retail brands.</p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-12">
@@ -388,7 +368,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why Us Section */}
+      {/* Why Us Section - Capabilities Focus */}
       <section className="py-24 lg:py-32 bg-card">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -398,8 +378,9 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-20"
           >
+            <span className="text-xs uppercase tracking-[0.3em] text-primary/60 font-medium mb-4 block">Manufacturing Capabilities</span>
             <h2 className="text-3xl sm:text-4xl font-semibold uppercase tracking-widest" data-testid="text-whyus-title">
-              {t.home.whyUs}
+              Direct Supply Infrastructure
             </h2>
           </motion.div>
 

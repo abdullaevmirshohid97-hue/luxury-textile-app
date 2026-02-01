@@ -917,6 +917,203 @@ Respond in the user's language (${language}).`;
     }
   });
 
+  // ==================== CONTENT MANAGEMENT ROUTES ====================
+
+  // Public routes for content consumption
+  app.get("/api/content/process-steps", async (_req: Request, res: Response) => {
+    try {
+      const steps = await storage.getProcessSteps();
+      res.json(steps);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch process steps" });
+    }
+  });
+
+  app.get("/api/content/cta/:key", async (req: Request, res: Response) => {
+    try {
+      const cta = await storage.getCtaConfigByKey(req.params.key);
+      if (!cta) return res.status(404).json({ error: "CTA not found" });
+      res.json(cta);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch CTA" });
+    }
+  });
+
+  app.get("/api/content/trust-blocks/:page", async (req: Request, res: Response) => {
+    try {
+      const blocks = await storage.getTrustBlocksByPage(req.params.page);
+      res.json(blocks);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch trust blocks" });
+    }
+  });
+
+  app.get("/api/content/form-options/:field", async (req: Request, res: Response) => {
+    try {
+      const options = await storage.getFormOptionsByField(req.params.field);
+      res.json(options);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch form options" });
+    }
+  });
+
+  // Admin routes for content management
+  app.get("/api/admin/process-steps", requireAdmin, async (_req: Request, res: Response) => {
+    try {
+      const steps = await storage.getProcessSteps();
+      res.json(steps);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch process steps" });
+    }
+  });
+
+  app.post("/api/admin/process-steps", requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const step = await storage.createProcessStep(req.body);
+      res.status(201).json(step);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create process step" });
+    }
+  });
+
+  app.put("/api/admin/process-steps/:id", requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const id = parseId(req.params.id);
+      const step = await storage.updateProcessStep(id, req.body);
+      if (!step) return res.status(404).json({ error: "Process step not found" });
+      res.json(step);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update process step" });
+    }
+  });
+
+  app.delete("/api/admin/process-steps/:id", requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const id = parseId(req.params.id);
+      await storage.deleteProcessStep(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete process step" });
+    }
+  });
+
+  app.get("/api/admin/cta-configs", requireAdmin, async (_req: Request, res: Response) => {
+    try {
+      const ctas = await storage.getCtaConfigs();
+      res.json(ctas);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch CTA configs" });
+    }
+  });
+
+  app.post("/api/admin/cta-configs", requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const cta = await storage.createCtaConfig(req.body);
+      res.status(201).json(cta);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create CTA config" });
+    }
+  });
+
+  app.put("/api/admin/cta-configs/:id", requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const id = parseId(req.params.id);
+      const cta = await storage.updateCtaConfig(id, req.body);
+      if (!cta) return res.status(404).json({ error: "CTA config not found" });
+      res.json(cta);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update CTA config" });
+    }
+  });
+
+  app.delete("/api/admin/cta-configs/:id", requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const id = parseId(req.params.id);
+      await storage.deleteCtaConfig(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete CTA config" });
+    }
+  });
+
+  app.get("/api/admin/trust-blocks", requireAdmin, async (_req: Request, res: Response) => {
+    try {
+      const blocks = await storage.getTrustBlocks();
+      res.json(blocks);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch trust blocks" });
+    }
+  });
+
+  app.post("/api/admin/trust-blocks", requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const block = await storage.createTrustBlock(req.body);
+      res.status(201).json(block);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create trust block" });
+    }
+  });
+
+  app.put("/api/admin/trust-blocks/:id", requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const id = parseId(req.params.id);
+      const block = await storage.updateTrustBlock(id, req.body);
+      if (!block) return res.status(404).json({ error: "Trust block not found" });
+      res.json(block);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update trust block" });
+    }
+  });
+
+  app.delete("/api/admin/trust-blocks/:id", requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const id = parseId(req.params.id);
+      await storage.deleteTrustBlock(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete trust block" });
+    }
+  });
+
+  app.get("/api/admin/form-options", requireAdmin, async (_req: Request, res: Response) => {
+    try {
+      const options = await storage.getFormOptions();
+      res.json(options);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch form options" });
+    }
+  });
+
+  app.post("/api/admin/form-options", requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const option = await storage.createFormOption(req.body);
+      res.status(201).json(option);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create form option" });
+    }
+  });
+
+  app.put("/api/admin/form-options/:id", requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const id = parseId(req.params.id);
+      const option = await storage.updateFormOption(id, req.body);
+      if (!option) return res.status(404).json({ error: "Form option not found" });
+      res.json(option);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update form option" });
+    }
+  });
+
+  app.delete("/api/admin/form-options/:id", requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const id = parseId(req.params.id);
+      await storage.deleteFormOption(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete form option" });
+    }
+  });
+
   return httpServer;
 }
 

@@ -131,6 +131,7 @@ export const LeadSource = {
 export const siteContent = pgTable("site_content", {
   id: serial("id").primaryKey(),
   key: text("key").notNull().unique(),
+  page: text("page").default("global"),
   valueUz: text("value_uz"),
   valueRu: text("value_ru"),
   valueEn: text("value_en"),
@@ -139,6 +140,92 @@ export const siteContent = pgTable("site_content", {
 export const insertSiteContentSchema = createInsertSchema(siteContent).omit({ id: true });
 export type InsertSiteContent = z.infer<typeof insertSiteContentSchema>;
 export type SiteContent = typeof siteContent.$inferSelect;
+
+export const processSteps = pgTable("process_steps", {
+  id: serial("id").primaryKey(),
+  stepKey: text("step_key").notNull().unique(),
+  titleUz: text("title_uz").notNull(),
+  titleRu: text("title_ru").notNull(),
+  titleEn: text("title_en").notNull(),
+  descriptionUz: text("description_uz").notNull(),
+  descriptionRu: text("description_ru").notNull(),
+  descriptionEn: text("description_en").notNull(),
+  icon: text("icon").notNull().default("MessageSquare"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  enabled: boolean("enabled").notNull().default(true),
+});
+
+export const insertProcessStepSchema = createInsertSchema(processSteps).omit({ id: true });
+export type InsertProcessStep = z.infer<typeof insertProcessStepSchema>;
+export type ProcessStep = typeof processSteps.$inferSelect;
+
+export const ctaConfigs = pgTable("cta_configs", {
+  id: serial("id").primaryKey(),
+  ctaKey: text("cta_key").notNull().unique(),
+  labelUz: text("label_uz").notNull(),
+  labelRu: text("label_ru").notNull(),
+  labelEn: text("label_en").notNull(),
+  helperTextUz: text("helper_text_uz"),
+  helperTextRu: text("helper_text_ru"),
+  helperTextEn: text("helper_text_en"),
+  targetUrl: text("target_url").default("/contact"),
+  enabled: boolean("enabled").notNull().default(true),
+});
+
+export const insertCtaConfigSchema = createInsertSchema(ctaConfigs).omit({ id: true });
+export type InsertCtaConfig = z.infer<typeof insertCtaConfigSchema>;
+export type CtaConfig = typeof ctaConfigs.$inferSelect;
+
+export const trustBlocks = pgTable("trust_blocks", {
+  id: serial("id").primaryKey(),
+  blockKey: text("block_key").notNull().unique(),
+  blockType: text("block_type").notNull().default("capability"),
+  page: text("page").notNull().default("home"),
+  titleUz: text("title_uz").notNull(),
+  titleRu: text("title_ru").notNull(),
+  titleEn: text("title_en").notNull(),
+  descriptionUz: text("description_uz"),
+  descriptionRu: text("description_ru"),
+  descriptionEn: text("description_en"),
+  icon: text("icon"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  enabled: boolean("enabled").notNull().default(true),
+});
+
+export const insertTrustBlockSchema = createInsertSchema(trustBlocks).omit({ id: true });
+export type InsertTrustBlock = z.infer<typeof insertTrustBlockSchema>;
+export type TrustBlock = typeof trustBlocks.$inferSelect;
+
+export const formOptions = pgTable("form_options", {
+  id: serial("id").primaryKey(),
+  formField: text("form_field").notNull(),
+  optionValue: text("option_value").notNull(),
+  labelUz: text("label_uz").notNull(),
+  labelRu: text("label_ru").notNull(),
+  labelEn: text("label_en").notNull(),
+  sortOrder: integer("sort_order").notNull().default(0),
+  enabled: boolean("enabled").notNull().default(true),
+});
+
+export const insertFormOptionSchema = createInsertSchema(formOptions).omit({ id: true });
+export type InsertFormOption = z.infer<typeof insertFormOptionSchema>;
+export type FormOption = typeof formOptions.$inferSelect;
+
+export const ContentBlockType = {
+  CAPABILITY: "capability",
+  RISK_REDUCTION: "risk_reduction",
+  AUTHORITY: "authority",
+  USE_CASE: "use_case",
+  FEATURE: "feature",
+} as const;
+
+export const ContentPage = {
+  HOME: "home",
+  BUSINESS: "business",
+  PROCESS: "process",
+  CONTACT: "contact",
+  GLOBAL: "global",
+} as const;
 
 export const settings = pgTable("settings", {
   id: serial("id").primaryKey(),

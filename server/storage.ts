@@ -7,6 +7,10 @@ import type {
   Settings, InsertSettings,
   Lead, InsertLead,
   Analytics, InsertAnalytics,
+  ProcessStep, InsertProcessStep,
+  CtaConfig, InsertCtaConfig,
+  TrustBlock, InsertTrustBlock,
+  FormOption, InsertFormOption,
 } from "@shared/schema";
 import { calculateLeadScore } from "@shared/schema";
 import { randomUUID } from "crypto";
@@ -68,6 +72,37 @@ export interface IStorage {
   getSettings(): Promise<Settings[]>;
   getSettingByKey(key: string): Promise<Settings | undefined>;
   upsertSetting(key: string, value: string): Promise<Settings>;
+
+  // Process Steps
+  getProcessSteps(): Promise<ProcessStep[]>;
+  getProcessStep(id: number): Promise<ProcessStep | undefined>;
+  createProcessStep(step: InsertProcessStep): Promise<ProcessStep>;
+  updateProcessStep(id: number, step: Partial<InsertProcessStep>): Promise<ProcessStep | undefined>;
+  deleteProcessStep(id: number): Promise<void>;
+
+  // CTA Configs
+  getCtaConfigs(): Promise<CtaConfig[]>;
+  getCtaConfig(id: number): Promise<CtaConfig | undefined>;
+  getCtaConfigByKey(key: string): Promise<CtaConfig | undefined>;
+  createCtaConfig(cta: InsertCtaConfig): Promise<CtaConfig>;
+  updateCtaConfig(id: number, cta: Partial<InsertCtaConfig>): Promise<CtaConfig | undefined>;
+  deleteCtaConfig(id: number): Promise<void>;
+
+  // Trust Blocks
+  getTrustBlocks(): Promise<TrustBlock[]>;
+  getTrustBlocksByPage(page: string): Promise<TrustBlock[]>;
+  getTrustBlock(id: number): Promise<TrustBlock | undefined>;
+  createTrustBlock(block: InsertTrustBlock): Promise<TrustBlock>;
+  updateTrustBlock(id: number, block: Partial<InsertTrustBlock>): Promise<TrustBlock | undefined>;
+  deleteTrustBlock(id: number): Promise<void>;
+
+  // Form Options
+  getFormOptions(): Promise<FormOption[]>;
+  getFormOptionsByField(field: string): Promise<FormOption[]>;
+  getFormOption(id: number): Promise<FormOption | undefined>;
+  createFormOption(option: InsertFormOption): Promise<FormOption>;
+  updateFormOption(id: number, option: Partial<InsertFormOption>): Promise<FormOption | undefined>;
+  deleteFormOption(id: number): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -522,6 +557,7 @@ export class MemStorage implements IStorage {
       const updated: SiteContent = { 
         ...existing, 
         key: content.key,
+        page: content.page ?? 'global',
         valueUz: content.valueUz ?? null,
         valueRu: content.valueRu ?? null,
         valueEn: content.valueEn ?? null,
@@ -533,6 +569,7 @@ export class MemStorage implements IStorage {
     const newContent: SiteContent = { 
       id, 
       key: content.key,
+      page: content.page ?? 'global',
       valueUz: content.valueUz ?? null,
       valueRu: content.valueRu ?? null,
       valueEn: content.valueEn ?? null,
@@ -561,6 +598,34 @@ export class MemStorage implements IStorage {
     this.settings.set(key, newSetting);
     return newSetting;
   }
+
+  // Stub implementations for new content entities (MemStorage is legacy, use dbStorage)
+  async getProcessSteps(): Promise<ProcessStep[]> { return []; }
+  async getProcessStep(_id: number): Promise<ProcessStep | undefined> { return undefined; }
+  async createProcessStep(_step: InsertProcessStep): Promise<ProcessStep> { throw new Error("Use dbStorage"); }
+  async updateProcessStep(_id: number, _step: Partial<InsertProcessStep>): Promise<ProcessStep | undefined> { return undefined; }
+  async deleteProcessStep(_id: number): Promise<void> {}
+
+  async getCtaConfigs(): Promise<CtaConfig[]> { return []; }
+  async getCtaConfig(_id: number): Promise<CtaConfig | undefined> { return undefined; }
+  async getCtaConfigByKey(_key: string): Promise<CtaConfig | undefined> { return undefined; }
+  async createCtaConfig(_cta: InsertCtaConfig): Promise<CtaConfig> { throw new Error("Use dbStorage"); }
+  async updateCtaConfig(_id: number, _cta: Partial<InsertCtaConfig>): Promise<CtaConfig | undefined> { return undefined; }
+  async deleteCtaConfig(_id: number): Promise<void> {}
+
+  async getTrustBlocks(): Promise<TrustBlock[]> { return []; }
+  async getTrustBlocksByPage(_page: string): Promise<TrustBlock[]> { return []; }
+  async getTrustBlock(_id: number): Promise<TrustBlock | undefined> { return undefined; }
+  async createTrustBlock(_block: InsertTrustBlock): Promise<TrustBlock> { throw new Error("Use dbStorage"); }
+  async updateTrustBlock(_id: number, _block: Partial<InsertTrustBlock>): Promise<TrustBlock | undefined> { return undefined; }
+  async deleteTrustBlock(_id: number): Promise<void> {}
+
+  async getFormOptions(): Promise<FormOption[]> { return []; }
+  async getFormOptionsByField(_field: string): Promise<FormOption[]> { return []; }
+  async getFormOption(_id: number): Promise<FormOption | undefined> { return undefined; }
+  async createFormOption(_option: InsertFormOption): Promise<FormOption> { throw new Error("Use dbStorage"); }
+  async updateFormOption(_id: number, _option: Partial<InsertFormOption>): Promise<FormOption | undefined> { return undefined; }
+  async deleteFormOption(_id: number): Promise<void> {}
 }
 
 export const storage = new MemStorage();

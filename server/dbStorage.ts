@@ -1,8 +1,9 @@
-import { eq } from "drizzle-orm";
+import { eq, asc } from "drizzle-orm";
 import bcrypt from "bcrypt";
 import { db } from "./db";
 import {
   users, categories, products, inquiries, leads, siteContent, settings, analytics,
+  processSteps, ctaConfigs, trustBlocks, formOptions,
   type User, type InsertUser,
   type Category, type InsertCategory,
   type Product, type InsertProduct,
@@ -11,6 +12,10 @@ import {
   type SiteContent, type InsertSiteContent,
   type Settings, type InsertSettings,
   type Analytics, type InsertAnalytics,
+  type ProcessStep, type InsertProcessStep,
+  type CtaConfig, type InsertCtaConfig,
+  type TrustBlock, type InsertTrustBlock,
+  type FormOption, type InsertFormOption,
   calculateLeadScore,
 } from "@shared/schema";
 import { sql, and, gte, desc } from "drizzle-orm";
@@ -286,6 +291,115 @@ export class DatabaseStorage implements IStorage {
     const [created] = await db.insert(settings).values({ key, value }).returning();
     return created;
   }
+
+  // Process Steps
+  async getProcessSteps(): Promise<ProcessStep[]> {
+    return db.select().from(processSteps).where(eq(processSteps.enabled, true)).orderBy(asc(processSteps.sortOrder));
+  }
+
+  async getProcessStep(id: number): Promise<ProcessStep | undefined> {
+    const [step] = await db.select().from(processSteps).where(eq(processSteps.id, id));
+    return step;
+  }
+
+  async createProcessStep(step: InsertProcessStep): Promise<ProcessStep> {
+    const [created] = await db.insert(processSteps).values(step).returning();
+    return created;
+  }
+
+  async updateProcessStep(id: number, step: Partial<InsertProcessStep>): Promise<ProcessStep | undefined> {
+    const [updated] = await db.update(processSteps).set(step).where(eq(processSteps.id, id)).returning();
+    return updated;
+  }
+
+  async deleteProcessStep(id: number): Promise<void> {
+    await db.delete(processSteps).where(eq(processSteps.id, id));
+  }
+
+  // CTA Configs
+  async getCtaConfigs(): Promise<CtaConfig[]> {
+    return db.select().from(ctaConfigs).where(eq(ctaConfigs.enabled, true));
+  }
+
+  async getCtaConfig(id: number): Promise<CtaConfig | undefined> {
+    const [cta] = await db.select().from(ctaConfigs).where(eq(ctaConfigs.id, id));
+    return cta;
+  }
+
+  async getCtaConfigByKey(key: string): Promise<CtaConfig | undefined> {
+    const [cta] = await db.select().from(ctaConfigs).where(eq(ctaConfigs.ctaKey, key));
+    return cta;
+  }
+
+  async createCtaConfig(cta: InsertCtaConfig): Promise<CtaConfig> {
+    const [created] = await db.insert(ctaConfigs).values(cta).returning();
+    return created;
+  }
+
+  async updateCtaConfig(id: number, cta: Partial<InsertCtaConfig>): Promise<CtaConfig | undefined> {
+    const [updated] = await db.update(ctaConfigs).set(cta).where(eq(ctaConfigs.id, id)).returning();
+    return updated;
+  }
+
+  async deleteCtaConfig(id: number): Promise<void> {
+    await db.delete(ctaConfigs).where(eq(ctaConfigs.id, id));
+  }
+
+  // Trust Blocks
+  async getTrustBlocks(): Promise<TrustBlock[]> {
+    return db.select().from(trustBlocks).where(eq(trustBlocks.enabled, true)).orderBy(asc(trustBlocks.sortOrder));
+  }
+
+  async getTrustBlocksByPage(page: string): Promise<TrustBlock[]> {
+    return db.select().from(trustBlocks).where(and(eq(trustBlocks.page, page), eq(trustBlocks.enabled, true))).orderBy(asc(trustBlocks.sortOrder));
+  }
+
+  async getTrustBlock(id: number): Promise<TrustBlock | undefined> {
+    const [block] = await db.select().from(trustBlocks).where(eq(trustBlocks.id, id));
+    return block;
+  }
+
+  async createTrustBlock(block: InsertTrustBlock): Promise<TrustBlock> {
+    const [created] = await db.insert(trustBlocks).values(block).returning();
+    return created;
+  }
+
+  async updateTrustBlock(id: number, block: Partial<InsertTrustBlock>): Promise<TrustBlock | undefined> {
+    const [updated] = await db.update(trustBlocks).set(block).where(eq(trustBlocks.id, id)).returning();
+    return updated;
+  }
+
+  async deleteTrustBlock(id: number): Promise<void> {
+    await db.delete(trustBlocks).where(eq(trustBlocks.id, id));
+  }
+
+  // Form Options
+  async getFormOptions(): Promise<FormOption[]> {
+    return db.select().from(formOptions).where(eq(formOptions.enabled, true)).orderBy(asc(formOptions.sortOrder));
+  }
+
+  async getFormOptionsByField(field: string): Promise<FormOption[]> {
+    return db.select().from(formOptions).where(and(eq(formOptions.formField, field), eq(formOptions.enabled, true))).orderBy(asc(formOptions.sortOrder));
+  }
+
+  async getFormOption(id: number): Promise<FormOption | undefined> {
+    const [option] = await db.select().from(formOptions).where(eq(formOptions.id, id));
+    return option;
+  }
+
+  async createFormOption(option: InsertFormOption): Promise<FormOption> {
+    const [created] = await db.insert(formOptions).values(option).returning();
+    return created;
+  }
+
+  async updateFormOption(id: number, option: Partial<InsertFormOption>): Promise<FormOption | undefined> {
+    const [updated] = await db.update(formOptions).set(option).where(eq(formOptions.id, id)).returning();
+    return updated;
+  }
+
+  async deleteFormOption(id: number): Promise<void> {
+    await db.delete(formOptions).where(eq(formOptions.id, id));
+  }
 }
 
 export async function initializeDatabase(storage: DatabaseStorage): Promise<void> {
@@ -343,6 +457,74 @@ export async function initializeDatabase(storage: DatabaseStorage): Promise<void
   const aiSetting = await storage.getSettingByKey("ai_assistant_enabled");
   if (!aiSetting) {
     await storage.upsertSetting("ai_assistant_enabled", "true");
+  }
+
+  // Seed process steps for B2B manufacturing process page
+  const existingSteps = await storage.getProcessSteps();
+  if (existingSteps.length === 0) {
+    console.log("[db] Seeding process steps...");
+    const defaultSteps: InsertProcessStep[] = [
+      { stepKey: "inquiry", sortOrder: 1, icon: "FileText", titleEn: "Initial Inquiry", titleRu: "Первичный запрос", titleUz: "Dastlabki so'rov", descriptionEn: "Submit your requirements through our inquiry form. Include product specifications, estimated volumes, and delivery timeline.", descriptionRu: "Отправьте ваши требования через форму запроса. Укажите спецификации продукции, предполагаемые объемы и сроки поставки.", descriptionUz: "So'rov formasi orqali talablaringizni yuboring. Mahsulot spetsifikatsiyalari, taxminiy hajmlar va yetkazib berish muddatlarini ko'rsating.", enabled: true },
+      { stepKey: "specification", sortOrder: 2, icon: "ClipboardList", titleEn: "Specification Review", titleRu: "Анализ спецификаций", titleUz: "Spetsifikatsiya tahlili", descriptionEn: "Our technical team reviews your specifications and provides a detailed quotation within 24-48 hours.", descriptionRu: "Наша техническая команда рассматривает ваши спецификации и предоставляет детальное коммерческое предложение в течение 24-48 часов.", descriptionUz: "Texnik jamoamiz sizning spetsifikatsiyalaringizni ko'rib chiqadi va 24-48 soat ichida batafsil taklif beradi.", enabled: true },
+      { stepKey: "sampling", sortOrder: 3, icon: "Package", titleEn: "Sampling & Approval", titleRu: "Образцы и утверждение", titleUz: "Namunalar va tasdiqlash", descriptionEn: "We produce samples for your approval before full production. Sampling cost applied to first order.", descriptionRu: "Мы производим образцы для вашего одобрения перед полным производством. Стоимость образцов включается в первый заказ.", descriptionUz: "To'liq ishlab chiqarishdan oldin sizning tasdig'ingiz uchun namunalar ishlab chiqaramiz. Namuna narxi birinchi buyurtmaga qo'shiladi.", enabled: true },
+      { stepKey: "pilot", sortOrder: 4, icon: "Settings", titleEn: "Pilot Production", titleRu: "Пилотное производство", titleUz: "Pilot ishlab chiqarish", descriptionEn: "Small batch production to validate quality standards and production processes.", descriptionRu: "Производство небольшой партии для проверки стандартов качества и производственных процессов.", descriptionUz: "Sifat standartlari va ishlab chiqarish jarayonlarini tekshirish uchun kichik partiya ishlab chiqarish.", enabled: true },
+      { stepKey: "production", sortOrder: 5, icon: "Factory", titleEn: "Full-Scale Manufacturing", titleRu: "Полномасштабное производство", titleUz: "To'liq ko'lamli ishlab chiqarish", descriptionEn: "Vertically integrated production from raw cotton to finished product. All manufacturing in Uzbekistan.", descriptionRu: "Вертикально интегрированное производство от сырого хлопка до готового продукта. Все производство в Узбекистане.", descriptionUz: "Xom paxtadan tayyor mahsulotgacha vertikal integratsiyalashgan ishlab chiqarish. Barcha ishlab chiqarish O'zbekistonda.", enabled: true },
+      { stepKey: "delivery", sortOrder: 6, icon: "Truck", titleEn: "Quality Control & Delivery", titleRu: "Контроль качества и доставка", titleUz: "Sifat nazorati va yetkazib berish", descriptionEn: "Final QC inspection and international shipping. FOB/CIF terms available.", descriptionRu: "Финальная инспекция контроля качества и международная доставка. Доступны условия FOB/CIF.", descriptionUz: "Yakuniy sifat nazorati tekshiruvi va xalqaro yetkazib berish. FOB/CIF shartlari mavjud.", enabled: true },
+    ];
+    for (const step of defaultSteps) {
+      await storage.createProcessStep(step);
+    }
+    console.log("[db] Process steps seeded");
+  }
+
+  // Seed CTA configurations
+  const existingCtas = await storage.getCtaConfigs();
+  if (existingCtas.length === 0) {
+    console.log("[db] Seeding CTA configs...");
+    const defaultCtas: InsertCtaConfig[] = [
+      { ctaKey: "home_hero", labelEn: "Request a Quote", labelRu: "Запросить расчет", labelUz: "Narx so'rash", helperTextEn: "Get a personalized quote within 24-48 hours", helperTextRu: "Получите индивидуальный расчет в течение 24-48 часов", helperTextUz: "24-48 soat ichida shaxsiy narx oling", targetUrl: "/contact", enabled: true },
+      { ctaKey: "home_secondary", labelEn: "View Our Process", labelRu: "Наш процесс", labelUz: "Jarayonimiz", helperTextEn: "See our 6-step B2B manufacturing process", helperTextRu: "Ознакомьтесь с нашим 6-этапным производственным процессом", helperTextUz: "Bizning 6 bosqichli B2B ishlab chiqarish jarayonimizni ko'ring", targetUrl: "/process", enabled: true },
+      { ctaKey: "business_inquiry", labelEn: "Submit Business Inquiry", labelRu: "Отправить бизнес-запрос", labelUz: "Biznes so'rov yuborish", helperTextEn: "Response within 24-48 hours", helperTextRu: "Ответ в течение 24-48 часов", helperTextUz: "24-48 soat ichida javob", targetUrl: "/contact", enabled: true },
+      { ctaKey: "process_cta", labelEn: "Start Your Inquiry", labelRu: "Начать запрос", labelUz: "So'rovni boshlash", helperTextEn: "Sampling available before commitment", helperTextRu: "Образцы доступны до обязательств", helperTextUz: "Majburiyatdan oldin namunalar mavjud", targetUrl: "/contact", enabled: true },
+    ];
+    for (const cta of defaultCtas) {
+      await storage.createCtaConfig(cta);
+    }
+    console.log("[db] CTA configs seeded");
+  }
+
+  // Seed trust blocks
+  const existingBlocks = await storage.getTrustBlocks();
+  if (existingBlocks.length === 0) {
+    console.log("[db] Seeding trust blocks...");
+    const defaultBlocks: InsertTrustBlock[] = [
+      { blockKey: "iso_certified", page: "home", sortOrder: 1, icon: "Shield", titleEn: "ISO 9001 Certified", titleRu: "Сертификат ISO 9001", titleUz: "ISO 9001 sertifikati", descriptionEn: "Quality management system certified", descriptionRu: "Сертифицированная система менеджмента качества", descriptionUz: "Sertifikatlangan sifat boshqaruv tizimi", enabled: true },
+      { blockKey: "vertical_integration", page: "home", sortOrder: 2, icon: "Layers", titleEn: "Vertically Integrated", titleRu: "Вертикальная интеграция", titleUz: "Vertikal integratsiya", descriptionEn: "From raw cotton to finished product", descriptionRu: "От сырого хлопка до готовой продукции", descriptionUz: "Xom paxtadan tayyor mahsulotgacha", enabled: true },
+      { blockKey: "moq", page: "business", sortOrder: 1, icon: "Package", titleEn: "MOQ 500 Units", titleRu: "МОЗ 500 единиц", titleUz: "MOQ 500 dona", descriptionEn: "Minimum order quantity for B2B partners", descriptionRu: "Минимальный объем заказа для B2B партнеров", descriptionUz: "B2B hamkorlar uchun minimal buyurtma hajmi", enabled: true },
+      { blockKey: "lead_time", page: "business", sortOrder: 2, icon: "Clock", titleEn: "4-6 Week Lead Time", titleRu: "Срок 4-6 недель", titleUz: "4-6 hafta muddat", descriptionEn: "Standard production timeline", descriptionRu: "Стандартные сроки производства", descriptionUz: "Standart ishlab chiqarish muddati", enabled: true },
+    ];
+    for (const block of defaultBlocks) {
+      await storage.createTrustBlock(block);
+    }
+    console.log("[db] Trust blocks seeded");
+  }
+
+  // Seed form options
+  const existingOptions = await storage.getFormOptions();
+  if (existingOptions.length === 0) {
+    console.log("[db] Seeding form options...");
+    const defaultOptions: InsertFormOption[] = [
+      { formField: "sector", optionValue: "hospitality", sortOrder: 1, labelEn: "Hospitality (Hotels & Spas)", labelRu: "Гостеприимство (Отели и СПА)", labelUz: "Mehmondo'stlik (Mehmonxonalar va SPA)", enabled: true },
+      { formField: "sector", optionValue: "retail", sortOrder: 2, labelEn: "Retail / Private Label", labelRu: "Розница / Частная марка", labelUz: "Chakana savdo / Xususiy brend", enabled: true },
+      { formField: "sector", optionValue: "contract", sortOrder: 3, labelEn: "Contract Manufacturing (OEM/ODM)", labelRu: "Контрактное производство (OEM/ODM)", labelUz: "Shartnoma ishlab chiqarish (OEM/ODM)", enabled: true },
+      { formField: "volume", optionValue: "500-1000", sortOrder: 1, labelEn: "500 - 1,000 units", labelRu: "500 - 1 000 единиц", labelUz: "500 - 1,000 dona", enabled: true },
+      { formField: "volume", optionValue: "1000-5000", sortOrder: 2, labelEn: "1,000 - 5,000 units", labelRu: "1 000 - 5 000 единиц", labelUz: "1,000 - 5,000 dona", enabled: true },
+      { formField: "volume", optionValue: "5000+", sortOrder: 3, labelEn: "5,000+ units", labelRu: "5 000+ единиц", labelUz: "5,000+ dona", enabled: true },
+    ];
+    for (const option of defaultOptions) {
+      await storage.createFormOption(option);
+    }
+    console.log("[db] Form options seeded");
   }
 }
 

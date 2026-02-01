@@ -76,6 +76,12 @@ uploads/             # Product image uploads directory
 - `POST /api/inquiries` - Submit contact form
 - `POST /api/chat` - AI assistant (streaming SSE)
 
+### Content Routes (Public)
+- `GET /api/content/process-steps` - Get manufacturing process steps
+- `GET /api/content/cta/:key` - Get CTA config by key (e.g., home_hero, business_inquiry)
+- `GET /api/content/trust-blocks/:page` - Get trust blocks by page (home, business)
+- `GET /api/content/form-options/:field` - Get form options by field (sector, volume)
+
 ### Admin Routes (Protected)
 - `POST /api/admin/login` - Admin authentication
 - `POST /api/admin/logout` - Logout
@@ -85,6 +91,10 @@ uploads/             # Product image uploads directory
 - `GET/POST/PUT/DELETE /api/admin/categories` - Category CRUD
 - `GET/PUT/DELETE /api/admin/inquiries` - Inquiry management
 - `GET/PUT /api/admin/settings` - Site settings
+- `GET/POST/PUT/DELETE /api/admin/process-steps` - Process steps management
+- `GET/POST/PUT/DELETE /api/admin/cta-configs` - CTA configuration management
+- `GET/POST/PUT/DELETE /api/admin/trust-blocks` - Trust blocks management
+- `GET/POST/PUT/DELETE /api/admin/form-options` - Form options management
 
 ## Database Schema
 - **users**: id, username, password (bcrypt hashed), role
@@ -94,6 +104,12 @@ uploads/             # Product image uploads directory
 - **leads**: id, companyName, country, contactPerson, email, phone, productInterest, source, status, priority, score
 - **settings**: key, value pairs for site configuration
 - **session**: PostgreSQL session storage (auto-created)
+
+### Content Management Tables (Admin-Editable)
+- **process_steps**: id, stepKey, title (uz/ru/en), description (uz/ru/en), icon, sortOrder, enabled
+- **cta_configs**: id, ctaKey, label (uz/ru/en), helperText (uz/ru/en), targetUrl, enabled
+- **trust_blocks**: id, blockKey, blockType, page, title (uz/ru/en), description (uz/ru/en), icon, sortOrder, enabled
+- **form_options**: id, formField, optionValue, label (uz/ru/en), sortOrder, enabled
 
 ## Security
 - Passwords hashed with bcrypt (12 salt rounds)

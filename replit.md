@@ -3,6 +3,24 @@
 ## Overview
 Mary Collection is a production-ready AI-powered B2B & export sales platform for luxury home textiles. The site features a minimalist "quiet luxury" aesthetic inspired by Brunello Cucinelli, Armani, and Ralph Lauren, with a cream/beige/soft brown color palette. Content is investor-pitch ready with premium B2B positioning.
 
+## Site Architecture (B2B Trust-First)
+**Primary Positioning**: "Mary Collection is a premium textile manufacturer supplying hotels and retail brands with controlled, made-to-order production."
+
+**Primary Navigation (B2B Path)**:
+- Home → `/` (Qualify B2B intent)
+- For Business → `/business` (Sector capabilities, MOQs)
+- Our Process → `/process` (Manufacturing trust, vertical integration)
+- Inquiry → `/contact` (B2B lead capture)
+
+**Secondary Navigation (Collections dropdown)**:
+- Catalog, Pastel Collection, Spa Collection, Accessories
+
+**Page Jobs**:
+- Homepage: Qualify B2B intent with manufacturing credibility
+- Business: Prove capability (Hospitality, Private Label, Contract sectors)
+- Process: Build trust (6-step manufacturing process, QC)
+- Inquiry: Capture B2B leads (company, sector, volume fields)
+
 ## Tech Stack
 - **Frontend**: React + TypeScript + Vite, TailwindCSS, Shadcn UI, Framer Motion
 - **Backend**: Express.js with PostgreSQL database (Drizzle ORM)

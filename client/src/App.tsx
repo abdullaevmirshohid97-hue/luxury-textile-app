@@ -7,6 +7,8 @@ import { Layout } from "@/components/layout/Layout";
 import NotFound from "@/pages/not-found";
 
 import Home from "@/pages/Home";
+import Business from "@/pages/Business";
+import Process from "@/pages/Process";
 import Catalog from "@/pages/Catalog";
 import SpaCollection from "@/pages/SpaCollection";
 import PastelCollection from "@/pages/PastelCollection";
@@ -53,6 +55,12 @@ function Router() {
     <Switch>
       <Route path="/">
         <PublicRoute component={Home} />
+      </Route>
+      <Route path="/business">
+        <PublicRoute component={Business} />
+      </Route>
+      <Route path="/process">
+        <PublicRoute component={Process} />
       </Route>
       <Route path="/catalog">
         <PublicRoute component={Catalog} />

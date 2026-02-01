@@ -8,7 +8,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 const languageNames: Record<Language, string> = {
@@ -50,23 +49,38 @@ export function Header() {
             </Link>
 
             <Link
-              href="/catalog"
+              href="/business"
               className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary rounded-md ${
-                isActive("/catalog") ? "text-primary" : "text-muted-foreground"
+                isActive("/business") ? "text-primary" : "text-muted-foreground"
               }`}
-              data-testid="link-nav-catalog"
+              data-testid="link-nav-business"
             >
-              {t.nav.catalog}
+              {t.nav.forBusiness}
+            </Link>
+
+            <Link
+              href="/process"
+              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary rounded-md ${
+                isActive("/process") ? "text-primary" : "text-muted-foreground"
+              }`}
+              data-testid="link-nav-process"
+            >
+              {t.nav.process}
             </Link>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary gap-1" data-testid="button-collections-menu">
-                  {language === "ru" ? "Коллекции" : language === "uz" ? "Kolleksiyalar" : "Collections"}
+                  {t.nav.collections}
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
+                <DropdownMenuItem asChild>
+                  <Link href="/catalog" className="w-full cursor-pointer" data-testid="link-nav-catalog">
+                    {t.nav.catalog}
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/pastel" className="w-full cursor-pointer" data-testid="link-nav-pastel">
                     {t.nav.pastel}
@@ -85,59 +99,6 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary gap-1" data-testid="button-b2b-menu">
-                  B2B
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                <DropdownMenuItem asChild>
-                  <Link href="/spa-hotel" className="w-full cursor-pointer" data-testid="link-nav-spa-hotel">
-                    {t.nav.spaHotel}
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/barber" className="w-full cursor-pointer" data-testid="link-nav-barber">
-                    {t.nav.barber}
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/bulk-order" className="w-full cursor-pointer font-medium" data-testid="link-nav-bulk-order">
-                    {t.nav.bulkOrder}
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary gap-1" data-testid="button-export-menu">
-                  {t.nav.export}
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                <DropdownMenuItem asChild>
-                  <Link href="/export/middle-east" className="w-full cursor-pointer" data-testid="link-nav-export-me">
-                    {t.export.middleEast}
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/export/europe" className="w-full cursor-pointer" data-testid="link-nav-export-eu">
-                    {t.export.europe}
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/export/barber-global" className="w-full cursor-pointer" data-testid="link-nav-export-barber">
-                    {t.export.global}
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
             <Link
               href="/contact"
               className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary rounded-md ${
@@ -145,7 +106,7 @@ export function Header() {
               }`}
               data-testid="link-nav-contact"
             >
-              {t.nav.contact}
+              {t.nav.inquiry}
             </Link>
           </nav>
 
@@ -195,20 +156,35 @@ export function Header() {
               >
                 {t.nav.home}
               </Link>
+
               <Link
-                href="/catalog"
+                href="/business"
                 onClick={() => setMobileMenuOpen(false)}
                 className={`px-3 py-2 text-sm font-medium rounded-md ${
-                  isActive("/catalog") ? "text-primary bg-accent" : "text-muted-foreground"
+                  isActive("/business") ? "text-primary bg-accent" : "text-muted-foreground"
                 }`}
-                data-testid="link-mobile-nav-catalog"
+                data-testid="link-mobile-nav-business"
               >
+                {t.nav.forBusiness}
+              </Link>
+
+              <Link
+                href="/process"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-3 py-2 text-sm font-medium rounded-md ${
+                  isActive("/process") ? "text-primary bg-accent" : "text-muted-foreground"
+                }`}
+                data-testid="link-mobile-nav-process"
+              >
+                {t.nav.process}
+              </Link>
+
+              <div className="px-3 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-2">
+                {t.nav.collections}
+              </div>
+              <Link href="/catalog" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary" data-testid="link-mobile-nav-catalog">
                 {t.nav.catalog}
               </Link>
-              
-              <div className="px-3 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-2">
-                {language === "ru" ? "Коллекции" : language === "uz" ? "Kolleksiyalar" : "Collections"}
-              </div>
               <Link href="/pastel" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary" data-testid="link-mobile-nav-pastel">
                 {t.nav.pastel}
               </Link>
@@ -219,32 +195,6 @@ export function Header() {
                 {t.nav.accessories}
               </Link>
 
-              <div className="px-3 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-2">
-                B2B
-              </div>
-              <Link href="/spa-hotel" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary" data-testid="link-mobile-nav-spa-hotel">
-                {t.nav.spaHotel}
-              </Link>
-              <Link href="/barber" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary" data-testid="link-mobile-nav-barber">
-                {t.nav.barber}
-              </Link>
-              <Link href="/bulk-order" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm font-medium text-primary" data-testid="link-mobile-nav-bulk-order">
-                {t.nav.bulkOrder}
-              </Link>
-
-              <div className="px-3 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-2">
-                {t.nav.export}
-              </div>
-              <Link href="/export/middle-east" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary" data-testid="link-mobile-nav-export-me">
-                {t.export.middleEast}
-              </Link>
-              <Link href="/export/europe" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary" data-testid="link-mobile-nav-export-eu">
-                {t.export.europe}
-              </Link>
-              <Link href="/export/barber-global" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary" data-testid="link-mobile-nav-export-barber">
-                {t.export.global}
-              </Link>
-
               <Link
                 href="/contact"
                 onClick={() => setMobileMenuOpen(false)}
@@ -253,7 +203,7 @@ export function Header() {
                 }`}
                 data-testid="link-mobile-nav-contact"
               >
-                {t.nav.contact}
+                {t.nav.inquiry}
               </Link>
             </div>
           </nav>

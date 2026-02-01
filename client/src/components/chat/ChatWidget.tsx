@@ -15,17 +15,14 @@ const GREETING_OPTIONS = {
   uz: [
     { id: "hospitality", label: "Mehmonxona yoki mehmondo'stlik loyihasi" },
     { id: "retail", label: "Chakana savdo yoki xususiy brend" },
-    { id: "personal", label: "Shaxsiy yoki uy foydalanish" },
   ],
   ru: [
     { id: "hospitality", label: "Отель или гостиничный проект" },
     { id: "retail", label: "Розничная торговля или собственный бренд" },
-    { id: "personal", label: "Личное или домашнее использование" },
   ],
   en: [
     { id: "hospitality", label: "A hotel or hospitality project" },
     { id: "retail", label: "A retail or private label brand" },
-    { id: "personal", label: "Personal or home use" },
   ],
 };
 
@@ -41,9 +38,9 @@ export function ChatWidget() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const greetingQuestion = {
-    uz: "Kimlar uchun mahsulot tanlamoqdasiz?",
-    ru: "Для кого вы подбираете продукцию?",
-    en: "Who are you selecting products for?",
+    uz: "Qanday biznes yo'nalishda hamkorlik qilishni xohlaysiz?",
+    ru: "Какое бизнес-направление вас интересует?",
+    en: "What type of business partnership interests you?",
   };
 
   useEffect(() => {
@@ -242,9 +239,9 @@ export function ChatWidget() {
         <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
           <div className="bg-white border border-stone-200 px-4 py-2 rounded shadow-sm">
             <p className="text-[11px] text-stone-500 font-light tracking-wide whitespace-nowrap">
-              {language === 'uz' ? "To'g'ri tekstilni tanlashda yordam oling" : 
-               language === 'ru' ? 'Получите консультацию по выбору текстиля' : 
-               'Get guidance on choosing the right textile'}
+              {language === 'uz' ? "B2B hamkorlik bo'yicha maslahat oling" : 
+               language === 'ru' ? 'Консультация по B2B-сотрудничеству' : 
+               'Get B2B partnership guidance'}
             </p>
           </div>
         </div>

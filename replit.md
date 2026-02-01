@@ -28,7 +28,7 @@ Mary Collection is a production-ready B2B textile manufacturing platform. The si
 - **Authentication**: bcrypt password hashing (12 salt rounds), session-based auth
 - **File Uploads**: multer with disk storage for product images
 - **State**: TanStack Query, Zustand for language state
-- **Styling**: Luxury design system with Playfair Display font
+- **Styling**: Professional design system with Playfair Display font
 
 ## Features
 - Full multilingual support (Uzbek, Russian, English) — default language: Uzbek
@@ -116,15 +116,25 @@ uploads/             # Product image uploads directory
 - Reuses existing i18n system from `client/src/lib/i18n.ts`
 
 ## Content & Brand Voice
-- Premium luxury brand voice — minimal, confident, high-end
+- **Trust-first, institutional-grade B2B copy** — no hype, no urgency, factual proofs only
 - Vertical textile manufacturer positioning (from raw cotton to finished product)
 - B2B-focused clarity for decision-makers (hotels, retailers, private label partners)
 - All text reviewed for grammar, spelling, and typography (proper dashes, spacing)
 - Consultative AI assistant — never sells directly, guides to human contact
 - Three human-led outcomes: hotel project inquiry, private label inquiry, or quotation request
+- **Domain language lock**: Product, Collection, Customization, MOQ, Lead time (consistent across site)
+- **Removed hype language**: No "luxury", "premium", "exquisite" — replaced with factual descriptions
+- **No urgency tactics**: "Trending Now" → "Featured Products", no "limited time" messaging
+
+## SEO & Institutional Signals
+- **Title**: "Mary Collection - Textile Manufacturing | Uzbekistan"
+- **Meta description**: B2B textile manufacturer, MOQ, ISO 9001 certified
+- **OG tags**: Vertically integrated production, sampling available
+- **Footer**: Mary Collection LLC, Namangan, Uzbekistan • B2B Textile Manufacturing
+- **Legal entity displayed**: Legal name, country, business scope in footer
 
 ## Analytics-Driven Features
-- **Trending Products**: Home page shows products trending based on click analytics (last 7 days)
+- **Featured Products**: Home page shows customer selections based on click analytics (last 7 days)
 - **AI Context**: Chat assistant receives trending product info to make natural recommendations
 - **Fallback**: If no analytics data, falls back to featured products
 - **API Endpoint**: `GET /api/products/trending?limit=6` (public)

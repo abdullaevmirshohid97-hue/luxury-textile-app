@@ -1,10 +1,10 @@
-# Mary Collection - Luxury Home Textiles
+# Mary Collection - Professional Textile Manufacturing
 
 ## Overview
-Mary Collection is a production-ready AI-powered B2B & export sales platform for luxury home textiles. The site features a minimalist "quiet luxury" aesthetic inspired by Brunello Cucinelli, Armani, and Ralph Lauren, with a cream/beige/soft brown color palette. Content is investor-pitch ready with premium B2B positioning.
+Mary Collection is a production-ready B2B textile manufacturing platform. The site uses trust-first, procurement-safe language targeting hotel groups, retail brands, and procurement teams. Vertically integrated production from Uzbek cotton to finished product. Content is senior-level B2B copy with controlled language and explicit risk reduction messaging.
 
 ## Site Architecture (B2B Trust-First)
-**Primary Positioning**: "Mary Collection is a premium textile manufacturer supplying hotels and retail brands with controlled, made-to-order production."
+**Primary Positioning**: "Controlled production for hotels and brands. Sampling available before commitment."
 
 **Primary Navigation (B2B Path)**:
 - Home → `/` (Qualify B2B intent)
@@ -32,9 +32,12 @@ Mary Collection is a production-ready AI-powered B2B & export sales platform for
 
 ## Features
 - Full multilingual support (Uzbek, Russian, English) — default language: Uzbek
-- Premium luxury brand voice across all content (investor-pitch ready)
+- Trust-first B2B copy with controlled language (no hype, factual proofs)
+- 24-48 hour response time commitment after all B2B CTAs
 - AI-powered consultative chat assistant (OpenAI gpt-4o-mini) — closed by default, no auto-opening
-- Three-segment B2B user paths: Hospitality, Private Label/Retail, Private Collections
+- Three-segment B2B user paths: Hospitality, OEM/ODM, Catalog
+- Risk reduction messaging: Sampling first, pilot orders, phased production
+- 6-step B2B process: Initial inquiry → Specification review → Sampling & approval → Pilot production → Full-scale manufacturing → Quality control & delivery
 - Secure admin panel with bcrypt authentication and PostgreSQL sessions
 - Image upload support for products
 - CRUD operations for categories, products, inquiries

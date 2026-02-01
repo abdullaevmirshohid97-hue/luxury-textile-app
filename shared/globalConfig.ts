@@ -18,15 +18,17 @@ export const GLOBAL_CONTACT = {
 
 export const BRAND = {
   name: "Mary Collection",
+  legalName: "Mary Collection LLC",
+  country: "Uzbekistan",
   tagline: {
-    en: "Luxury Home Textiles",
-    ru: "Роскошный домашний текстиль",
-    uz: "Hashamatli uy to'qimachilik",
+    en: "B2B Textile Manufacturing",
+    ru: "B2B Текстильное Производство",
+    uz: "B2B Tekstil Ishlab Chiqarish",
   },
   description: {
-    en: "Premium bathrobes, towels, and textile accessories crafted with quiet luxury and impeccable craftsmanship.",
-    ru: "Премиальные халаты, полотенца и текстильные аксессуары, созданные с тихой роскошью и безупречным мастерством.",
-    uz: "Yumshoq hashamat va benuqson hunarmandchilik bilan yaratilgan premium xalatlar, sochiqlar va tekstil aksessuarlari.",
+    en: "Vertically integrated textile manufacturer. Bathrobes, towels, and hotel textiles from Uzbek cotton.",
+    ru: "Вертикально интегрированный производитель текстиля. Халаты, полотенца и гостиничный текстиль из узбекского хлопка.",
+    uz: "Vertikal integratsiyalashgan tekstil ishlab chiqaruvchi. O'zbekiston paxtasidan xalatlar, sochiqlar va mehmonxona tekstili.",
   },
 };
 

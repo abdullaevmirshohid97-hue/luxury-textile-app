@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { useTranslations, useLanguageStore } from "@/lib/i18n";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { SiWhatsapp, SiTelegram } from "react-icons/si";
-import { GLOBAL_CONTACT } from "@shared/globalConfig";
+import { GLOBAL_CONTACT, BRAND } from "@shared/globalConfig";
 
 export function Footer() {
   const t = useTranslations();
@@ -14,9 +14,12 @@ export function Footer() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-lg font-semibold mb-4">Mary Collection</h3>
+            <h3 className="text-lg font-semibold mb-2">Mary Collection</h3>
+            <p className="text-body text-xs text-muted-foreground/70 mb-3">
+              {BRAND.tagline[language]}
+            </p>
             <p className="text-body text-sm text-muted-foreground leading-relaxed">
-              {t.home.philosophyText.substring(0, 120)}...
+              {BRAND.description[language]}
             </p>
           </div>
 
@@ -107,9 +110,16 @@ export function Footer() {
         </div>
 
         <div className="border-t mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-body text-xs text-muted-foreground">
-            {currentYear} Mary Collection. {t.footer.rights}.
-          </p>
+          <div className="text-center sm:text-left">
+            <p className="text-body text-xs text-muted-foreground">
+              © {currentYear} {BRAND.legalName}. {t.footer.rights}.
+            </p>
+            <p className="text-body text-[10px] text-muted-foreground/70 mt-1">
+              {language === 'uz' ? "Namangan, O'zbekiston • B2B Tekstil Ishlab Chiqarish" : 
+               language === 'ru' ? 'Наманган, Узбекистан • B2B Текстильное Производство' : 
+               'Namangan, Uzbekistan • B2B Textile Manufacturing'}
+            </p>
+          </div>
           <div className="flex gap-4">
             <Link
               href="/privacy"

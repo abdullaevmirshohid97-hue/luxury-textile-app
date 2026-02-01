@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslations } from "@/lib/i18n";
-import { Leaf, Factory, Droplets, Scissors, ShieldCheck, ArrowRight, CheckCircle } from "lucide-react";
+import { MessageSquare, FileText, FlaskConical, TestTube, Factory, PackageCheck, ArrowRight } from "lucide-react";
 
 import cottonQuality from "@/assets/images/cotton-quality.jpg";
 
@@ -25,12 +25,12 @@ export default function Process() {
   const t = useTranslations();
 
   const steps = [
-    { icon: Leaf, title: t.process.step1Title, description: t.process.step1Desc, step: "01" },
-    { icon: Factory, title: t.process.step2Title, description: t.process.step2Desc, step: "02" },
-    { icon: Factory, title: t.process.step3Title, description: t.process.step3Desc, step: "03" },
-    { icon: Droplets, title: t.process.step4Title, description: t.process.step4Desc, step: "04" },
-    { icon: Scissors, title: t.process.step5Title, description: t.process.step5Desc, step: "05" },
-    { icon: ShieldCheck, title: t.process.step6Title, description: t.process.step6Desc, step: "06" },
+    { icon: MessageSquare, title: t.process.step1Title, description: t.process.step1Desc, step: "01" },
+    { icon: FileText, title: t.process.step2Title, description: t.process.step2Desc, step: "02" },
+    { icon: FlaskConical, title: t.process.step3Title, description: t.process.step3Desc, step: "03" },
+    { icon: TestTube, title: t.process.step4Title, description: t.process.step4Desc, step: "04" },
+    { icon: Factory, title: t.process.step5Title, description: t.process.step5Desc, step: "05" },
+    { icon: PackageCheck, title: t.process.step6Title, description: t.process.step6Desc, step: "06" },
   ];
 
   return (
@@ -86,23 +86,23 @@ export default function Process() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className={`flex gap-8 mb-16 last:mb-0 ${index % 2 === 1 ? 'flex-row-reverse' : ''}`}
+                className={`flex gap-8 mb-12 last:mb-0 ${index % 2 === 1 ? 'flex-row-reverse' : ''}`}
               >
                 <div className="flex-shrink-0 w-20">
                   <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
                     <span className="text-2xl font-bold text-primary">{step.step}</span>
                   </div>
                   {index < steps.length - 1 && (
-                    <div className="w-0.5 h-16 bg-primary/20 mx-auto mt-4" />
+                    <div className="w-0.5 h-12 bg-primary/20 mx-auto mt-4" />
                   )}
                 </div>
                 <Card className="flex-1">
-                  <CardContent className="p-8">
-                    <div className="flex items-center gap-4 mb-4">
-                      <step.icon className="h-6 w-6 text-primary" />
-                      <h3 className="text-xl font-semibold">{step.title}</h3>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-4 mb-3">
+                      <step.icon className="h-5 w-5 text-primary" />
+                      <h3 className="text-lg font-semibold">{step.title}</h3>
                     </div>
-                    <p className="text-muted-foreground leading-relaxed">
+                    <p className="text-muted-foreground text-sm leading-relaxed">
                       {step.description}
                     </p>
                   </CardContent>
@@ -120,23 +120,23 @@ export default function Process() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="max-w-3xl mx-auto text-center"
+            className="max-w-2xl mx-auto text-center"
           >
-            <div className="p-4 rounded-full bg-white w-fit mx-auto mb-6 shadow-sm">
-              <CheckCircle className="h-8 w-8 text-primary" />
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-semibold mb-6">
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-4">
               {t.process.qualityTitle}
             </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+            <p className="text-muted-foreground leading-relaxed mb-8">
               {t.process.qualityDesc}
             </p>
             <Link href="/contact">
-              <Button size="lg" className="min-w-[200px] h-14 rounded-none uppercase tracking-widest text-xs font-semibold" data-testid="button-process-cta">
+              <Button size="lg" className="min-w-[200px] rounded-none uppercase tracking-widest text-xs font-semibold" data-testid="button-process-cta">
                 {t.business.ctaButton}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
+            <p className="text-sm text-muted-foreground mt-4">
+              {t.business.responseTime}
+            </p>
           </motion.div>
         </div>
       </section>

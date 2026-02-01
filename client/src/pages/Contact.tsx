@@ -99,7 +99,7 @@ export default function Contact() {
       timeline: "Loyiha muddati (ixtiyoriy)",
       projectDetails: "Loyiha tafsilotlari",
       success: "Rahmat!",
-      successText: "So'rovingiz qabul qilindi. Menejerimiz 24 soat ichida siz bilan bog'lanadi.",
+      successText: "So'rovingiz qabul qilindi. Biz odatda 24–48 soat ichida javob beramiz.",
       sendAnother: "Yangi so'rov yuborish",
     },
     ru: {
@@ -112,7 +112,7 @@ export default function Contact() {
       timeline: "Сроки проекта (опционально)",
       projectDetails: "Детали проекта",
       success: "Спасибо!",
-      successText: "Ваш запрос получен. Наш менеджер свяжется с вами в течение 24 часов.",
+      successText: "Ваш запрос получен. Мы обычно отвечаем в течение 24–48 часов.",
       sendAnother: "Отправить новый запрос",
     },
     en: {
@@ -125,7 +125,7 @@ export default function Contact() {
       timeline: "Project Timeline (optional)",
       projectDetails: "Project Details",
       success: "Thank you!",
-      successText: "Your inquiry has been received. Our manager will contact you within 24 hours.",
+      successText: "Your inquiry has been received. We typically respond within 24–48 hours.",
       sendAnother: "Submit another inquiry",
     },
   };
@@ -424,6 +424,11 @@ export default function Contact() {
                           t.contact.send
                         )}
                       </Button>
+                      <p className="text-sm text-muted-foreground text-center mt-4">
+                        {language === 'uz' ? 'Biz odatda 24–48 soat ichida javob beramiz.' : 
+                         language === 'ru' ? 'Мы обычно отвечаем в течение 24–48 часов.' : 
+                         'We typically respond within 24–48 hours.'}
+                      </p>
                     </form>
                   </Form>
                 )}

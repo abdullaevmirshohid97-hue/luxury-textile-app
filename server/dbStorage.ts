@@ -250,6 +250,11 @@ export class DatabaseStorage implements IStorage {
     return updated;
   }
 
+  async updateLeadTelegramId(id: number, telegramId: string): Promise<Lead | undefined> {
+    const [updated] = await db.update(leads).set({ telegramId }).where(eq(leads.id, id)).returning();
+    return updated;
+  }
+
   async deleteLead(id: number): Promise<void> {
     await db.delete(leads).where(eq(leads.id, id));
   }

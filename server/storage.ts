@@ -61,6 +61,7 @@ export interface IStorage {
   createLead(lead: InsertLead): Promise<Lead>;
   updateLead(id: number, lead: Partial<InsertLead>): Promise<Lead | undefined>;
   updateLeadStatus(id: number, status: string): Promise<Lead | undefined>;
+  updateLeadTelegramId(id: number, telegramId: string): Promise<Lead | undefined>;
   deleteLead(id: number): Promise<void>;
 
   // Site Content
@@ -535,6 +536,14 @@ export class MemStorage implements IStorage {
     const existing = this.leads.get(id);
     if (!existing) return undefined;
     const updated = { ...existing, status, updatedAt: new Date() };
+    this.leads.set(id, updated);
+    return updated;
+  }
+
+  async updateLeadTelegramId(id: number, telegramId: string): Promise<Lead | undefined> {
+    const existing = this.leads.get(id);
+    if (!existing) return undefined;
+    const updated = { ...existing, telegramId, updatedAt: new Date() };
     this.leads.set(id, updated);
     return updated;
   }

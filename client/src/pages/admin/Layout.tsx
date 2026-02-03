@@ -13,7 +13,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, BarChart3, Package, Tag, MessageSquare, Settings, LogOut, Users } from "lucide-react";
+import { LayoutDashboard, BarChart3, Package, Tag, MessageSquare, Settings, LogOut, Users, Layers, MousePointer, ShieldCheck, ListOrdered } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useTranslations } from "@/lib/i18n";
 
@@ -32,6 +32,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { href: "/admin/products", label: t.admin.products, icon: Package },
     { href: "/admin/categories", label: t.admin.categories, icon: Tag },
     { href: "/admin/inquiries", label: t.admin.inquiries, icon: MessageSquare },
+    { href: "/admin/process-steps", label: t.admin.processSteps, icon: Layers },
+    { href: "/admin/cta-configs", label: t.admin.ctaConfigs, icon: MousePointer },
+    { href: "/admin/trust-blocks", label: t.admin.trustBlocks, icon: ShieldCheck },
+    { href: "/admin/form-options", label: t.admin.formOptions, icon: ListOrdered },
     { href: "/admin/settings", label: t.admin.settings, icon: Settings },
   ];
 

@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { useTranslations, useLanguageStore } from "@/lib/i18n";
 import { apiRequest } from "@/lib/queryClient";
+import { useFormOptions } from "@/hooks/useFormOptions";
 import { Mail, Phone, MapPin, Clock, Loader2, CheckCircle, Building2 } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
 
@@ -40,53 +41,8 @@ export default function Contact() {
   const productSlug = params.get("product");
   const [submitted, setSubmitted] = useState(false);
 
-  const sectorOptions = {
-    uz: [
-      { value: "hotel", label: "Mehmonxona / Kurort" },
-      { value: "spa", label: "Spa / Wellness" },
-      { value: "retail", label: "Chakana savdo" },
-      { value: "private_label", label: "Xususiy brend (OEM/ODM)" },
-      { value: "distributor", label: "Distribyutor" },
-      { value: "other", label: "Boshqa" },
-    ],
-    ru: [
-      { value: "hotel", label: "Отель / Курорт" },
-      { value: "spa", label: "Спа / Велнес" },
-      { value: "retail", label: "Розничная торговля" },
-      { value: "private_label", label: "Собственная марка (OEM/ODM)" },
-      { value: "distributor", label: "Дистрибьютор" },
-      { value: "other", label: "Другое" },
-    ],
-    en: [
-      { value: "hotel", label: "Hotel / Resort" },
-      { value: "spa", label: "Spa / Wellness" },
-      { value: "retail", label: "Retail" },
-      { value: "private_label", label: "Private Label (OEM/ODM)" },
-      { value: "distributor", label: "Distributor" },
-      { value: "other", label: "Other" },
-    ],
-  };
-
-  const volumeOptions = {
-    uz: [
-      { value: "500-1000", label: "500–1,000 dona" },
-      { value: "1000-5000", label: "1,000–5,000 dona" },
-      { value: "5000-10000", label: "5,000–10,000 dona" },
-      { value: "10000+", label: "10,000+ dona" },
-    ],
-    ru: [
-      { value: "500-1000", label: "500–1 000 шт." },
-      { value: "1000-5000", label: "1 000–5 000 шт." },
-      { value: "5000-10000", label: "5 000–10 000 шт." },
-      { value: "10000+", label: "10 000+ шт." },
-    ],
-    en: [
-      { value: "500-1000", label: "500–1,000 pieces" },
-      { value: "1000-5000", label: "1,000–5,000 pieces" },
-      { value: "5000-10000", label: "5,000–10,000 pieces" },
-      { value: "10000+", label: "10,000+ pieces" },
-    ],
-  };
+  const { options: sectorOptions, isLoading: sectorLoading } = useFormOptions("sector");
+  const { options: volumeOptions, isLoading: volumeLoading } = useFormOptions("volume");
 
   const labels = {
     uz: {
@@ -328,11 +284,17 @@ export default function Contact() {
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                {sectorOptions[language].map((option) => (
-                                  <SelectItem key={option.value} value={option.value}>
-                                    {option.label}
-                                  </SelectItem>
-                                ))}
+                                {sectorLoading ? (
+                                  <SelectItem value="_loading" disabled>Loading...</SelectItem>
+                                ) : sectorOptions.length === 0 ? (
+                                  <SelectItem value="_empty" disabled>No options available</SelectItem>
+                                ) : (
+                                  sectorOptions.map((option) => (
+                                    <SelectItem key={option.value} value={option.value}>
+                                      {option.label}
+                                    </SelectItem>
+                                  ))
+                                )}
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -353,11 +315,17 @@ export default function Contact() {
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                {volumeOptions[language].map((option) => (
-                                  <SelectItem key={option.value} value={option.value}>
-                                    {option.label}
-                                  </SelectItem>
-                                ))}
+                                {volumeLoading ? (
+                                  <SelectItem value="_loading" disabled>Loading...</SelectItem>
+                                ) : volumeOptions.length === 0 ? (
+                                  <SelectItem value="_empty" disabled>No options available</SelectItem>
+                                ) : (
+                                  volumeOptions.map((option) => (
+                                    <SelectItem key={option.value} value={option.value}>
+                                      {option.label}
+                                    </SelectItem>
+                                  ))
+                                )}
                               </SelectContent>
                             </Select>
                             <FormMessage />

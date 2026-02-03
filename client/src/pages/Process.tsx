@@ -1,9 +1,12 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useTranslations } from "@/lib/i18n";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations, useLanguageStore } from "@/lib/i18n";
 import { MessageSquare, FileText, FlaskConical, TestTube, Factory, PackageCheck, ArrowRight } from "lucide-react";
+import type { ProcessStep } from "@shared/schema";
 
 import cottonQuality from "@/assets/images/cotton-quality.jpg";
 
@@ -21,17 +24,32 @@ const stagger = {
   },
 };
 
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  MessageSquare,
+  FileText,
+  FlaskConical,
+  TestTube,
+  Factory,
+  PackageCheck,
+};
+
+function getLocalizedText(step: ProcessStep, field: 'title' | 'description', lang: string): string {
+  const fieldMap = {
+    title: { uz: step.titleUz, ru: step.titleRu, en: step.titleEn },
+    description: { uz: step.descriptionUz, ru: step.descriptionRu, en: step.descriptionEn },
+  };
+  return fieldMap[field][lang as keyof typeof fieldMap.title] || fieldMap[field].en;
+}
+
 export default function Process() {
   const t = useTranslations();
+  const { language } = useLanguageStore();
 
-  const steps = [
-    { icon: MessageSquare, title: t.process.step1Title, description: t.process.step1Desc, step: "01" },
-    { icon: FileText, title: t.process.step2Title, description: t.process.step2Desc, step: "02" },
-    { icon: FlaskConical, title: t.process.step3Title, description: t.process.step3Desc, step: "03" },
-    { icon: TestTube, title: t.process.step4Title, description: t.process.step4Desc, step: "04" },
-    { icon: Factory, title: t.process.step5Title, description: t.process.step5Desc, step: "05" },
-    { icon: PackageCheck, title: t.process.step6Title, description: t.process.step6Desc, step: "06" },
-  ];
+  const { data: processSteps, isLoading, isError } = useQuery<ProcessStep[]>({
+    queryKey: ["/api/content/process-steps"],
+  });
+
+  const sortedSteps = processSteps?.filter(s => s.enabled).slice().sort((a, b) => a.sortOrder - b.sortOrder) || [];
 
   return (
     <div className="flex flex-col">
@@ -79,36 +97,63 @@ export default function Process() {
       <section className="py-24 bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
-            {steps.map((step, index) => (
-              <motion.div
-                key={step.step}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className={`flex gap-8 mb-12 last:mb-0 ${index % 2 === 1 ? 'flex-row-reverse' : ''}`}
-              >
-                <div className="flex-shrink-0 w-20">
-                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-                    <span className="text-2xl font-bold text-primary">{step.step}</span>
+            {isLoading ? (
+              <div className="space-y-12">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className="flex gap-8">
+                    <Skeleton className="w-20 h-20 rounded-full flex-shrink-0" />
+                    <Skeleton className="flex-1 h-32" />
                   </div>
-                  {index < steps.length - 1 && (
-                    <div className="w-0.5 h-12 bg-primary/20 mx-auto mt-4" />
-                  )}
-                </div>
-                <Card className="flex-1">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-4 mb-3">
-                      <step.icon className="h-5 w-5 text-primary" />
-                      <h3 className="text-lg font-semibold">{step.title}</h3>
+                ))}
+              </div>
+            ) : isError ? (
+              <Card>
+                <CardContent className="p-8 text-center text-muted-foreground">
+                  Unable to load process steps. Please try again later.
+                </CardContent>
+              </Card>
+            ) : sortedSteps.length === 0 ? (
+              <Card>
+                <CardContent className="p-8 text-center text-muted-foreground">
+                  No process steps available.
+                </CardContent>
+              </Card>
+            ) : (
+              sortedSteps.map((step, index) => {
+                const IconComponent = iconMap[step.icon] || MessageSquare;
+                const stepNumber = String(index + 1).padStart(2, '0');
+                return (
+                  <motion.div
+                    key={step.id}
+                    initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    className={`flex gap-8 mb-12 last:mb-0 ${index % 2 === 1 ? 'flex-row-reverse' : ''}`}
+                  >
+                    <div className="flex-shrink-0 w-20">
+                      <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
+                        <span className="text-2xl font-bold text-primary">{stepNumber}</span>
+                      </div>
+                      {index < sortedSteps.length - 1 && (
+                        <div className="w-0.5 h-12 bg-primary/20 mx-auto mt-4" />
+                      )}
                     </div>
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                      {step.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+                    <Card className="flex-1">
+                      <CardContent className="p-6">
+                        <div className="flex items-center gap-4 mb-3">
+                          <IconComponent className="h-5 w-5 text-primary" />
+                          <h3 className="text-lg font-semibold">{getLocalizedText(step, 'title', language)}</h3>
+                        </div>
+                        <p className="text-muted-foreground text-sm leading-relaxed">
+                          {getLocalizedText(step, 'description', language)}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })
+            )}
           </div>
         </div>
       </section>

@@ -33,6 +33,10 @@ import AdminCategories from "@/pages/admin/Categories";
 import AdminInquiries from "@/pages/admin/Inquiries";
 import AdminSettings from "@/pages/admin/Settings";
 import AdminAnalytics from "@/pages/admin/Analytics";
+import AdminProcessSteps from "@/pages/admin/ProcessSteps";
+import AdminCtaConfigs from "@/pages/admin/CtaConfigs";
+import AdminTrustBlocks from "@/pages/admin/TrustBlocks";
+import AdminFormOptions from "@/pages/admin/FormOptions";
 
 function AdminRoute({ component: Component }: { component: React.ComponentType }) {
   return (
@@ -122,6 +126,18 @@ function Router() {
       </Route>
       <Route path="/admin/analytics">
         <AdminRoute component={AdminAnalytics} />
+      </Route>
+      <Route path="/admin/process-steps">
+        <AdminRoute component={AdminProcessSteps} />
+      </Route>
+      <Route path="/admin/cta-configs">
+        <AdminRoute component={AdminCtaConfigs} />
+      </Route>
+      <Route path="/admin/trust-blocks">
+        <AdminRoute component={AdminTrustBlocks} />
+      </Route>
+      <Route path="/admin/form-options">
+        <AdminRoute component={AdminFormOptions} />
       </Route>
       <Route path="/admin">
         <AdminRoute component={AdminDashboard} />

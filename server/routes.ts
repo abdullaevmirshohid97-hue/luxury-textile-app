@@ -13,6 +13,7 @@ import { pool } from "./db";
 import crypto from "crypto";
 import { GLOBAL_CONTACT, BRAND } from "@shared/globalConfig";
 import { LeadType, LeadSource, getLeadTemperature } from "@shared/schema";
+import { notifyAdminNewLead } from "./telegram.service.js";
 
 // Basic server-side request logging
 function logRequest(req: Request, type: 'info' | 'warn' | 'error' = 'info', message?: string) {
@@ -369,6 +370,8 @@ export async function registerRoutes(
         }
       }
 
+      notifyAdminNewLead(lead).catch((err: unknown) => console.error("[Telegram] Notification error:", err));
+
       res.status(201).json(lead);
     } catch (error) {
       res.status(500).json({ error: "Failed to create lead" });
@@ -408,6 +411,8 @@ export async function registerRoutes(
           console.error("CRM sync failed:", crmError);
         }
       }
+
+      notifyAdminNewLead(lead).catch((err: unknown) => console.error("[Telegram] Notification error:", err));
 
       res.status(201).json(lead);
     } catch (error) {
@@ -562,13 +567,14 @@ Respond in the user's language (${language}).`;
             leadData.phone = phoneMatch[0].replace(/\s/g, "");
             
             // If we have a phone, we can create a formal lead record
-            await storage.createLead({
+            const chatLead = await storage.createLead({
               ...leadData,
               phone: leadData.phone,
               source: LeadSource.AI_CHAT,
               leadType: LeadType.BULK_B2B,
             });
             console.log("Structured lead created from chat:", leadData);
+            notifyAdminNewLead(chatLead).catch((err: unknown) => console.error("[Telegram] Notification error:", err));
             
             // Track chat conversion
             storage.trackAnalytics({

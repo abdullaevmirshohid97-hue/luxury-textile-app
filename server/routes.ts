@@ -14,6 +14,7 @@ import crypto from "crypto";
 import { GLOBAL_CONTACT, BRAND } from "@shared/globalConfig";
 import { LeadType, LeadSource, getLeadTemperature } from "@shared/schema";
 import { notifyAdminNewLead } from "./telegram.service.js";
+import { notifyUser } from "./userNotify.service.js";
 
 // Basic server-side request logging
 function logRequest(req: Request, type: 'info' | 'warn' | 'error' = 'info', message?: string) {
@@ -747,6 +748,10 @@ Respond in the user's language (${language}).`;
       if (!lead) {
         return res.status(404).json({ error: "Lead not found" });
       }
+
+      const statusMessage = `<b>Order Status Update</b>\n\n<b>Order ID:</b> ${lead.id}\n<b>New Status:</b> ${status}`;
+      notifyUser(lead, statusMessage).catch((err: unknown) => console.error("[OrderStatus] Notification error:", err));
+
       res.json({
         ...lead,
         temperature: getLeadTemperature(lead.score),

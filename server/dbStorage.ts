@@ -223,6 +223,12 @@ export class DatabaseStorage implements IStorage {
     return db.select().from(leads);
   }
 
+  async getLeadsToday(): Promise<Lead[]> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return db.select().from(leads).where(gte(leads.createdAt, today));
+  }
+
   async getLead(id: number): Promise<Lead | undefined> {
     const [lead] = await db.select().from(leads).where(eq(leads.id, id));
     return lead;

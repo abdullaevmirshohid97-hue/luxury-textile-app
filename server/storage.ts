@@ -57,6 +57,7 @@ export interface IStorage {
 
   // Leads
   getLeads(): Promise<Lead[]>;
+  getLeadsToday(): Promise<Lead[]>;
   getLead(id: number): Promise<Lead | undefined>;
   createLead(lead: InsertLead): Promise<Lead>;
   updateLead(id: number, lead: Partial<InsertLead>): Promise<Lead | undefined>;
@@ -478,6 +479,14 @@ export class MemStorage implements IStorage {
   async getLeads(): Promise<Lead[]> {
     return Array.from(this.leads.values()).sort((a, b) =>
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+
+  async getLeadsToday(): Promise<Lead[]> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return Array.from(this.leads.values()).filter(lead =>
+      new Date(lead.createdAt) >= today
     );
   }
 

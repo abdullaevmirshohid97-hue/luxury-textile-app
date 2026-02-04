@@ -68,30 +68,30 @@ export default function Home() {
   const useCases = [
     {
       icon: Building2,
-      title: language === 'uz' ? "Mehmonxonalar" : 
-             language === 'ru' ? "Отели" : 
-             "Hotels",
-      description: language === 'uz' ? "Brendlangan choyshablar, xalatlar, sochiqlar. Sanoat yuvish sinovidan o'tgan." : 
-                   language === 'ru' ? "Брендированное бельё, халаты, полотенца. Промышленная стирка." : 
-                   "Branded linens, bathrobes, towels. Industrial wash tested.",
+      title: language === 'uz' ? "Ip Yigirish" : 
+             language === 'ru' ? "Прядение" : 
+             "Yarn Spinning",
+      description: language === 'uz' ? "O'zbekiston uzun shtapelli paxtasidan ip ishlab chiqarish. Ichki sifat nazorati." : 
+                   language === 'ru' ? "Производство пряжи из узбекского длинноволокнистого хлопка. Внутренний контроль качества." : 
+                   "Yarn production from Uzbek long-staple cotton. In-house quality control.",
     },
     {
       icon: Waves,
-      title: language === 'uz' ? "Spa va Wellness" : 
-             language === 'ru' ? "Спа и Велнес" : 
-             "Spa & Wellness",
-      description: language === 'uz' ? "Professional tekstil. Namlik yutish va chidamlilik sinovidan o'tgan." : 
-                   language === 'ru' ? "Профессиональный текстиль. Тестирование на впитываемость и износостойкость." : 
-                   "Professional textiles. Absorbency and durability tested.",
+      title: language === 'uz' ? "Bo'yash va Pardozlash" : 
+             language === 'ru' ? "Крашение и Отделка" : 
+             "Dyeing & Finishing",
+      description: language === 'uz' ? "OEKO-TEX sertifikatlangan bo'yoqlar. 200+ yuvish sinovidan o'tgan rang barqarorligi." : 
+                   language === 'ru' ? "Красители с сертификацией OEKO-TEX. Устойчивость цвета проверена 200+ стирками." : 
+                   "OEKO-TEX certified dyes. Color fastness tested through 200+ washes.",
     },
     {
       icon: ShoppingBag,
-      title: language === 'uz' ? "Chakana Brendlar" : 
-             language === 'ru' ? "Розничные Бренды" : 
-             "Retail Brands",
-      description: language === 'uz' ? "OEM/ODM ishlab chiqarish. Sizning spetsifikatsiyalaringiz, nazorat ostida ishlab chiqarish." : 
-                   language === 'ru' ? "OEM/ODM производство. Ваши спецификации, контролируемое производство." : 
-                   "OEM/ODM manufacturing. Your specifications, controlled production.",
+      title: language === 'uz' ? "Dizayn va Tikish" : 
+             language === 'ru' ? "Дизайн и Пошив" : 
+             "Design & Sewing",
+      description: language === 'uz' ? "Ichki dizayn jamoasi. Sanoat tikuv liniyalari. Ommaviy va maxsus buyurtmalar." : 
+                   language === 'ru' ? "Собственная дизайн-команда. Промышленные швейные линии. Массовые и кастомные заказы." : 
+                   "In-house design team. Industrial sewing lines. Volume and custom orders.",
     },
   ];
 
@@ -117,56 +117,57 @@ export default function Home() {
         >
           <div className="max-w-3xl text-white">
             <motion.div variants={fadeInUp} className="mb-4 inline-block">
-              <span className="text-xs uppercase tracking-[0.3em] font-medium text-white/70">
-                {language === 'uz' ? 'Vertikal Ishlab Chiqaruvchi' : 
-                 language === 'ru' ? 'Вертикальный Производитель' : 
-                 'Vertical Manufacturer'}
+              <span className="text-xs uppercase tracking-[0.3em] font-medium text-white/70 border border-white/30 px-3 py-1">
+                {language === 'uz' ? 'To\'liq Tsikl Ishlab Chiqaruvchi' : 
+                 language === 'ru' ? 'Производитель Полного Цикла' : 
+                 'Full-Cycle Manufacturer'}
               </span>
             </motion.div>
             <motion.h1
               variants={fadeInUp}
-              className="text-5xl sm:text-6xl lg:text-7xl font-semibold leading-[1.1] mb-8"
+              className="text-5xl sm:text-6xl lg:text-7xl font-semibold leading-[1.1] mb-6"
               data-testid="text-hero-title"
             >
-              {language === 'uz' ? <>Nazorat Ostida <br /> <span className="text-white/80">Ishlab Chiqarish</span></> : 
-               language === 'ru' ? <>Контролируемое <br /> <span className="text-white/80">Производство</span></> : 
-               <>Controlled <br /> <span className="text-white/80">Production</span></>}
+              {language === 'uz' ? <>Ip → Bo'yash → Dizayn → <br /> <span className="text-white/80">Tayyor Mahsulot</span></> : 
+               language === 'ru' ? <>Пряжа → Крашение → Дизайн → <br /> <span className="text-white/80">Готовый Продукт</span></> : 
+               <>Yarn → Dyeing → Design → <br /> <span className="text-white/80">Finished Product</span></>}
             </motion.h1>
             <motion.p
               variants={fadeInUp}
-              className="text-xl sm:text-2xl text-white/80 mb-8 max-w-xl font-light leading-relaxed"
+              className="text-lg sm:text-xl text-white/80 mb-6 max-w-xl font-light leading-relaxed"
               data-testid="text-hero-subtitle"
             >
-              {language === 'uz' ? 'Mehmonxonalar va brendlar uchun tekstil ishlab chiqarish. Xom paxtadan tayyor mahsulotgacha nazorat.' : 
-               language === 'ru' ? 'Текстильное производство для отелей и брендов. Контроль от сырого хлопка до готовой продукции.' : 
-               'Textile manufacturing for hotels and brands. Control from raw cotton to finished product.'}
+              {language === 'uz' ? 'Mehmonxonalar, chakana brendlar va B2B xaridorlar uchun to\'liq nazorat ostida tekstil ishlab chiqarish. Barcha bosqichlar bir tom ostida.' : 
+               language === 'ru' ? 'Текстильное производство под полным контролем для отелей, розничных брендов и B2B-покупателей. Все этапы под одной крышей.' : 
+               'Textile manufacturing under full control for hotels, retail brands, and B2B buyers. All stages under one roof.'}
             </motion.p>
             <motion.p
               variants={fadeInUp}
-              className="text-sm text-white/60 mb-8"
+              className="text-sm text-white/60 mb-8 flex items-center gap-2"
             >
-              {language === 'uz' ? 'Namunalar majburiyatdan oldin mavjud.' : 
-               language === 'ru' ? 'Образцы до начала заказа.' : 
-               'Sampling available before commitment.'}
+              <ShieldCheck className="w-4 h-4" />
+              {language === 'uz' ? 'Namunalar majburiyatdan oldin. Sinov buyurtmalari mavjud.' : 
+               language === 'ru' ? 'Образцы до обязательств. Пробные заказы доступны.' : 
+               'Sampling before commitment. Pilot orders available.'}
             </motion.p>
             <motion.div variants={fadeInUp} className="flex flex-wrap gap-6">
-              <Link href="/business">
-                <Button size="lg" className="min-w-[200px] rounded-none uppercase tracking-widest text-xs font-semibold bg-white text-black hover:bg-white/90 shadow-lg" data-testid="button-shop-collection">
-                  {language === 'uz' ? 'B2B Spetsifikatsiyalar' : 
-                   language === 'ru' ? 'B2B Спецификации' : 
-                   'B2B Specifications'}
+              <Link href="/contact">
+                <Button size="lg" className="min-w-[220px] rounded-none uppercase tracking-widest text-xs font-semibold bg-white text-black shadow-lg" data-testid="button-request-consultation">
+                  {language === 'uz' ? 'Texnik Maslahat So\'rash' : 
+                   language === 'ru' ? 'Запросить Консультацию' : 
+                   'Request Technical Consultation'}
                 </Button>
               </Link>
-              <Link href="/contact">
+              <Link href="/business">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="min-w-[200px] rounded-none uppercase tracking-widest text-xs font-semibold bg-white/5 border-white/40 text-white backdrop-blur-md hover:bg-white/10"
-                  data-testid="button-wholesale-offer"
+                  className="min-w-[200px] rounded-none uppercase tracking-widest text-xs font-semibold bg-white/5 border-white/40 text-white backdrop-blur-md"
+                  data-testid="button-view-capabilities"
                 >
-                  {language === 'uz' ? 'So\'rov Yuborish' : 
-                   language === 'ru' ? 'Отправить Запрос' : 
-                   'Submit Inquiry'}
+                  {language === 'uz' ? 'Imkoniyatlarni Ko\'rish' : 
+                   language === 'ru' ? 'Смотреть Возможности' : 
+                   'View Capabilities'}
                 </Button>
               </Link>
             </motion.div>
@@ -174,9 +175,9 @@ export default function Home() {
               variants={fadeInUp}
               className="text-xs text-white/50 mt-6"
             >
-              {language === 'uz' ? 'Biz odatda 24–48 soat ichida javob beramiz.' : 
-               language === 'ru' ? 'Мы обычно отвечаем в течение 24–48 часов.' : 
-               'We typically respond within 24–48 hours.'}
+              {language === 'uz' ? 'Texnik jamoamiz 24–48 soat ichida javob beradi.' : 
+               language === 'ru' ? 'Наша техническая команда ответит в течение 24–48 часов.' : 
+               'Our technical team responds within 24–48 hours.'}
             </motion.p>
           </div>
         </motion.div>
@@ -194,25 +195,25 @@ export default function Home() {
           >
             <div>
               <span className="text-xs uppercase tracking-[0.3em] text-primary/60 font-medium mb-4 block">
-                {language === 'uz' ? 'Ishlab Chiqarish' : 
-                 language === 'ru' ? 'Производство' : 
-                 'Production'}
+                {language === 'uz' ? 'To\'liq Tsikl Ishlab Chiqarish' : 
+                 language === 'ru' ? 'Производство Полного Цикла' : 
+                 'Full-Cycle Production'}
               </span>
               <h2 className="text-4xl sm:text-5xl font-semibold mb-8 leading-tight" data-testid="text-philosophy-title">
-                {language === 'uz' ? 'Vertikal Integratsiya' : 
-                 language === 'ru' ? 'Вертикальная Интеграция' : 
-                 'Vertical Integration'}
+                {language === 'uz' ? 'Bir Tom Ostida Nazorat' : 
+                 language === 'ru' ? 'Контроль Под Одной Крышей' : 
+                 'Control Under One Roof'}
               </h2>
               <div className="space-y-6 text-body text-muted-foreground text-lg leading-relaxed font-light">
                 <p>
-                  {language === 'uz' ? "O'zbekiston uzun shtapelli paxtasidan tayyor mahsulotgacha — har bir bosqich nazorat ostida." : 
-                   language === 'ru' ? 'От узбекского длинноволокнистого хлопка до готовой продукции — каждый этап под контролем.' : 
-                   'From Uzbek long-staple cotton to finished product—every stage controlled.'}
+                  {language === 'uz' ? "Ip yigirish, bo'yash, dizayn va tikish — barcha jarayonlar fabrikamizda. Uchinchi tomon ishtirokisiz to'liq nazorat." : 
+                   language === 'ru' ? 'Прядение, крашение, дизайн и пошив — все процессы на нашей фабрике. Полный контроль без участия третьих сторон.' : 
+                   'Yarn spinning, dyeing, design, and sewing—all processes in our factory. Full control without third-party involvement.'}
                 </p>
                 <p>
-                  {language === 'uz' ? "200+ sanoat yuvish davrida sinovdan o'tgan. OEKO-TEX va ISO 9001 sertifikatlangan." : 
-                   language === 'ru' ? 'Тестирование 200+ промышленных стирок. Сертификация OEKO-TEX и ISO 9001.' : 
-                   'Tested through 200+ industrial wash cycles. OEKO-TEX and ISO 9001 certified.'}
+                  {language === 'uz' ? "200+ sanoat yuvish sinovidan o'tgan. OEKO-TEX va ISO 9001 sertifikatlangan. Sanoat mijozlari uchun barqaror sifat." : 
+                   language === 'ru' ? 'Проверено 200+ промышленных стирок. Сертификация OEKO-TEX и ISO 9001. Стабильное качество для промышленных клиентов.' : 
+                   'Tested through 200+ industrial washes. OEKO-TEX and ISO 9001 certified. Consistent quality for industrial clients.'}
                 </p>
               </div>
             </div>
@@ -232,83 +233,98 @@ export default function Home() {
       <section className="py-24 lg:py-32 bg-background border-t border-primary/5">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-3 gap-0 border border-primary/10">
-            {/* Hospitality Path */}
-            <div className="p-12 border-b lg:border-b-0 lg:border-r border-primary/10 flex flex-col justify-between hover:bg-primary/[0.02] transition-colors">
+            {/* Hotels Path */}
+            <div className="p-12 border-b lg:border-b-0 lg:border-r border-primary/10 flex flex-col justify-between hover:bg-primary/[0.02] transition-colors" data-testid="segment-hotels">
               <div>
                 <Building2 className="w-10 h-10 mb-8 text-primary/40" />
-                <h3 className="text-2xl font-semibold mb-4 tracking-tight">
-                  {language === 'uz' ? 'Mehmonxonalar' : 
-                   language === 'ru' ? 'Отели' : 
-                   'Hospitality'}
+                <h3 className="text-2xl font-semibold mb-4 tracking-tight" data-testid="text-segment-hotels-title">
+                  {language === 'uz' ? 'Mehmonxonalar va Kurortlar' : 
+                   language === 'ru' ? 'Отели и Курорты' : 
+                   'Hotels & Resorts'}
                 </h3>
-                <p className="text-muted-foreground font-light leading-relaxed mb-8">
-                  {language === 'uz' ? 'Sanoat yuvishga chidamli tekstil. Brendlangan choyshablar, xalatlar, sochiqlar.' : 
-                   language === 'ru' ? 'Текстиль для промышленной стирки. Брендированное бельё, халаты, полотенца.' : 
-                   'Industrial wash durable textiles. Branded linens, bathrobes, towels.'}
+                <p className="text-muted-foreground font-light leading-relaxed mb-4">
+                  {language === 'uz' ? '200+ sanoat yuvish sinovidan o\'tgan tekstil. Xalatlar, sochiqlar, choyshablar.' : 
+                   language === 'ru' ? 'Текстиль, проверенный 200+ промышленных стирок. Халаты, полотенца, постельное.' : 
+                   'Textiles tested through 200+ industrial washes. Bathrobes, towels, linens.'}
                 </p>
+                <ul className="text-xs text-muted-foreground/80 space-y-1 mb-8">
+                  <li>• {language === 'uz' ? 'Logotip tikish' : language === 'ru' ? 'Вышивка логотипа' : 'Logo embroidery'}</li>
+                  <li>• {language === 'uz' ? 'Maxsus ranglar' : language === 'ru' ? 'Кастомные цвета' : 'Custom colors'}</li>
+                  <li>• {language === 'uz' ? 'MOQ: 500+ dona' : language === 'ru' ? 'MOQ: 500+ шт.' : 'MOQ: 500+ pcs'}</li>
+                </ul>
               </div>
               <Link href="/contact?segment=hospitality">
-                <Button variant="outline" className="w-full rounded-none uppercase tracking-widest text-[10px] font-bold">
-                  {language === 'uz' ? 'So\'rov' : 
-                   language === 'ru' ? 'Запрос' : 
-                   'Inquire'}
+                <Button variant="outline" className="w-full rounded-none uppercase tracking-widest text-[10px] font-bold" data-testid="button-hotel-consultation">
+                  {language === 'uz' ? 'Loyiha Konsultatsiyasi' : 
+                   language === 'ru' ? 'Консультация по Проекту' : 
+                   'Project Consultation'}
                 </Button>
               </Link>
               <p className="text-xs text-muted-foreground/60 mt-3 text-center">
-                {language === 'uz' ? '24–48 soat ichida javob' : 
-                 language === 'ru' ? 'Ответ в течение 24–48 ч.' : 
-                 'Response within 24–48 hrs'}
+                {language === 'uz' ? 'Texnik javob: 24–48 soat' : 
+                 language === 'ru' ? 'Технический ответ: 24–48 ч.' : 
+                 'Technical response: 24–48 hrs'}
               </p>
             </div>
 
-            {/* Retail Path */}
-            <div className="p-12 border-b lg:border-b-0 lg:border-r border-primary/10 flex flex-col justify-between hover:bg-primary/[0.02] transition-colors">
+            {/* Private Label / Retail Path */}
+            <div className="p-12 border-b lg:border-b-0 lg:border-r border-primary/10 flex flex-col justify-between hover:bg-primary/[0.02] transition-colors" data-testid="segment-private-label">
               <div>
                 <Factory className="w-10 h-10 mb-8 text-primary/40" />
-                <h3 className="text-2xl font-semibold mb-4 tracking-tight">
-                  {language === 'uz' ? 'OEM/ODM' : 
-                   language === 'ru' ? 'OEM/ODM' : 
-                   'OEM/ODM'}
+                <h3 className="text-2xl font-semibold mb-4 tracking-tight" data-testid="text-segment-private-label-title">
+                  {language === 'uz' ? 'Xususiy Brend / OEM' : 
+                   language === 'ru' ? 'Частная Марка / OEM' : 
+                   'Private Label / OEM'}
                 </h3>
-                <p className="text-muted-foreground font-light leading-relaxed mb-8">
-                  {language === 'uz' ? 'Chakana brendlar uchun shartnomaviy ishlab chiqarish. Sizning spetsifikatsiyalaringiz.' : 
-                   language === 'ru' ? 'Контрактное производство для розничных брендов. Ваши спецификации.' : 
-                   'Contract manufacturing for retail brands. Your specifications.'}
+                <p className="text-muted-foreground font-light leading-relaxed mb-4">
+                  {language === 'uz' ? 'To\'liq tsikl ishlab chiqarish sizning brending ostida. Dizayndan tayyor mahsulotgacha.' : 
+                   language === 'ru' ? 'Производство полного цикла под вашим брендом. От дизайна до готового продукта.' : 
+                   'Full-cycle manufacturing under your brand. From design to finished product.'}
                 </p>
+                <ul className="text-xs text-muted-foreground/80 space-y-1 mb-8">
+                  <li>• {language === 'uz' ? 'Sizning spetsifikatsiyalaringiz' : language === 'ru' ? 'Ваши спецификации' : 'Your specifications'}</li>
+                  <li>• {language === 'uz' ? 'Ip, gazlama, mahsulot — barchasi ichki' : language === 'ru' ? 'Пряжа, ткань, изделие — всё внутри' : 'Yarn, fabric, product—all in-house'}</li>
+                  <li>• {language === 'uz' ? 'Namuna: 2–3 hafta' : language === 'ru' ? 'Образец: 2–3 недели' : 'Sample: 2–3 weeks'}</li>
+                </ul>
               </div>
               <Link href="/contact?segment=retail">
-                <Button variant="outline" className="w-full rounded-none uppercase tracking-widest text-[10px] font-bold">
-                  {language === 'uz' ? 'So\'rov' : 
-                   language === 'ru' ? 'Запрос' : 
-                   'Inquire'}
+                <Button variant="outline" className="w-full rounded-none uppercase tracking-widest text-[10px] font-bold" data-testid="button-oem-consultation">
+                  {language === 'uz' ? 'OEM Konsultatsiyasi' : 
+                   language === 'ru' ? 'Консультация по OEM' : 
+                   'OEM Consultation'}
                 </Button>
               </Link>
               <p className="text-xs text-muted-foreground/60 mt-3 text-center">
-                {language === 'uz' ? '24–48 soat ichida javob' : 
-                 language === 'ru' ? 'Ответ в течение 24–48 ч.' : 
-                 'Response within 24–48 hrs'}
+                {language === 'uz' ? 'Texnik javob: 24–48 soat' : 
+                 language === 'ru' ? 'Технический ответ: 24–48 ч.' : 
+                 'Technical response: 24–48 hrs'}
               </p>
             </div>
 
-            {/* Catalog Path */}
-            <div className="p-12 flex flex-col justify-between hover:bg-primary/[0.02] transition-colors">
+            {/* Bulk B2B Path */}
+            <div className="p-12 flex flex-col justify-between hover:bg-primary/[0.02] transition-colors" data-testid="segment-bulk-b2b">
               <div>
                 <ShoppingBag className="w-10 h-10 mb-8 text-primary/40" />
-                <h3 className="text-2xl font-semibold mb-4 tracking-tight">
-                  {language === 'uz' ? 'Katalog' : 
-                   language === 'ru' ? 'Каталог' : 
-                   'Catalog'}
+                <h3 className="text-2xl font-semibold mb-4 tracking-tight" data-testid="text-segment-bulk-title">
+                  {language === 'uz' ? 'Ulgurji B2B' : 
+                   language === 'ru' ? 'Оптовые B2B' : 
+                   'Bulk B2B'}
                 </h3>
-                <p className="text-muted-foreground font-light leading-relaxed mb-8">
-                  {language === 'uz' ? 'Mahsulot turlarini ko\'rish. Spetsifikatsiyalar va hajm variantlari.' : 
-                   language === 'ru' ? 'Просмотр ассортимента продукции. Спецификации и варианты объёмов.' : 
-                   'Browse product range. Specifications and volume options.'}
+                <p className="text-muted-foreground font-light leading-relaxed mb-4">
+                  {language === 'uz' ? 'Katalog mahsulotlari bo\'yicha hajmga asoslangan buyurtmalar. Distributor va ulgurji xaridorlar uchun.' : 
+                   language === 'ru' ? 'Объёмные заказы по каталогу. Для дистрибьюторов и оптовых покупателей.' : 
+                   'Volume-based orders from catalog. For distributors and wholesale buyers.'}
                 </p>
+                <ul className="text-xs text-muted-foreground/80 space-y-1 mb-8">
+                  <li>• {language === 'uz' ? 'Hajmga qarab narx' : language === 'ru' ? 'Цена от объёма' : 'Volume pricing'}</li>
+                  <li>• {language === 'uz' ? 'Barqaror sifat' : language === 'ru' ? 'Стабильное качество' : 'Consistent quality'}</li>
+                  <li>• {language === 'uz' ? 'Yetkazib berish: 4–6 hafta' : language === 'ru' ? 'Доставка: 4–6 недель' : 'Lead time: 4–6 weeks'}</li>
+                </ul>
               </div>
               <Link href="/catalog">
-                <Button variant="outline" className="w-full rounded-none uppercase tracking-widest text-[10px] font-bold">
-                  {language === 'uz' ? 'Katalog' : 
-                   language === 'ru' ? 'Каталог' : 
+                <Button variant="outline" className="w-full rounded-none uppercase tracking-widest text-[10px] font-bold" data-testid="button-view-catalog">
+                  {language === 'uz' ? 'Katalogni Ko\'rish' : 
+                   language === 'ru' ? 'Смотреть Каталог' : 
                    'View Catalog'}
                 </Button>
               </Link>
@@ -418,19 +434,19 @@ export default function Home() {
             className="text-center mb-20"
           >
             <span className="text-xs uppercase tracking-[0.3em] text-primary/60 font-medium mb-4 block">
-              {language === 'uz' ? 'Global Miqyos' : 
-               language === 'ru' ? 'Глобальный Масштаб' : 
-               'Global Scale'}
+              {language === 'uz' ? 'To\'liq Tsikl Afzalligi' : 
+               language === 'ru' ? 'Преимущество Полного Цикла' : 
+               'Full-Cycle Advantage'}
             </span>
             <h2 className="text-4xl font-semibold mb-4">
-              {language === 'uz' ? 'Sanoat Tasdig\'i' : 
-               language === 'ru' ? 'Промышленная Верификация' : 
-               'Industrial Verification'}
+              {language === 'uz' ? 'Nima Uchun To\'liq Tsikl Muhim' : 
+               language === 'ru' ? 'Почему Полный Цикл Важен' : 
+               'Why Full-Cycle Matters'}
             </h2>
             <p className="text-muted-foreground font-light max-w-2xl mx-auto">
-              {language === 'uz' ? 'Dunyodagi eng talabchan mehmondo\'stlik va chakana brendlar uchun barqaror sifatni ta\'minlovchi vertikal integratsiya.' : 
-               language === 'ru' ? 'Вертикальная интеграция, обеспечивающая стабильное качество для самых требовательных мировых брендов гостеприимства и розничной торговли.' : 
-               'Vertical integration ensuring consistent quality for the world\'s most demanding hospitality and retail brands.'}
+              {language === 'uz' ? 'Ipdan tayyor mahsulotgacha bir fabrikada. Oraliq sotuvchilar yo\'q. Barqaror sifat. Aniq muddatlar.' : 
+               language === 'ru' ? 'От пряжи до готового изделия на одной фабрике. Без посредников. Стабильное качество. Чёткие сроки.' : 
+               'From yarn to finished product in one factory. No middlemen. Consistent quality. Predictable lead times.'}
             </p>
           </motion.div>
 

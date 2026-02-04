@@ -76,23 +76,40 @@ export default function Business() {
           <div className="max-w-3xl text-white">
             <motion.span
               variants={fadeInUp}
-              className="text-xs uppercase tracking-[0.3em] font-medium text-white/70 mb-4 block"
+              className="text-xs uppercase tracking-[0.3em] font-medium text-white/70 mb-4 block border border-white/30 px-3 py-1 inline-block"
             >
-              B2B
+              {t.business.title === 'B2B Ishlab Chiqarish' ? 'To\'liq Tsikl Ishlab Chiqaruvchi' : 
+               t.business.title === 'B2B Производство' ? 'Производитель Полного Цикла' : 
+               'Full-Cycle Manufacturer'}
             </motion.span>
             <motion.h1
               variants={fadeInUp}
-              className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-tight mb-6"
+              className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-tight mb-6 mt-4"
               data-testid="text-business-title"
             >
-              {t.business.title}
+              {t.business.title === 'B2B Ishlab Chiqarish' ? 'B2B Tekstil Ishlab Chiqarish' : 
+               t.business.title === 'B2B Производство' ? 'B2B Текстильное Производство' : 
+               'B2B Textile Manufacturing'}
             </motion.h1>
             <motion.p
               variants={fadeInUp}
-              className="text-xl text-white/80 font-light leading-relaxed"
+              className="text-xl text-white/80 font-light leading-relaxed mb-4"
               data-testid="text-business-subtitle"
             >
-              {t.business.heroText}
+              {t.business.heroText === 'Vertikal integratsiyalashgan ishlab chiqarish. Majburiyatdan oldin namunalar mavjud.' ? 
+               'Ip → Bo\'yash → Dizayn → Tayyor mahsulot. Barcha jarayonlar bir fabrikada.' : 
+               t.business.heroText === 'Вертикально-интегрированное производство. Образцы до начала заказа.' ? 
+               'Пряжа → Крашение → Дизайн → Готовый продукт. Все процессы на одной фабрике.' : 
+               'Yarn → Dyeing → Design → Finished product. All processes in one factory.'}
+            </motion.p>
+            <motion.p
+              variants={fadeInUp}
+              className="text-sm text-white/60 flex items-center gap-2"
+            >
+              <Award className="w-4 h-4" />
+              {t.business.title === 'B2B Ishlab Chiqarish' ? 'Namunalar majburiyatdan oldin. Sinov buyurtmalari mavjud.' : 
+               t.business.title === 'B2B Производство' ? 'Образцы до обязательств. Пробные заказы доступны.' : 
+               'Sampling before commitment. Pilot orders available.'}
             </motion.p>
           </div>
         </motion.div>
@@ -219,17 +236,28 @@ export default function Business() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl sm:text-4xl font-semibold mb-8">
-              {t.business.ctaTitle}
+            <h2 className="text-3xl sm:text-4xl font-semibold mb-4">
+              {t.business.ctaTitle === 'Spetsifikatsiyalarni So\'rash' ? 'Texnik Maslahat So\'rash' : 
+               t.business.ctaTitle === 'Запросить Спецификации' ? 'Запросить Техническую Консультацию' : 
+               'Request Technical Consultation'}
             </h2>
+            <p className="text-white/70 mb-8 max-w-xl mx-auto">
+              {t.business.ctaTitle === 'Spetsifikatsiyalarni So\'rash' ? 'Texnik jamoamiz loyihangiz uchun spetsifikatsiyalar, namunalar va muddatlarni muhokama qiladi.' : 
+               t.business.ctaTitle === 'Запросить Спецификации' ? 'Наша техническая команда обсудит спецификации, образцы и сроки для вашего проекта.' : 
+               'Our technical team will discuss specifications, samples, and lead times for your project.'}
+            </p>
             <Link href="/contact">
-              <Button size="lg" variant="outline" className="min-w-[200px] rounded-none uppercase tracking-widest text-xs font-semibold border-white text-white hover:bg-white hover:text-primary" data-testid="button-business-cta">
-                {t.business.ctaButton}
+              <Button size="lg" variant="outline" className="min-w-[220px] rounded-none uppercase tracking-widest text-xs font-semibold border-white text-white" data-testid="button-business-cta">
+                {t.business.ctaButton === 'So\'rov yuborish' ? 'Konsultatsiya So\'rash' : 
+                 t.business.ctaButton === 'Отправить запрос' ? 'Запросить Консультацию' : 
+                 'Request Consultation'}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
             <p className="text-white/70 mt-6 text-sm">
-              {t.business.responseTime}
+              {t.business.responseTime === 'Biz odatda 24–48 soat ichida javob beramiz.' ? 'Texnik javob: 24–48 soat.' : 
+               t.business.responseTime === 'Мы обычно отвечаем в течение 24–48 часов.' ? 'Технический ответ: 24–48 часов.' : 
+               'Technical response: 24–48 hours.'}
             </p>
           </motion.div>
         </div>

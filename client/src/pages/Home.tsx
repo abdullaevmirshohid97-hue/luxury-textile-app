@@ -583,6 +583,217 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Factory Credentials & Proof */}
+      <section className="py-24 lg:py-32 bg-primary/[0.02] border-y border-primary/5" data-testid="section-factory-credentials">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/60 font-medium mb-6 block">
+              {language === 'uz' ? 'Fabrika Hujjatlari' : language === 'ru' ? 'Документация Фабрики' : 'Factory Documentation'}
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-semibold" data-testid="text-credentials-title">
+              {language === 'uz' ? 'Tasdiqlangan Ishlab Chiqarish Imkoniyatlari' : 
+               language === 'ru' ? 'Подтверждённые Производственные Возможности' : 
+               'Verified Manufacturing Capabilities'}
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+            <div className="text-center p-6" data-testid="credential-iso">
+              <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center mx-auto mb-4">
+                <ShieldCheck className="h-8 w-8 text-primary/60" />
+              </div>
+              <h3 className="font-semibold mb-2">ISO 9001:2015</h3>
+              <p className="text-sm text-muted-foreground">
+                {language === 'uz' ? 'Sertifikatlangan sifat boshqaruvi' : 
+                 language === 'ru' ? 'Сертифицированная система качества' : 
+                 'Certified quality management'}
+              </p>
+            </div>
+            <div className="text-center p-6" data-testid="credential-oeko">
+              <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center mx-auto mb-4">
+                <Leaf className="h-8 w-8 text-primary/60" />
+              </div>
+              <h3 className="font-semibold mb-2">OEKO-TEX Standard 100</h3>
+              <p className="text-sm text-muted-foreground">
+                {language === 'uz' ? 'Xavfsiz bo\'yoqlar va materiallar' : 
+                 language === 'ru' ? 'Безопасные красители и материалы' : 
+                 'Safe dyes and materials'}
+              </p>
+            </div>
+            <div className="text-center p-6" data-testid="credential-capacity">
+              <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center mx-auto mb-4">
+                <Factory className="h-8 w-8 text-primary/60" />
+              </div>
+              <h3 className="font-semibold mb-2">50,000+ {language === 'uz' ? 'dona/oy' : language === 'ru' ? 'шт./мес.' : 'pcs/month'}</h3>
+              <p className="text-sm text-muted-foreground">
+                {language === 'uz' ? 'Oylik ishlab chiqarish hajmi' : 
+                 language === 'ru' ? 'Производственная мощность' : 
+                 'Monthly production capacity'}
+              </p>
+            </div>
+            <div className="text-center p-6" data-testid="credential-export">
+              <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center mx-auto mb-4">
+                <Globe2 className="h-8 w-8 text-primary/60" />
+              </div>
+              <h3 className="font-semibold mb-2">15+ {language === 'uz' ? 'davlat' : language === 'ru' ? 'стран' : 'countries'}</h3>
+              <p className="text-sm text-muted-foreground">
+                {language === 'uz' ? 'Eksport geografiyasi' : 
+                 language === 'ru' ? 'География экспорта' : 
+                 'Export geography'}
+              </p>
+            </div>
+          </div>
+
+          {/* International Trust Signals */}
+          <div className="bg-card/50 border border-primary/5 p-8 rounded-lg" data-testid="trust-international">
+            <div className="grid md:grid-cols-3 gap-8 text-center">
+              <div data-testid="trust-incoterms">
+                <p className="text-2xl font-semibold text-primary mb-2">EXW / FOB / CIF</p>
+                <p className="text-sm text-muted-foreground">
+                  {language === 'uz' ? 'Incoterms shartlari' : language === 'ru' ? 'Условия Incoterms' : 'Incoterms available'}
+                </p>
+              </div>
+              <div data-testid="trust-payment">
+                <p className="text-2xl font-semibold text-primary mb-2">T/T, L/C</p>
+                <p className="text-sm text-muted-foreground">
+                  {language === 'uz' ? 'To\'lov shartlari' : language === 'ru' ? 'Условия оплаты' : 'Payment terms'}
+                </p>
+              </div>
+              <div data-testid="trust-inspection">
+                <p className="text-2xl font-semibold text-primary mb-2">SGS, Bureau Veritas</p>
+                <p className="text-sm text-muted-foreground">
+                  {language === 'uz' ? 'Uchinchi tomon tekshiruvi' : language === 'ru' ? 'Сторонняя инспекция' : 'Third-party inspection'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Founder Voice */}
+      <section className="py-24 lg:py-32 bg-background" data-testid="section-founder">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/60 font-medium mb-6 block">
+                {language === 'uz' ? 'Asoschidan' : language === 'ru' ? 'От Основателя' : 'From the Founder'}
+              </span>
+              <blockquote className="text-xl sm:text-2xl font-light leading-relaxed text-muted-foreground mb-8 italic" data-testid="text-founder-quote">
+                {language === 'uz' ? '"Biz 2015-yildan beri to\'liq tsikl tekstil ishlab chiqarish bilan shug\'ullanmoqdamiz. Har bir buyurtma shaxsan men yoki texnik jamoam tomonidan nazorat qilinadi. Sizning loyihangiz bizning obro\'imizdir."' : 
+                 language === 'ru' ? '"Мы занимаемся текстильным производством полного цикла с 2015 года. Каждый заказ контролируется лично мной или технической командой. Ваш проект — это наша репутация."' : 
+                 '"We have been operating full-cycle textile manufacturing since 2015. Every order is personally supervised by me or my technical team. Your project is our reputation."'}
+              </blockquote>
+              <div className="flex flex-col items-center">
+                <p className="font-semibold" data-testid="text-founder-name">
+                  {language === 'uz' ? 'Mary Collection Jamoasi' : 
+                   language === 'ru' ? 'Команда Mary Collection' : 
+                   'Mary Collection Team'}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Namangan, {language === 'uz' ? 'O\'zbekiston' : language === 'ru' ? 'Узбекистан' : 'Uzbekistan'}
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* B2B FAQ */}
+      <section className="py-24 lg:py-32 bg-primary/[0.02]" data-testid="section-faq">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/60 font-medium mb-6 block">
+              FAQ
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-semibold" data-testid="text-faq-title">
+              {language === 'uz' ? 'B2B Buyurtmalar Bo\'yicha Savollar' : 
+               language === 'ru' ? 'Вопросы по B2B Заказам' : 
+               'B2B Order Questions'}
+            </h2>
+          </motion.div>
+
+          <div className="max-w-3xl mx-auto space-y-6">
+            <div className="p-6 bg-card border border-primary/5 rounded-lg" data-testid="faq-moq">
+              <h3 className="font-semibold mb-2">
+                {language === 'uz' ? 'Minimal buyurtma hajmi qancha?' : 
+                 language === 'ru' ? 'Каков минимальный объём заказа?' : 
+                 'What is the minimum order quantity?'}
+              </h3>
+              <p className="text-muted-foreground">
+                {language === 'uz' ? 'Standart mahsulotlar uchun 500 dona. Maxsus ranglar yoki dizaynlar uchun 1,000+ dona.' : 
+                 language === 'ru' ? '500 единиц для стандартных товаров. 1,000+ единиц для кастомных цветов или дизайнов.' : 
+                 '500 units for standard products. 1,000+ units for custom colors or designs.'}
+              </p>
+            </div>
+            <div className="p-6 bg-card border border-primary/5 rounded-lg" data-testid="faq-samples">
+              <h3 className="font-semibold mb-2">
+                {language === 'uz' ? 'Namunalarni qanday olsam bo\'ladi?' : 
+                 language === 'ru' ? 'Как получить образцы?' : 
+                 'How can I get samples?'}
+              </h3>
+              <p className="text-muted-foreground">
+                {language === 'uz' ? 'Katalog namunalari 5-7 ish kunida yuboriladi. Maxsus namunalar 2-3 haftada tayyorlanadi. Kuryer harajatlari xaridor tomonidan to\'lanadi.' : 
+                 language === 'ru' ? 'Каталожные образцы отправляются за 5-7 рабочих дней. Кастомные образцы — 2-3 недели. Курьерские расходы оплачивает покупатель.' : 
+                 'Catalog samples ship within 5-7 business days. Custom samples require 2-3 weeks. Courier costs are paid by buyer.'}
+              </p>
+            </div>
+            <div className="p-6 bg-card border border-primary/5 rounded-lg" data-testid="faq-leadtime">
+              <h3 className="font-semibold mb-2">
+                {language === 'uz' ? 'Ishlab chiqarish muddati qancha?' : 
+                 language === 'ru' ? 'Каковы сроки производства?' : 
+                 'What is the production lead time?'}
+              </h3>
+              <p className="text-muted-foreground">
+                {language === 'uz' ? 'Standart buyurtmalar: 4-6 hafta. Katta hajmli yoki maxsus buyurtmalar: 6-8 hafta. Namuna tasdiqlashdan keyin hisoblash boshlanadi.' : 
+                 language === 'ru' ? 'Стандартные заказы: 4-6 недель. Крупные или кастомные заказы: 6-8 недель. Отсчёт начинается после утверждения образца.' : 
+                 'Standard orders: 4-6 weeks. Large or custom orders: 6-8 weeks. Counting starts after sample approval.'}
+              </p>
+            </div>
+            <div className="p-6 bg-card border border-primary/5 rounded-lg" data-testid="faq-payment">
+              <h3 className="font-semibold mb-2">
+                {language === 'uz' ? 'Qanday to\'lov usullari mavjud?' : 
+                 language === 'ru' ? 'Какие способы оплаты доступны?' : 
+                 'What payment methods are available?'}
+              </h3>
+              <p className="text-muted-foreground">
+                {language === 'uz' ? 'T/T (bank o\'tkazmasi): 30% oldindan, 70% jo\'natishdan oldin. L/C (akkreditiv): katta hajmli buyurtmalar uchun.' : 
+                 language === 'ru' ? 'T/T (банковский перевод): 30% предоплата, 70% перед отгрузкой. L/C (аккредитив): для крупных заказов.' : 
+                 'T/T (wire transfer): 30% deposit, 70% before shipment. L/C (letter of credit): available for large orders.'}
+              </p>
+            </div>
+            <div className="p-6 bg-card border border-primary/5 rounded-lg" data-testid="faq-private-label">
+              <h3 className="font-semibold mb-2">
+                {language === 'uz' ? 'Xususiy brend / OEM qilasizlarmi?' : 
+                 language === 'ru' ? 'Делаете ли вы частную марку / OEM?' : 
+                 'Do you do private label / OEM?'}
+              </h3>
+              <p className="text-muted-foreground">
+                {language === 'uz' ? 'Ha. Sizning brendingiz ostida to\'liq tsikl ishlab chiqarish: ipdan tayyor mahsulotgacha. Yorliq, qadoqlash, maxsus dizayn.' : 
+                 language === 'ru' ? 'Да. Полный цикл производства под вашим брендом: от пряжи до готового изделия. Этикетки, упаковка, кастомный дизайн.' : 
+                 'Yes. Full-cycle manufacturing under your brand: from yarn to finished product. Labels, packaging, custom design.'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Contact Section */}
       <section className="py-24 lg:py-32 bg-card/30">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">

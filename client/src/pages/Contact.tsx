@@ -11,12 +11,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslations, useLanguageStore } from "@/lib/i18n";
 import { apiRequest } from "@/lib/queryClient";
 import { useFormOptions } from "@/hooks/useFormOptions";
 import { Mail, Phone, MapPin, Clock, Loader2, CheckCircle, Building2 } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
+
+const QUALIFIED_VOLUMES = ["500-1000", "1000-5000", "5000+"];
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -25,9 +28,13 @@ const formSchema = z.object({
   email: z.string().email("Please enter a valid email"),
   phone: z.string().optional(),
   sector: z.string().min(1, "Please select a sector"),
-  volume: z.string().optional(),
+  volume: z.string().min(1, "Please select an estimated volume").refine(
+    val => QUALIFIED_VOLUMES.includes(val),
+    { message: "Minimum order quantity is 500 units. For smaller orders, please contact our retail partners." }
+  ),
   timeline: z.string().optional(),
   message: z.string().min(10, "Message must be at least 10 characters"),
+  moqConfirm: z.boolean().refine(val => val === true, { message: "Please confirm you meet the minimum order quantity" }),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -51,7 +58,7 @@ export default function Contact() {
       company: "Kompaniya nomi",
       role: "Lavozim (ixtiyoriy)",
       sector: "Biznes yo'nalishi",
-      volume: "Taxminiy hajm (ixtiyoriy)",
+      volume: "Buyurtma hajmi (talab qilinadi)",
       timeline: "Loyiha muddati (ixtiyoriy)",
       projectDetails: "Loyiha tafsilotlari",
       success: "Rahmat!",
@@ -64,7 +71,7 @@ export default function Contact() {
       company: "Название компании",
       role: "Должность (опционально)",
       sector: "Направление бизнеса",
-      volume: "Ориентировочный объём (опционально)",
+      volume: "Объём заказа (обязательно)",
       timeline: "Сроки проекта (опционально)",
       projectDetails: "Детали проекта",
       success: "Спасибо!",
@@ -77,7 +84,7 @@ export default function Contact() {
       company: "Company Name",
       role: "Your Role (optional)",
       sector: "Business Sector",
-      volume: "Estimated Volume (optional)",
+      volume: "Order Volume (required)",
       timeline: "Project Timeline (optional)",
       projectDetails: "Project Details",
       success: "Thank you!",
@@ -112,6 +119,24 @@ export default function Contact() {
 
   const l = labels[language];
 
+  const moqNotice = {
+    uz: {
+      title: "Minimal Buyurtma Hajmi",
+      text: "Biz 500+ dona buyurtmalar bilan ishlaymiz. Agar sizning ehtiyojlaringiz kichikroq bo'lsa, chakana do'konlarimizga tashrif buyuring.",
+      badge: "B2B faqat",
+    },
+    ru: {
+      title: "Минимальный объём заказа",
+      text: "Мы работаем с заказами от 500+ единиц. Для меньших объёмов посетите наши розничные партнёры.",
+      badge: "Только B2B",
+    },
+    en: {
+      title: "Minimum Order Quantity",
+      text: "We work with orders of 500+ units. For smaller quantities, please visit our retail partners.",
+      badge: "B2B only",
+    },
+  };
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -124,6 +149,7 @@ export default function Contact() {
       volume: "",
       timeline: "",
       message: productSlug ? `Interested in: ${productSlug}` : "",
+      moqConfirm: false,
     },
   });
 
@@ -181,6 +207,17 @@ export default function Contact() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
+            {/* MOQ Filtering Notice */}
+            <div className="mb-6 p-4 bg-primary/5 border border-primary/10 rounded-lg" data-testid="notice-moq">
+              <div className="flex flex-wrap items-center gap-2 mb-2">
+                <span className="text-xs font-semibold uppercase tracking-wider text-primary/70 bg-primary/10 px-2 py-0.5 rounded" data-testid="badge-b2b-only">
+                  {moqNotice[language].badge}
+                </span>
+              </div>
+              <h4 className="font-semibold text-sm mb-1" data-testid="text-moq-title">{moqNotice[language].title}</h4>
+              <p className="text-sm text-muted-foreground" data-testid="text-moq-desc">{moqNotice[language].text}</p>
+            </div>
+
             <Card>
               <CardContent className="p-6 sm:p-8">
                 {submitted ? (
@@ -373,6 +410,31 @@ export default function Contact() {
                               />
                             </FormControl>
                             <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* MOQ Confirmation Checkbox */}
+                      <FormField
+                        control={form.control}
+                        name="moqConfirm"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-primary/10 p-4 bg-primary/[0.02]">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                data-testid="checkbox-moq-confirm"
+                              />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                              <FormLabel className="text-sm font-medium cursor-pointer">
+                                {language === 'uz' ? 'Men minimal buyurtma hajmi (500+ dona) talablarini tushunaman va qabul qilaman.' : 
+                                 language === 'ru' ? 'Я понимаю и принимаю требования к минимальному объёму заказа (500+ единиц).' : 
+                                 'I understand and accept the minimum order quantity (500+ units) requirement.'}
+                              </FormLabel>
+                              <FormMessage />
+                            </div>
                           </FormItem>
                         )}
                       />

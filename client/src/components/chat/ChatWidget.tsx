@@ -38,9 +38,9 @@ export function ChatWidget() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const greetingQuestion = {
-    uz: "Qanday biznes yo'nalishda hamkorlik qilishni xohlaysiz?",
-    ru: "Какое бизнес-направление вас интересует?",
-    en: "What type of business partnership interests you?",
+    uz: "Salom! Men Mary Collection AI Ishlab Chiqarish Maslahatchisiman. MOQ, yetkazib berish muddatlari yoki texnik spetsifikatsiyalar bo'yicha yordam bera olaman. Qanday loyiha ustida ishlayapsiz?",
+    ru: "Здравствуйте! Я AI-Консультант по Производству Mary Collection. Помогу с вопросами по MOQ, срокам доставки или техническим спецификациям. Над каким проектом вы работаете?",
+    en: "Hello! I'm the Mary Collection AI Production Consultant. I can help with MOQ, lead times, and technical specifications. What project are you working on?",
   };
 
   useEffect(() => {
@@ -155,15 +155,21 @@ export function ChatWidget() {
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
             className="fixed bottom-24 right-4 sm:right-8 w-[calc(100vw-2rem)] sm:w-[380px] h-[500px] bg-white border border-stone-200 rounded-lg shadow-2xl flex flex-col z-[100]"
           >
-            <div className="flex items-center justify-between p-6 border-b border-stone-100">
-              <h3 className="text-[11px] uppercase tracking-[0.2em] font-semibold text-stone-400">
-                {language === 'uz' ? 'Maslahatchi' : language === 'ru' ? 'Консультант' : 'Consultant'}
-              </h3>
+            <div className="flex flex-wrap items-center justify-between gap-2 p-6 border-b border-stone-100">
+              <div>
+                <h3 className="text-[11px] uppercase tracking-[0.2em] font-semibold text-stone-400">
+                  {language === 'uz' ? 'AI Ishlab Chiqarish Maslahatchisi' : language === 'ru' ? 'AI-Консультант по Производству' : 'AI Production Consultant'}
+                </h3>
+                <p className="text-[9px] text-stone-300 mt-0.5">
+                  {language === 'uz' ? 'Texnik savollar uchun' : language === 'ru' ? 'Для технических вопросов' : 'For technical questions'}
+                </p>
+              </div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsOpen(false)}
-                className="hover:bg-stone-50 text-stone-400"
+                className="text-stone-400"
+                data-testid="button-chat-close"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -174,7 +180,7 @@ export function ChatWidget() {
                 {messages.map((message, index) => (
                   <div
                     key={index}
-                    className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                    className={`flex flex-wrap ${message.role === "user" ? "justify-end" : "justify-start"}`}
                   >
                     <div
                       className={`max-w-[85%] px-4 py-3 text-[14px] leading-relaxed font-light ${
@@ -190,7 +196,8 @@ export function ChatWidget() {
                             <button
                               key={opt.id}
                               onClick={() => selectOption(opt.id, opt.label)}
-                              className="text-left w-full px-4 py-2 text-[13px] text-stone-500 border border-stone-200 rounded-md hover:border-stone-400 hover:text-stone-700 transition-all duration-300"
+                              className="text-left w-full px-4 py-2 text-[13px] text-stone-500 border border-stone-200 rounded-md transition-all duration-300"
+                              data-testid={`button-chat-option-${opt.id}`}
                             >
                               {opt.label}
                             </button>
@@ -211,21 +218,23 @@ export function ChatWidget() {
             </ScrollArea>
 
             <div className="p-6 border-t border-stone-100">
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-3">
                 <Input
                   ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={language === 'uz' ? 'Xabaringizni yozing...' : language === 'ru' ? 'Напишите сообщение...' : 'Type your message...'}
-                  className="h-10 text-[14px] font-light border-stone-200 focus-visible:ring-stone-400 focus-visible:ring-offset-0 rounded-none bg-stone-50/30"
+                  className="flex-1 min-w-0 text-[14px] font-light border-stone-200 focus-visible:ring-stone-400 focus-visible:ring-offset-0 rounded-none bg-stone-50/30"
                   disabled={isLoading}
+                  data-testid="input-chat-message"
                 />
                 <Button
                   size="icon"
                   onClick={() => sendMessage()}
                   disabled={!input.trim() || isLoading}
-                  className="h-10 w-10 bg-stone-800 hover:bg-stone-900 rounded-none"
+                  className="bg-stone-800 rounded-none"
+                  data-testid="button-chat-send"
                 >
                   <Send className="h-4 w-4" />
                 </Button>
@@ -238,17 +247,23 @@ export function ChatWidget() {
       <div className="fixed bottom-6 right-6 sm:right-8 flex flex-col items-end gap-3 z-[100] group">
         <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
           <div className="bg-white border border-stone-200 px-4 py-2 rounded shadow-sm">
-            <p className="text-[11px] text-stone-500 font-light tracking-wide whitespace-nowrap">
-              {language === 'uz' ? "B2B hamkorlik bo'yicha maslahat oling" : 
-               language === 'ru' ? 'Консультация по B2B-сотрудничеству' : 
-               'Get B2B partnership guidance'}
+            <p className="text-[10px] font-medium text-stone-600 whitespace-nowrap">
+              {language === 'uz' ? 'AI Ishlab Chiqarish Maslahatchisi' : 
+               language === 'ru' ? 'AI-Консультант по Производству' : 
+               'AI Production Consultant'}
+            </p>
+            <p className="text-[9px] text-stone-400 whitespace-nowrap">
+              {language === 'uz' ? "MOQ, muddatlar, texnik savollar" : 
+               language === 'ru' ? 'MOQ, сроки, технические вопросы' : 
+               'MOQ, lead times, technical specs'}
             </p>
           </div>
         </div>
         <Button
           size="icon"
-          className="h-14 w-14 rounded-full shadow-lg bg-stone-100 hover:bg-stone-200 text-stone-600 border border-stone-200 transition-all duration-300 active:scale-95 no-default-hover-elevate no-default-active-elevate"
+          className="rounded-full shadow-lg bg-stone-100 text-stone-600 border border-stone-200 transition-all duration-300"
           onClick={() => setIsOpen(!isOpen)}
+          data-testid="button-chat-toggle"
         >
           {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" strokeWidth={1.5} />}
         </Button>

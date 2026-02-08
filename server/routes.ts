@@ -161,6 +161,8 @@ export async function registerRoutes(
 ): Promise<Server> {
   await initializeDatabase(storage);
 
+  app.set("trust proxy", 1);
+
   // Security headers - Cloudflare WAF compatible
   app.use((req, res, next) => {
     // Security headers
@@ -200,6 +202,7 @@ export async function registerRoutes(
         secure: process.env.NODE_ENV === "production",
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       },
     })
   );
@@ -831,6 +834,30 @@ Respond in the user's language (${language}).`;
       res.json({ success: true });
     } catch (error) {
       res.status(500).json({ error: "Failed to update credentials" });
+    }
+  });
+
+  app.patch("/api/admin/change-password", requireAdminRole, async (req: Request, res: Response) => {
+    try {
+      const { oldPassword, newPassword } = req.body;
+      if (!oldPassword || !newPassword || typeof oldPassword !== "string" || typeof newPassword !== "string") {
+        return res.status(400).json({ error: "Old password and new password are required" });
+      }
+      if (newPassword.length < 8) {
+        return res.status(400).json({ error: "New password must be at least 8 characters" });
+      }
+      const user = await storage.getUserByUsername(req.session.username!);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      const isValid = await storage.verifyPassword(user, oldPassword);
+      if (!isValid) {
+        return res.status(401).json({ error: "Current password is incorrect" });
+      }
+      await storage.updateUserCredentials(user.id, user.username, newPassword);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to change password" });
     }
   });
 

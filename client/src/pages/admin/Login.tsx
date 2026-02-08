@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Loader2, Globe } from "lucide-react";
+import { Loader2, Globe, Eye, EyeOff } from "lucide-react";
 import { useTranslations, useLanguageStore } from "@/lib/i18n";
 import {
   DropdownMenu,
@@ -29,6 +29,7 @@ export default function AdminLogin() {
   const { toast } = useToast();
   const t = useTranslations();
   const { language, setLanguage } = useLanguageStore();
+  const [showPassword, setShowPassword] = useState(false);
 
   const loginSchema = z.object({
     username: z.string().min(1, t.admin.usernameRequired),
@@ -110,7 +111,29 @@ export default function AdminLogin() {
                   <FormItem>
                     <FormLabel className="text-body">{t.admin.password}</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} className="text-body" data-testid="input-password" />
+                      <div className="relative">
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          {...field}
+                          className="text-body pr-10"
+                          data-testid="input-password"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-0 top-0 h-full"
+                          onClick={() => setShowPassword(!showPassword)}
+                          tabIndex={-1}
+                          data-testid="button-toggle-password"
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4 text-muted-foreground" />
+                          ) : (
+                            <Eye className="h-4 w-4 text-muted-foreground" />
+                          )}
+                        </Button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

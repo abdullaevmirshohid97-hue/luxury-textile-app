@@ -57,7 +57,7 @@ export default function Terms() {
         {
           title: "10. Contact Information",
           content: `For questions about these Terms of Use, please contact us at:
-Email: info@marycollection.com
+Email: mariamhome.uz@gmail.com
 Phone: +998 88 259 94 44
 Address: Istiqbol MFY, Turakurgan street, Namangan city, Uzbekistan`
         }
@@ -115,7 +115,7 @@ Address: Istiqbol MFY, Turakurgan street, Namangan city, Uzbekistan`
         {
           title: "10. Контактная информация",
           content: `По вопросам об Условиях использования свяжитесь с нами:
-Email: info@marycollection.com
+Email: mariamhome.uz@gmail.com
 Телефон: +998 88 259 94 44
 Адрес: Истикбол МФЙ, улица Туракурган, город Наманган, Узбекистан`
         }
@@ -173,7 +173,7 @@ Email: info@marycollection.com
         {
           title: "10. Aloqa ma'lumotlari",
           content: `Foydalanish shartlari haqida savollar uchun biz bilan bog'laning:
-Email: info@marycollection.com
+Email: mariamhome.uz@gmail.com
 Telefon: +998 88 259 94 44
 Manzil: Istiqbol MFY, Turakurgan ko'chasi, Namangan shahri, O'zbekiston`
         }

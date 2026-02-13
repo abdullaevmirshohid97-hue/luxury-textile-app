@@ -290,7 +290,7 @@ export class MemStorage implements IStorage {
 
     this.upsertSetting("ai_assistant_enabled", "true");
     this.upsertSetting("contact_phone", "+998 88 259 94 44");
-    this.upsertSetting("contact_email", "info@marycollection.com");
+    this.upsertSetting("contact_email", "mariamhome.uz@gmail.com");
     this.upsertSetting("contact_address_en", "Istiqbol MFY, Turakurgan street, Namangan city, Uzbekistan");
     this.upsertSetting("contact_address_ru", "Истикбол МФЙ, улица Туракурган, город Наманган, Узбекистан");
     this.upsertSetting("contact_address_uz", "Istiqbol MFY, Turakurgan ko'chasi, Namangan shahri, O'zbekiston");

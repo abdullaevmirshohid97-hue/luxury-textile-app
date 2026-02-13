@@ -822,10 +822,11 @@ export default function Home() {
                 </div>
                 <h3 className="text-sm uppercase tracking-widest font-semibold mb-3">{t.contact.email}</h3>
                 <a 
-                  href="mailto:Marycollection.uz@gmail.com" 
+                  href="mailto:mariamhome.uz@gmail.com" 
                   className="text-sm text-muted-foreground hover:text-primary transition-colors block break-all font-light"
+                  data-testid="link-home-email"
                 >
-                  Marycollection.uz@gmail.com
+                  mariamhome.uz@gmail.com
                 </a>
               </CardContent>
             </Card>
@@ -868,9 +869,15 @@ export default function Home() {
                   <MapPin className="h-5 w-5 text-primary/60" />
                 </div>
                 <h3 className="text-sm uppercase tracking-widest font-semibold mb-3">{t.contact.address}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed font-light">
+                <a 
+                  href="https://www.google.com/maps/search/?api=1&query=Istiqbol+MFY+Turakurgan+1A+Namangan+Uzbekistan"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors block leading-relaxed font-light"
+                  data-testid="link-home-address"
+                >
                   {t.home.address}
-                </p>
+                </a>
               </CardContent>
             </Card>
           </div>

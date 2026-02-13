@@ -495,11 +495,11 @@ export default function Contact() {
                   <div>
                     <h3 className="font-semibold mb-1">{t.contact.email}</h3>
                     <a
-                      href="mailto:marycollection.uz@gmail.com"
+                      href="mailto:mariamhome.uz@gmail.com"
                       className="text-body text-muted-foreground hover:text-foreground transition-colors"
                       data-testid="link-email"
                     >
-                      marycollection.uz@gmail.com
+                      mariamhome.uz@gmail.com
                     </a>
                   </div>
                 </div>
@@ -544,9 +544,15 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">{t.contact.address}</h3>
-                    <p className="text-body text-muted-foreground whitespace-pre-line">
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=Istiqbol+MFY+Turakurgan+1A+Namangan+Uzbekistan"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-body text-muted-foreground hover:text-foreground transition-colors whitespace-pre-line"
+                      data-testid="link-address"
+                    >
                       {t.contact.fullAddress}
-                    </p>
+                    </a>
                   </div>
                 </div>
 

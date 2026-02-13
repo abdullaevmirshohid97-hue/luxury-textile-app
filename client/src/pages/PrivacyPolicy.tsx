@@ -65,7 +65,7 @@ We automatically collect certain information when you visit our website:
         {
           title: "7. Contact Us",
           content: `For privacy-related inquiries, please contact us at:
-Email: info@marycollection.com
+Email: mariamhome.uz@gmail.com
 Phone: +998 88 259 94 44
 Address: Istiqbol MFY, Turakurgan street, Namangan city, Uzbekistan`
         }
@@ -131,7 +131,7 @@ Address: Istiqbol MFY, Turakurgan street, Namangan city, Uzbekistan`
         {
           title: "7. Связаться с нами",
           content: `По вопросам конфиденциальности свяжитесь с нами:
-Email: info@marycollection.com
+Email: mariamhome.uz@gmail.com
 Телефон: +998 88 259 94 44
 Адрес: Истикбол МФЙ, улица Туракурган, город Наманган, Узбекистан`
         }
@@ -197,7 +197,7 @@ Saytga tashrif buyurganingizda avtomatik ravishda yig'iladigan ma'lumotlar:
         {
           title: "7. Biz bilan bog'laning",
           content: `Maxfiylik bilan bog'liq so'rovlar uchun biz bilan bog'laning:
-Email: info@marycollection.com
+Email: mariamhome.uz@gmail.com
 Telefon: +998 88 259 94 44
 Manzil: Istiqbol MFY, Turakurgan ko'chasi, Namangan shahri, O'zbekiston`
         }

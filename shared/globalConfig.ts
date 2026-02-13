@@ -3,7 +3,8 @@ export const GLOBAL_CONTACT = {
   phoneRaw: "+998882599444",
   whatsapp: "https://wa.me/998882599444",
   telegram: "https://t.me/+998882599444",
-  email: "info@marycollection.com",
+  email: "mariamhome.uz@gmail.com",
+  mapsUrl: "https://www.google.com/maps/search/?api=1&query=Istiqbol+MFY+Turakurgan+1A+Namangan+Uzbekistan",
   address: {
     en: "Istiqbol MFY, Turakurgan street, Namangan city, Uzbekistan",
     ru: "Истикбол МФЙ, улица Туракурган, город Наманган, Узбекистан",

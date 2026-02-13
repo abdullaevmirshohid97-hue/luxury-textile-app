@@ -101,10 +101,16 @@ export function Footer() {
                 <SiTelegram className="h-4 w-4" />
                 Telegram
               </a>
-              <span className="text-body text-sm text-muted-foreground flex items-center gap-2">
+              <a
+                href={GLOBAL_CONTACT.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-body text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                data-testid="link-footer-address"
+              >
                 <MapPin className="h-4 w-4 shrink-0" />
                 {GLOBAL_CONTACT.address[language]}
-              </span>
+              </a>
             </div>
           </div>
         </div>

@@ -13,8 +13,7 @@ import { pool } from "./db";
 import crypto from "crypto";
 import { GLOBAL_CONTACT, BRAND } from "@shared/globalConfig";
 import { LeadType, LeadSource, getLeadTemperature } from "@shared/schema";
-import { notifyAdminNewLead } from "./telegram.service.js";
-import { notifyUser } from "./userNotify.service.js";
+import { notifyAdminNewLead, notifyAdminContactMessage } from "./telegram.service.js";
 
 // Basic server-side request logging
 function logRequest(req: Request, type: 'info' | 'warn' | 'error' = 'info', message?: string) {
@@ -321,6 +320,7 @@ export async function registerRoutes(
         email: email?.trim() || null,
         message: message.trim(),
       });
+      notifyAdminContactMessage(saved).catch((err: unknown) => console.error("[Telegram] Contact notification error:", err));
       res.status(201).json({ success: true });
     } catch (error) {
       console.error("Contact form error:", error);
@@ -776,9 +776,6 @@ Respond in the user's language (${language}).`;
       if (!lead) {
         return res.status(404).json({ error: "Lead not found" });
       }
-
-      const statusMessage = `<b>Order Status Update</b>\n\n<b>Order ID:</b> ${lead.id}\n<b>New Status:</b> ${status}`;
-      notifyUser(lead, statusMessage).catch((err: unknown) => console.error("[OrderStatus] Notification error:", err));
 
       res.json({
         ...lead,

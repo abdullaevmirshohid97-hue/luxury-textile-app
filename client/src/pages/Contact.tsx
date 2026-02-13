@@ -25,7 +25,7 @@ const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   company: z.string().min(2, "Company name is required"),
   role: z.string().optional(),
-  email: z.string().email("Please enter a valid email"),
+  email: z.string().email("Please enter a valid email").or(z.literal("")),
   phone: z.string().optional(),
   sector: z.string().min(1, "Please select a sector"),
   volume: z.string().min(1, "Please select an estimated volume").refine(
@@ -35,6 +35,9 @@ const formSchema = z.object({
   timeline: z.string().optional(),
   message: z.string().min(10, "Message must be at least 10 characters"),
   moqConfirm: z.boolean().refine(val => val === true, { message: "Please confirm you meet the minimum order quantity" }),
+}).refine(data => (data.email && data.email.length > 0) || (data.phone && data.phone.length > 0), {
+  message: "Phone or email is required",
+  path: ["phone"],
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -155,12 +158,11 @@ export default function Contact() {
 
   const submitMutation = useMutation({
     mutationFn: async (data: FormData) => {
-      const response = await apiRequest("POST", "/api/inquiries", {
+      const response = await apiRequest("POST", "/api/contact", {
         name: data.name,
-        email: data.email,
-        phone: data.phone,
+        email: data.email || null,
+        phone: data.phone || null,
         message: `[B2B Inquiry]\nCompany: ${data.company}\nRole: ${data.role || 'Not specified'}\nSector: ${data.sector}\nVolume: ${data.volume || 'Not specified'}\nTimeline: ${data.timeline || 'Not specified'}\n\n${data.message}`,
-        productId: null,
       });
       return response;
     },

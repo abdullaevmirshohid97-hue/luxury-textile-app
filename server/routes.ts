@@ -303,6 +303,31 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/contact", async (req: Request, res: Response) => {
+    try {
+      const { name, phone, email, message } = req.body;
+      if (!name || typeof name !== "string" || name.trim().length < 2) {
+        return res.status(400).json({ error: "Name is required (at least 2 characters)" });
+      }
+      if ((!phone || typeof phone !== "string" || !phone.trim()) && (!email || typeof email !== "string" || !email.trim())) {
+        return res.status(400).json({ error: "Phone or email is required" });
+      }
+      if (!message || typeof message !== "string" || message.trim().length < 10) {
+        return res.status(400).json({ error: "Message is required (at least 10 characters)" });
+      }
+      const saved = await storage.createContactMessage({
+        name: name.trim(),
+        phone: phone?.trim() || null,
+        email: email?.trim() || null,
+        message: message.trim(),
+      });
+      res.status(201).json({ success: true });
+    } catch (error) {
+      console.error("Contact form error:", error);
+      res.status(500).json({ error: "Failed to save your message. Please try again." });
+    }
+  });
+
   app.post("/api/inquiries", async (req: Request, res: Response) => {
     try {
       const { name, email, phone, message, productId, recaptchaToken } = req.body;

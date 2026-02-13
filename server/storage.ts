@@ -2,6 +2,7 @@ import type {
   User, InsertUser,
   Category, InsertCategory,
   Product, InsertProduct,
+  ContactMessage, InsertContactMessage,
   Inquiry, InsertInquiry,
   SiteContent, InsertSiteContent,
   Settings, InsertSettings,
@@ -47,6 +48,9 @@ export interface IStorage {
   createProduct(product: InsertProduct): Promise<Product>;
   updateProduct(id: number, product: Partial<InsertProduct>): Promise<Product | undefined>;
   deleteProduct(id: number): Promise<void>;
+
+  // Contact Messages
+  createContactMessage(msg: InsertContactMessage): Promise<ContactMessage>;
 
   // Inquiries
   getInquiries(): Promise<Inquiry[]>;
@@ -446,6 +450,17 @@ export class MemStorage implements IStorage {
 
   async getInquiry(id: number): Promise<Inquiry | undefined> {
     return this.inquiries.get(id);
+  }
+
+  async createContactMessage(msg: InsertContactMessage): Promise<ContactMessage> {
+    return {
+      id: 0,
+      name: msg.name,
+      phone: msg.phone ?? null,
+      email: msg.email ?? null,
+      message: msg.message,
+      createdAt: new Date(),
+    };
   }
 
   async createInquiry(inquiry: InsertInquiry): Promise<Inquiry> {

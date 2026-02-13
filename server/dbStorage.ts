@@ -2,11 +2,12 @@ import { eq, asc } from "drizzle-orm";
 import bcrypt from "bcrypt";
 import { db } from "./db";
 import {
-  users, categories, products, inquiries, leads, siteContent, settings, analytics,
+  users, categories, products, contactMessages, inquiries, leads, siteContent, settings, analytics,
   processSteps, ctaConfigs, trustBlocks, formOptions,
   type User, type InsertUser,
   type Category, type InsertCategory,
   type Product, type InsertProduct,
+  type ContactMessage, type InsertContactMessage,
   type Inquiry, type InsertInquiry,
   type Lead, type InsertLead,
   type SiteContent, type InsertSiteContent,
@@ -203,6 +204,11 @@ export class DatabaseStorage implements IStorage {
   async getInquiry(id: number): Promise<Inquiry | undefined> {
     const [inquiry] = await db.select().from(inquiries).where(eq(inquiries.id, id));
     return inquiry;
+  }
+
+  async createContactMessage(msg: InsertContactMessage): Promise<ContactMessage> {
+    const [created] = await db.insert(contactMessages).values(msg).returning();
+    return created;
   }
 
   async createInquiry(inquiry: InsertInquiry): Promise<Inquiry> {

@@ -47,8 +47,6 @@ waitForPort = 5000
 [userenv.shared]
 AI_INTEGRATIONS_OPENAI_BASE_URL = "http://localhost:1106/modelfarm/openai"
 AI_INTEGRATIONS_OPENAI_API_KEY = "_DUMMY_API_KEY_"
-TELEGRAM_BOT_TOKEN = "8014205123:AAFFz0uQb9FLGsOtXvfKy9HzrIZxAuV12cg"
-TELEGRAM_CHAT_ID = "-1002249715469"
 
 [agent]
 integrations = ["javascript_openai_ai_integrations:2.0.0"]

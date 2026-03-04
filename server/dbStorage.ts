@@ -423,9 +423,13 @@ export async function initializeDatabase(storage: DatabaseStorage): Promise<void
   const existingUsers = await storage.getUsers();
   if (existingUsers.length === 0) {
     console.log("[db] Creating initial admin account...");
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    if (!adminPassword) {
+      throw new Error("ADMIN_PASSWORD environment variable is not set. Cannot create initial admin account.");
+    }
     await storage.createUser({
       username: "marycollection.uzb",
-      password: "Aa1234567890@0987654321@",
+      password: adminPassword,
     });
     console.log("[db] Initial admin account created");
   }

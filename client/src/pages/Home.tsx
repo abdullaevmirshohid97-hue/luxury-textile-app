@@ -33,7 +33,7 @@ export default function Home() {
 
   // Fetch trending products based on analytics
   const { data: trendingProducts = [] } = useQuery<Product[]>({
-    queryKey: ['/api/products/trending', { limit: 4 }],
+    queryKey: ['/api/products/trending?limit=4'],
   });
 
   const getLocalizedName = (product: Product) => {

@@ -1,5 +1,5 @@
 import { eq, asc } from "drizzle-orm";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { db } from "./db";
 import {
   users, categories, products, contactMessages, inquiries, leads, siteContent, settings, analytics,

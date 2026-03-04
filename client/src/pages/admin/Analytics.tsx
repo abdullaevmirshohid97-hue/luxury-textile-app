@@ -31,7 +31,7 @@ export default function AdminAnalytics() {
   const [timeframe, setTimeframe] = useState<string>("week");
 
   const { data: stats, isLoading } = useQuery<AnalyticsStats>({
-    queryKey: ["/api/admin/analytics", { timeframe }],
+    queryKey: [`/api/admin/analytics?timeframe=${timeframe}`],
   });
 
   const getCount = (type: string) => 

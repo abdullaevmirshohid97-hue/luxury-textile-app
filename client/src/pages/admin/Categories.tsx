@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 import { useTranslations } from "@/lib/i18n";
+import ImageUpload from "@/components/ImageUpload";
 import type { Category } from "@shared/schema";
 
 export default function AdminCategories() {
@@ -190,6 +191,14 @@ export default function AdminCategories() {
                 />
               </div>
 
+              <div className="space-y-2">
+                <Label className="text-body">{t.admin.categoryImage}</Label>
+                <ImageUpload
+                  value={formData.image}
+                  onChange={(val) => setFormData({ ...formData, image: val })}
+                />
+              </div>
+
               <Button type="submit" className="w-full text-body" disabled={saveMutation.isPending} data-testid="button-save-category">
                 {saveMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                 {editingCategory ? t.admin.updateCategory : t.admin.createCategory}
@@ -211,6 +220,7 @@ export default function AdminCategories() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>{t.admin.categoryImage}</TableHead>
                   <TableHead>{t.admin.name}</TableHead>
                   <TableHead>{t.admin.slug}</TableHead>
                   <TableHead className="text-right">{t.admin.actions}</TableHead>
@@ -219,6 +229,20 @@ export default function AdminCategories() {
               <TableBody>
                 {categories.map((category) => (
                   <TableRow key={category.id}>
+                    <TableCell>
+                      {category.image ? (
+                        <img
+                          src={category.image}
+                          alt=""
+                          className="w-10 h-10 rounded object-cover"
+                          data-testid={`img-category-thumb-${category.id}`}
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded bg-muted flex items-center justify-center text-muted-foreground">
+                          <Plus className="h-4 w-4" />
+                        </div>
+                      )}
+                    </TableCell>
                     <TableCell className="font-medium text-body" data-testid={`text-category-row-${category.id}`}>
                       {category.nameEn}
                     </TableCell>

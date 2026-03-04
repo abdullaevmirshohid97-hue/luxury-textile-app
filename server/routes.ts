@@ -840,6 +840,29 @@ Respond in the user's language (${language}).`;
     }
   });
 
+  app.delete("/api/admin/upload", requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const { url } = req.body;
+      if (!url || typeof url !== "string" || !url.startsWith("/uploads/")) {
+        return res.status(400).json({ error: "Invalid URL" });
+      }
+      const filename = path.basename(url);
+      if (!filename || filename.includes("..") || /[/\\]/.test(filename)) {
+        return res.status(400).json({ error: "Invalid filename" });
+      }
+      const filePath = path.resolve(uploadsDir, filename);
+      if (!filePath.startsWith(path.resolve(uploadsDir))) {
+        return res.status(400).json({ error: "Invalid path" });
+      }
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete image" });
+    }
+  });
+
   app.post("/api/admin/credentials", requireAdminRole, async (req: Request, res: Response) => {
     try {
       const { newUsername, newPassword, currentPassword } = req.body;

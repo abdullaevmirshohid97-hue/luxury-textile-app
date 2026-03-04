@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 import { useTranslations } from "@/lib/i18n";
+import ImageUpload from "@/components/ImageUpload";
 import type { Product, Category } from "@shared/schema";
 
 export default function AdminProducts() {
@@ -268,6 +269,15 @@ export default function AdminProducts() {
                 </div>
               </div>
 
+              <div className="space-y-2">
+                <Label className="text-body">{t.admin.images}</Label>
+                <ImageUpload
+                  value={formData.images}
+                  onChange={(val) => setFormData({ ...formData, images: val })}
+                  multiple
+                />
+              </div>
+
               <div className="flex items-center gap-2">
                 <Switch
                   checked={formData.featured}
@@ -298,6 +308,7 @@ export default function AdminProducts() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>{t.admin.images}</TableHead>
                   <TableHead>{t.admin.name}</TableHead>
                   <TableHead>{t.admin.category}</TableHead>
                   <TableHead>{t.admin.featured}</TableHead>
@@ -307,6 +318,20 @@ export default function AdminProducts() {
               <TableBody>
                 {products.map((product) => (
                   <TableRow key={product.id}>
+                    <TableCell>
+                      {product.images && product.images.split(",")[0] ? (
+                        <img
+                          src={product.images.split(",")[0]}
+                          alt=""
+                          className="w-10 h-10 rounded object-cover"
+                          data-testid={`img-product-thumb-${product.id}`}
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded bg-muted flex items-center justify-center text-muted-foreground">
+                          <Plus className="h-4 w-4" />
+                        </div>
+                      )}
+                    </TableCell>
                     <TableCell className="font-medium text-body" data-testid={`text-product-row-${product.id}`}>
                       {product.nameEn}
                     </TableCell>

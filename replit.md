@@ -39,14 +39,14 @@ Mary Collection is a production-ready B2B textile manufacturing platform. The si
 - Risk reduction messaging: Sampling first, pilot orders, phased production
 - 6-step B2B process: Initial inquiry → Specification review → Sampling & approval → Pilot production → Full-scale manufacturing → Quality control & delivery
 - Secure admin panel with bcrypt authentication and PostgreSQL sessions
-- Image upload support for products
+- Visual image upload management for products (multi-image) and categories (single image) in admin panel
 - CRUD operations for categories, products, inquiries
 - Admin credentials management (change username/password)
 
 ## Admin Access
 - URL: `/admin/login`
 - Initial Username: `marycollection.uzb`
-- Initial Password: `Aa1234567890@0987654321@`
+- Initial Password: Stored in `ADMIN_PASSWORD` environment secret
 - **Important**: Change these credentials after first login via `/api/admin/credentials`
 
 ## Project Structure
@@ -85,7 +85,8 @@ uploads/             # Product image uploads directory
 ### Admin Routes (Protected)
 - `POST /api/admin/login` - Admin authentication
 - `POST /api/admin/logout` - Logout
-- `POST /api/admin/upload` - Upload product image
+- `POST /api/admin/upload` - Upload product/category image
+- `DELETE /api/admin/upload` - Delete uploaded image (with path traversal protection)
 - `POST /api/admin/credentials` - Change admin credentials
 - `GET/POST/PUT/DELETE /api/admin/products` - Product CRUD
 - `GET/POST/PUT/DELETE /api/admin/categories` - Category CRUD

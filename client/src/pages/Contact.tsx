@@ -17,7 +17,8 @@ import { useTranslations, useLanguageStore } from "@/lib/i18n";
 import { apiRequest } from "@/lib/queryClient";
 import { useFormOptions } from "@/hooks/useFormOptions";
 import { Mail, Phone, MapPin, Clock, Loader2, CheckCircle, Building2 } from "lucide-react";
-import { SiWhatsapp } from "react-icons/si";
+import { SiWhatsapp, SiTelegram } from "react-icons/si";
+import { GLOBAL_CONTACT } from "@shared/globalConfig";
 
 const QUALIFIED_VOLUMES = ["500-1000", "1000-5000", "5000+"];
 
@@ -497,11 +498,11 @@ export default function Contact() {
                   <div>
                     <h3 className="font-semibold mb-1">{t.contact.email}</h3>
                     <a
-                      href="mailto:mariamhome.uz@gmail.com"
+                      href={`mailto:${GLOBAL_CONTACT.email}`}
                       className="text-body text-muted-foreground hover:text-foreground transition-colors"
                       data-testid="link-email"
                     >
-                      mariamhome.uz@gmail.com
+                      {GLOBAL_CONTACT.email}
                     </a>
                   </div>
                 </div>
@@ -513,11 +514,11 @@ export default function Contact() {
                   <div>
                     <h3 className="font-semibold mb-1">{t.contact.phone}</h3>
                     <a
-                      href="tel:+998882599444"
+                      href={`tel:${GLOBAL_CONTACT.phoneRaw}`}
                       className="text-body text-muted-foreground hover:text-foreground transition-colors"
                       data-testid="link-phone"
                     >
-                      +998 88 259 94 44
+                      {GLOBAL_CONTACT.phone}
                     </a>
                   </div>
                 </div>
@@ -529,13 +530,31 @@ export default function Contact() {
                   <div>
                     <h3 className="font-semibold mb-1">WhatsApp</h3>
                     <a
-                      href="https://wa.me/998882599444"
+                      href={GLOBAL_CONTACT.whatsapp}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-body text-muted-foreground hover:text-foreground transition-colors"
                       data-testid="link-whatsapp"
                     >
-                      +998 88 259 94 44
+                      {GLOBAL_CONTACT.phone}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-lg bg-blue-500/10">
+                    <SiTelegram className="h-5 w-5 text-blue-500" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-1">Telegram</h3>
+                    <a
+                      href={GLOBAL_CONTACT.telegram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-body text-muted-foreground hover:text-foreground transition-colors"
+                      data-testid="link-telegram"
+                    >
+                      {GLOBAL_CONTACT.phone}
                     </a>
                   </div>
                 </div>

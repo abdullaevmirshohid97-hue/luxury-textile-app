@@ -3,7 +3,7 @@ import TelegramBot from 'node-telegram-bot-api';
 import { dbStorage } from './dbStorage.js';
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const ADMIN_CHAT_ID = process.env.ADMIN_CHAT_ID;
+const ADMIN_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 let cronInitialized = false;
 

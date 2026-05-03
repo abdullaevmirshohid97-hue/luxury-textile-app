@@ -372,6 +372,10 @@ export const translations = {
       categoryImage: "Kategoriya rasmi",
       clickToUpload: "Rasm tanlash uchun bosing",
       maxFileSize: "Maksimal hajm: 10MB",
+      autoTranslate: "AI orqali tarjima",
+      translating: "Tarjima qilinmoqda...",
+      autoSlug: "Slug yaratish",
+      analytics: "Analitika",
     },
   },
   ru: {
@@ -730,6 +734,10 @@ export const translations = {
       categoryImage: "Изображение категории",
       clickToUpload: "Нажмите для выбора изображения",
       maxFileSize: "Макс. размер: 10МБ",
+      autoTranslate: "Перевод через AI",
+      translating: "Перевод...",
+      autoSlug: "Создать Slug",
+      analytics: "Аналитика",
     },
   },
   en: {
@@ -1088,6 +1096,10 @@ export const translations = {
       categoryImage: "Category Image",
       clickToUpload: "Click to select image",
       maxFileSize: "Max size: 10MB",
+      autoTranslate: "AI Translate",
+      translating: "Translating...",
+      autoSlug: "Generate Slug",
+      analytics: "Analytics",
     },
   },
 };

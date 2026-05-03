@@ -140,6 +140,62 @@ export default function AdminProducts() {
     setDialogOpen(true);
   };
 
+  const handleAutoTranslate = async (field: "name" | "description") => {
+    const sourceText = field === "name" ? formData.nameEn : formData.descriptionEn;
+    if (!sourceText) {
+      toast({
+        title: t.admin.error,
+        description: "Please enter English text first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const response = await apiRequest("POST", "/api/admin/translate", {
+        text: sourceText,
+        targetLanguages: ["ru", "uz"],
+        context: field === "name" ? "Product name" : "Product description",
+      });
+      const translations = await response.json();
+
+      if (field === "name") {
+        setFormData((prev) => ({
+          ...prev,
+          nameRu: translations.ru || prev.nameRu,
+          nameUz: translations.uz || prev.nameUz,
+        }));
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          descriptionRu: translations.ru || prev.descriptionRu,
+          descriptionUz: translations.uz || prev.descriptionUz,
+        }));
+      }
+
+      toast({
+        title: t.admin.success,
+        description: "Translations generated successfully",
+      });
+    } catch (error) {
+      toast({
+        title: t.admin.error,
+        description: "Failed to generate translations",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const generateSlug = () => {
+    if (!formData.nameEn) return;
+    const slug = formData.nameEn
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    setFormData((prev) => ({ ...prev, slug }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     saveMutation.mutate(formData);
@@ -165,8 +221,19 @@ export default function AdminProducts() {
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-body">{t.admin.slug}</Label>
+                <div className="space-y-1">
+                  <div className="flex justify-between items-center">
+                    <Label className="text-body">{t.admin.slug}</Label>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 text-xs px-2"
+                      onClick={generateSlug}
+                    >
+                      {t.admin.autoSlug}
+                    </Button>
+                  </div>
                   <Input
                     value={formData.slug}
                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
@@ -197,7 +264,19 @@ export default function AdminProducts() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-body">{t.admin.nameMultilang}</Label>
+                <div className="flex justify-between items-center">
+                  <Label className="text-body">{t.admin.nameMultilang}</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="h-7 text-xs"
+                    onClick={() => handleAutoTranslate("name")}
+                  >
+                    <Plus className="h-3 w-3 mr-1" />
+                    {t.admin.autoTranslate}
+                  </Button>
+                </div>
                 <div className="grid grid-cols-3 gap-2">
                   <Input
                     value={formData.nameEn}
@@ -224,7 +303,19 @@ export default function AdminProducts() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-body">{t.admin.descriptionMultilang}</Label>
+                <div className="flex justify-between items-center">
+                  <Label className="text-body">{t.admin.descriptionMultilang}</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="h-7 text-xs"
+                    onClick={() => handleAutoTranslate("description")}
+                  >
+                    <Plus className="h-3 w-3 mr-1" />
+                    {t.admin.autoTranslate}
+                  </Button>
+                </div>
                 <Textarea
                   value={formData.descriptionEn}
                   onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}

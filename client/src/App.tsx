@@ -55,6 +55,54 @@ function PublicRoute({ component: Component }: { component: React.ComponentType 
 }
 
 function Router() {
+  const isSubdomainAdmin = typeof window !== "undefined" && window.location.hostname.startsWith("admin.");
+
+  if (isSubdomainAdmin) {
+    return (
+      <Switch>
+        <Route path="/login" component={AdminLogin} />
+        <Route path="/leads">
+          <AdminRoute component={AdminLeads} />
+        </Route>
+        <Route path="/products">
+          <AdminRoute component={AdminProducts} />
+        </Route>
+        <Route path="/categories">
+          <AdminRoute component={AdminCategories} />
+        </Route>
+        <Route path="/inquiries">
+          <AdminRoute component={AdminInquiries} />
+        </Route>
+        <Route path="/settings">
+          <AdminRoute component={AdminSettings} />
+        </Route>
+        <Route path="/analytics">
+          <AdminRoute component={AdminAnalytics} />
+        </Route>
+        <Route path="/process-steps">
+          <AdminRoute component={AdminProcessSteps} />
+        </Route>
+        <Route path="/cta-configs">
+          <AdminRoute component={AdminCtaConfigs} />
+        </Route>
+        <Route path="/trust-blocks">
+          <AdminRoute component={AdminTrustBlocks} />
+        </Route>
+        <Route path="/form-options">
+          <AdminRoute component={AdminFormOptions} />
+        </Route>
+        <Route path="/">
+          <AdminRoute component={AdminDashboard} />
+        </Route>
+        <Route>
+          <AdminLayout>
+            <NotFound />
+          </AdminLayout>
+        </Route>
+      </Switch>
+    );
+  }
+
   return (
     <Switch>
       <Route path="/">

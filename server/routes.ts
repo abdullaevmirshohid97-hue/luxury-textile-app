@@ -796,6 +796,33 @@ Respond in the user's language (${language}).`;
     }
   });
 
+  app.post("/api/admin/translate", requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const { text, targetLanguages, context } = req.body;
+      if (!text || !targetLanguages || !Array.isArray(targetLanguages)) {
+        return res.status(400).json({ error: "Text and target languages array are required" });
+      }
+
+      const prompt = `Translate the following textile product text into these languages: ${targetLanguages.join(", ")}.
+Text to translate: "${text}"
+Context: ${context || "Textile manufacturing and luxury home decor"}.
+Format the output as a JSON object where keys are the language codes (en, ru, uz).
+Provide only the JSON.`;
+
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [{ role: "user", content: prompt }],
+        response_format: { type: "json_object" },
+      });
+
+      const result = JSON.parse(completion.choices[0].message.content || "{}");
+      res.json(result);
+    } catch (error) {
+      console.error("Translation error:", error);
+      res.status(500).json({ error: "Failed to translate text" });
+    }
+  });
+
   app.post("/api/admin/products", requireAdmin, async (req: Request, res: Response) => {
     try {
       const product = await storage.createProduct(req.body);

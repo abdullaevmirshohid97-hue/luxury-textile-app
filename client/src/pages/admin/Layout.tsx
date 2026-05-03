@@ -25,18 +25,21 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [location, setLocation] = useLocation();
   const t = useTranslations();
 
+  const isSubdomain = typeof window !== "undefined" && window.location.hostname.startsWith("admin.");
+  const pathPrefix = isSubdomain ? "" : "/admin";
+
   const menuItems = [
-    { href: "/admin", label: t.admin.dashboard, icon: LayoutDashboard },
-    { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
-    { href: "/admin/leads", label: t.admin.leads, icon: Users },
-    { href: "/admin/products", label: t.admin.products, icon: Package },
-    { href: "/admin/categories", label: t.admin.categories, icon: Tag },
-    { href: "/admin/inquiries", label: t.admin.inquiries, icon: MessageSquare },
-    { href: "/admin/process-steps", label: t.admin.processSteps, icon: Layers },
-    { href: "/admin/cta-configs", label: t.admin.ctaConfigs, icon: MousePointer },
-    { href: "/admin/trust-blocks", label: t.admin.trustBlocks, icon: ShieldCheck },
-    { href: "/admin/form-options", label: t.admin.formOptions, icon: ListOrdered },
-    { href: "/admin/settings", label: t.admin.settings, icon: Settings },
+    { href: `${pathPrefix}/`, label: t.admin.dashboard, icon: LayoutDashboard },
+    { href: `${pathPrefix}/analytics`, label: t.admin.analytics, icon: BarChart3 },
+    { href: `${pathPrefix}/leads`, label: t.admin.leads, icon: Users },
+    { href: `${pathPrefix}/products`, label: t.admin.products, icon: Package },
+    { href: `${pathPrefix}/categories`, label: t.admin.categories, icon: Tag },
+    { href: `${pathPrefix}/inquiries`, label: t.admin.inquiries, icon: MessageSquare },
+    { href: `${pathPrefix}/process-steps`, label: t.admin.processSteps, icon: Layers },
+    { href: `${pathPrefix}/cta-configs`, label: t.admin.ctaConfigs, icon: MousePointer },
+    { href: `${pathPrefix}/trust-blocks`, label: t.admin.trustBlocks, icon: ShieldCheck },
+    { href: `${pathPrefix}/form-options`, label: t.admin.formOptions, icon: ListOrdered },
+    { href: `${pathPrefix}/settings`, label: t.admin.settings, icon: Settings },
   ];
 
   const { data: session, isLoading } = useQuery<{ authenticated: boolean }>({
@@ -46,7 +49,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const handleLogout = async () => {
     await apiRequest("POST", "/api/admin/logout", {});
-    setLocation("/admin/login");
+    setLocation(isSubdomain ? "/login" : "/admin/login");
   };
 
   if (isLoading) {
@@ -58,7 +61,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   if (!session?.authenticated) {
-    setLocation("/admin/login");
+    setLocation(isSubdomain ? "/login" : "/admin/login");
     return null;
   }
 
@@ -67,12 +70,21 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     "--sidebar-width-icon": "3.5rem",
   };
 
+  const getMainDomainUrl = () => {
+    if (typeof window === "undefined") return "/";
+    const hostname = window.location.hostname;
+    if (hostname.startsWith("admin.")) {
+      return `http://${hostname.replace("admin.", "")}${window.location.port ? `:${window.location.port}` : ""}`;
+    }
+    return "/";
+  };
+
   return (
     <SidebarProvider style={style as React.CSSProperties}>
       <div className="flex h-screen w-full">
         <Sidebar>
           <SidebarHeader className="p-4 border-b">
-            <Link href="/admin" className="flex items-center gap-2">
+            <Link href={isSubdomain ? "/" : "/admin"} className="flex items-center gap-2">
               <span className="text-lg font-semibold">{t.admin.title}</span>
             </Link>
           </SidebarHeader>
@@ -81,13 +93,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <SidebarGroupContent>
                 <SidebarMenu>
                   {menuItems.map((item) => {
-                    const isActive = location === item.href || (item.href !== "/admin" && location.startsWith(item.href));
+                    const isActive = location === item.href || (item.href !== "/" && item.href !== "/admin" && location.startsWith(item.href));
                     return (
                       <SidebarMenuItem key={item.href}>
                         <SidebarMenuButton
                           asChild
                           isActive={isActive}
-                          data-testid={`link-admin-${item.href.replace("/admin/", "").replace("/admin", "dashboard")}`}
+                          data-testid={`link-admin-${item.href.replace("/admin/", "").replace("/admin", "dashboard").replace("/", "dashboard")}`}
                         >
                           <Link href={item.href}>
                             <item.icon className="h-4 w-4" />
@@ -117,9 +129,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <div className="flex flex-col flex-1 overflow-hidden">
           <header className="flex items-center gap-4 p-4 border-b bg-background">
             <SidebarTrigger data-testid="button-sidebar-toggle" />
-            <Link href="/" className="text-body text-sm text-muted-foreground hover:text-foreground">
+            <a href={getMainDomainUrl()} className="text-body text-sm text-muted-foreground hover:text-foreground">
               {t.admin.viewSite}
-            </Link>
+            </a>
           </header>
           <main className="flex-1 overflow-auto p-6">
             {children}

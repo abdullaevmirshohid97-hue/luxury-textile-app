@@ -34,6 +34,12 @@ export function log(message: string, source = "express") {
 }
 
 app.use((req, res, next) => {
+  const host = req.headers.host || "";
+  // Check if the request is coming from an 'admin' subdomain
+  // Supports admin.localhost, admin.marycollection.uz, etc.
+  const isAdminSubdomain = host.startsWith("admin.");
+  (req as any).isAdminSubdomain = isAdminSubdomain;
+
   const start = Date.now();
   const path = req.path;
   let capturedJsonResponse: Record<string, any> | undefined = undefined;
@@ -95,7 +101,6 @@ app.use((req, res, next) => {
       {
         port,
         host: "0.0.0.0",
-        reusePort: true,
       },
       () => {
         log(`serving on port ${port}`);
